@@ -443,7 +443,7 @@ class _CreateSalesState extends State<CreateSales> {
                                       ),
                                     ),
                                   )
-                                      : SizedBox(width: 450,
+                                      : SizedBox(width: 500,
                                     child: ListView.builder(
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
@@ -616,7 +616,7 @@ class _CreateSalesState extends State<CreateSales> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10)
           ),
-          child: SizedBox(width: 450,
+          child: SizedBox(width: 500,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -654,7 +654,7 @@ class _CreateSalesState extends State<CreateSales> {
         ),
         builder: (context){
           return SizedBox(
-            width: 450,
+            width: 500,
             child: Column(
               children: [
                 DialogTitle(title: 'P R O D U C T S'),
@@ -682,7 +682,7 @@ class _CreateSalesState extends State<CreateSales> {
             borderRadius: BorderRadius.circular(10)
         ),
         child: SizedBox(
-          width: 450,
+          width: 500,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -746,7 +746,7 @@ class _CreateSalesState extends State<CreateSales> {
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10)
         ),
-        child: SizedBox(width: 450,
+        child: SizedBox(width: 500,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(

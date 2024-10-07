@@ -6,6 +6,7 @@ import 'package:TallyApp/Widget/empty_data.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/data.dart';
 import 'package:TallyApp/models/duties.dart';
+import 'package:TallyApp/models/payments.dart';
 import 'package:TallyApp/models/sales.dart';
 import 'package:TallyApp/views/sales_tab/sale_items.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +20,7 @@ import '../../Widget/buttons/bottom_call_buttons.dart';
 import '../../Widget/buttons/card_button.dart';
 import '../../Widget/dialogs/call_actions/dialog_edit_sales.dart';
 import '../../Widget/dialogs/call_actions/double_call_action.dart';
+import '../../Widget/dialogs/dialog_receipt.dart';
 import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
 import '../../models/entities.dart';
@@ -675,6 +677,24 @@ class _SalesOverviewState extends State<SalesOverview> {
 
                                                     },
                                                   ),
+                                                  PopupMenuItem(
+                                                    value: 'receipt',
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(CupertinoIcons.doc_plaintext,
+                                                          color: normal,
+                                                        ),
+                                                        SizedBox(width: 5,),
+                                                        Text('Receipt', style: TextStyle(
+                                                          color: normal),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    onTap: (){
+                                                      dialogReceipt(context, sale);
+                                                    },
+                                                  ),
                                                 ];
                                               },
                                             )
@@ -898,6 +918,20 @@ class _SalesOverviewState extends State<SalesOverview> {
                                               ),
                                               BottomCallButtons(
                                                   onTap: (){
+                                                    dialogReceipt(context, sale);
+                                                  },
+                                                  icon: Icon(
+                                                    CupertinoIcons.doc_plaintext,
+                                                    color: Colors.black,),
+                                                  actionColor: Colors.black,
+                                                  title: "Receipt"
+                                              ),
+                                              VerticalDivider(
+                                                thickness: 0.5,
+                                                width: 15,color: Colors.black12,
+                                              ),
+                                              BottomCallButtons(
+                                                  onTap: (){
                                                     items == 0? null :
                                                     Get.to(()=>SaleItems(
                                                       index: snapshot,
@@ -1060,6 +1094,33 @@ class _SalesOverviewState extends State<SalesOverview> {
           ),
         )
     );
+  }
+  void dialogReceipt(BuildContext context, SaleModel sale) {
+    final size = MediaQuery.of(context).size;
+    showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              topLeft: Radius.circular(10),
+            )
+        ),
+        isScrollControlled: true,
+        useRootNavigator: true,
+        useSafeArea: true,
+        constraints: BoxConstraints(
+            maxHeight: size.height - 50,
+            minHeight: size.height-100,
+            maxWidth: 500,minWidth: 400
+        ),
+        context: context,
+        builder: (context) {
+          return Column(
+            children: [
+              DialogTitle(title: 'R E C E I P T'),
+              Expanded(child: DialogReceipt(sale: sale,))
+            ],
+          );
+        });
   }
 
   _checkData()async{
