@@ -247,7 +247,8 @@ class _DialogPaymentState extends State<DialogPayment> {
                             DateFormat.yMMMd().format(_dateTime),
                             style: TextStyle(color: isToday(_dateTime)
                                 ?Colors.red
-                                :null),
+                                :null
+                            ),
                           )
                       )
                   ),
