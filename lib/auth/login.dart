@@ -39,8 +39,6 @@ class _LoginState extends State<Login> {
   List<UserModel> _user = [];
   List<UserModel> fltUsrs = [];
 
-
-
   UserModel user = UserModel(uid: "");
   bool obsecure = true;
   bool select = false;
@@ -58,6 +56,7 @@ class _LoginState extends State<Login> {
     });
     _user = await Services().getUser(email==""?_emailController.text.trim().toString():email);
     user = _user.first;
+    token = Platform.isAndroid || Platform.isIOS ? deviceModel.id! : "";
     tokens = user.token.toString().split(",");
     tokens.add(token);
     tokens.remove("");
@@ -74,7 +73,7 @@ class _LoginState extends State<Login> {
     sharedPreferences.setString('type', user.type.toString());
     sharedPreferences.setString('token', token.toString());
     sharedPreferences.setString('country', user.country.toString());
-    sharedPreferences.setString('password', _passwordController.text.trim().toString());
+    sharedPreferences.setString('password', user.password.toString());
 
     currentUser.uid = user.uid.toString();
     currentUser.username = user.username.toString();
@@ -85,7 +84,7 @@ class _LoginState extends State<Login> {
     currentUser.phone = user.phone.toString();
     currentUser.type = user.type.toString();
     currentUser.token = token.toString();
-    currentUser.password = _passwordController.text.trim().toString();
+    currentUser.password = user.password.toString();
     currentUser.country = user.country.toString();
     Get.offAll(()=>Restore(), transition: Transition.fadeIn);
     setState(() {
@@ -103,7 +102,6 @@ class _LoginState extends State<Login> {
     } else {
       response = await Services.loginUserWithEmail(email);
     }
-    print(response);
     if(response.contains('Success')){
       _getUser();
     }
@@ -137,8 +135,8 @@ class _LoginState extends State<Login> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(Platform.isAndroid || Platform.isIOS){
-      initPlatform();
+    if(deviceModel.id==null){
+      SocketManager().initPlatform();
     }
   }
 
@@ -244,6 +242,104 @@ class _LoginState extends State<Login> {
                                 ),
                               ),
                               SizedBox(height: 30,),
+                              Platform.isAndroid || Platform.isIOS ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Divider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                      height: 1,
+                                    ),
+                                  ),
+                                  Text('  or  '),
+                                  Expanded(
+                                    child: Divider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                      height: 1,
+                                    ),
+                                  ),
+                                ],
+                              ) : SizedBox(),
+                              Platform.isAndroid || Platform.isIOS ? SizedBox(height: 10,) : SizedBox(),
+                              Platform.isAndroid || Platform.isIOS ? Text('Continue login') : SizedBox(),
+                              Platform.isAndroid || Platform.isIOS ? SizedBox(height: 10,) : SizedBox(),
+                              Platform.isAndroid || Platform.isIOS ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Tooltip(
+                                    message: "Register with Facebook",
+                                    child: InkWell(
+                                      onTap:(){},
+                                      borderRadius: BorderRadius.circular(15),
+                                      splashColor: CupertinoColors.activeBlue,
+                                      child: Container(
+                                        padding: EdgeInsets.all(15),
+                                        decoration: BoxDecoration(
+                                            color: CupertinoColors.activeBlue,
+                                            borderRadius: BorderRadius.circular(15),
+                                            border: Border.all(
+                                                width: 2, color: Colors.blue
+                                            )
+                                        ),
+                                        child: Image.asset(
+                                          'assets/add/fb.png',
+                                          height: 30,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Tooltip(
+                                    message: "Register with Google",
+                                    child: InkWell(
+                                      onTap:signIn,
+                                      borderRadius: BorderRadius.circular(15),
+                                      splashColor: CupertinoColors.activeBlue,
+                                      child: Container(
+                                        padding: EdgeInsets.all(15),
+                                        decoration: BoxDecoration(
+                                            color: color2,
+                                            borderRadius: BorderRadius.circular(15),
+                                            border: Border.all(
+                                                width: 2, color: color1
+                                            )
+                                        ),
+                                        child: Image.asset(
+                                          'assets/add/google_2.png',
+                                          height: 30,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: Platform.isAndroid || Platform.isIOS ?10:0,),
+                                  Platform.isIOS
+                                      ? Tooltip(
+                                    message: "Register with Apple",
+                                    child: InkWell(
+                                      onTap: (){},
+                                      borderRadius: BorderRadius.circular(15),
+                                      splashColor: CupertinoColors.activeBlue,
+                                      child: Container(
+                                        padding: EdgeInsets.all(15),
+                                        decoration: BoxDecoration(
+                                            color: color2,
+                                            borderRadius: BorderRadius.circular(15),
+                                            border: Border.all(
+                                                width: 2, color: color1
+                                            )
+                                        ),
+                                        child: Image.asset(
+                                          Theme.of(context).brightness == Brightness.dark?'assets/add/apple_2.png' : 'assets/add/apple.png',
+                                          height: 30,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                      : SizedBox(),
+                                ],
+                              ) : SizedBox(),
                             ],
                           ),
                         ),
@@ -278,13 +374,6 @@ class _LoginState extends State<Login> {
           ),
         ), context: context
     );
-  }
-  Future<void> initPlatform() async {
-    // await OneSignal.shared.setAppId("41db0b95-b70f-44a5-a5bf-ad849c74352e");
-    // await OneSignal.shared.getDeviceState().then((value) {
-    //   print(value!.userId);
-    //   token = value.userId!;
-    // });
   }
   Future signIn()async{
     final user = await GoogleSignInApi.login();

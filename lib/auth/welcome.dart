@@ -1,6 +1,8 @@
+import 'package:TallyApp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:TallyApp/auth/signup.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -29,6 +31,12 @@ class _WelcomeState extends State<Welcome> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
@@ -50,7 +58,7 @@ class _WelcomeState extends State<Welcome> {
                   children: [
                     SizedBox(height: 20,),
                     Text('WELCOME TO TALLYAPP', style: TextStyle(fontSize: 20,color: Colors.white),),
-                    Expanded(child: SizedBox()),
+                    Expanded(child: Text(deviceModel.toJson().toString())),
                     Text(
                       welcome[activeIndex].title.toString(),
                       style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600, color: Colors.white),

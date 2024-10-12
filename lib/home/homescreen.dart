@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ? Colors.cyanAccent
         : Colors.cyan;
     final normal = Theme.of(context).brightness == Brightness.dark
-        ? Colors.black
+        ? screenBackgroundColor
         : Colors.white;
     return Scaffold(
       body: SizedBox(
@@ -92,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: (_selectedIndex == 0) ? secBtn : secondaryColor,
             ),
             label: '',
+            tooltip: 'Home',
             backgroundColor: primaryColor,
           ),
           BottomNavigationBarItem(
@@ -102,6 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Icon(CupertinoIcons.tag, color: (_selectedIndex == 1) ? secBtn : secondaryColor,)
             ),
             label: '',
+            tooltip: 'Sell/Buy',
             backgroundColor: primaryColor,
           ),
           BottomNavigationBarItem(
@@ -109,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: (_selectedIndex == 2) ? secBtn : secondaryColor,
             ),
             label: '',
+            tooltip: 'Payments',
             backgroundColor: primaryColor,
           ),
           BottomNavigationBarItem(
@@ -116,6 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: (_selectedIndex == 3) ? secBtn : secondaryColor,
             ),
             label: '',
+            tooltip: 'Analytics',
             backgroundColor: primaryColor,
           ),
         ],

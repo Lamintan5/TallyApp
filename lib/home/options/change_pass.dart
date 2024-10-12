@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:TallyApp/Widget/text_filed_input.dart';
 import 'package:TallyApp/utils/colors.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,7 +77,7 @@ class _ChangePassState extends State<ChangePass> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter current password.';
                             }
-                            if (value != currentUser.password) {
+                            if (md5.convert(utf8.encode(value!)).toString()!= currentUser.password) {
                               return 'Please enter the correct password.';
                             }
                           },

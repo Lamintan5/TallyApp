@@ -79,238 +79,242 @@ class _RestoreState extends State<Restore> {
                       )
                   ),
                   Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          elevation: 8,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10,),
-                                Row(
-                                  children: [
-                                    CurrentImage(radius: 23,),
-                                    SizedBox(width: 10,),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(currentUser.username.toString(), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),),
-                                          Text("Fetching Tally data for ${currentUser.username}", style: TextStyle(color: secondaryColor, fontSize: 12, fontStyle: FontStyle.italic),)
-                                        ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 20 ,),
+                          Card(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                            elevation: 8,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      CurrentImage(radius: 23,),
+                                      SizedBox(width: 10,),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(currentUser.username.toString(), style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),),
+                                            Text("Fetching Tally data for ${currentUser.username}", style: TextStyle(color: secondaryColor, fontSize: 12, fontStyle: FontStyle.italic),)
+                                          ],
+                                        ),
                                       ),
+                                      _loading
+                                          ?SizedBox(width: 20,height: 20, child: CircularProgressIndicator(color: secondaryColor,strokeWidth: 2,))
+                                          : SizedBox()
+                                    ],
+                                  ),
+                                  SizedBox(height: 20,),
+                                  Divider(
+                                    color: reverse,
+                                    thickness: 0.1,
+                                    height: 1,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        Icon(CupertinoIcons.folder, color: secondaryColor,size: 20,),
+                                        SizedBox(width: 15,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Entity", style: TextStyle(color: secondaryColor),),
+                                            _loading? SizedBox() : Text("${myEntity.length} Results", style: TextStyle(fontSize: 11, color: secondaryColor),)
+                                          ],
+                                        ),
+                                        Expanded(child: SizedBox()),
+                                        _loading?_loading?SizedBox():Icon(Icons.check, color: Colors.green,):Icon(Icons.check, color: Colors.green,)
+                                      ],
                                     ),
-                                    _loading
-                                        ?SizedBox(width: 20,height: 20, child: CircularProgressIndicator(color: secondaryColor,strokeWidth: 2,))
-                                        : SizedBox()
-                                  ],
-                                ),
-                                SizedBox(height: 20,),
-                                Divider(
-                                  color: reverse,
-                                  thickness: 0.1,
-                                  height: 1,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      Icon(CupertinoIcons.folder, color: secondaryColor,size: 20,),
-                                      SizedBox(width: 15,),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Entity", style: TextStyle(color: secondaryColor),),
-                                          _loading? SizedBox() : Text("${myEntity.length} Results", style: TextStyle(fontSize: 11, color: secondaryColor),)
-                                        ],
-                                      ),
-                                      Expanded(child: SizedBox()),
-                                      _loading?_loading?SizedBox():Icon(Icons.check, color: Colors.green,):Icon(Icons.check, color: Colors.green,)
-                                    ],
                                   ),
-                                ),
-                                Divider(
-                                  color: reverse,
-                                  thickness: 0.1,
-                                  height: 1,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      LineIcon.box(color: secondaryColor),
-                                      SizedBox(width: 15,),
+                                  Divider(
+                                    color: reverse,
+                                    thickness: 0.1,
+                                    height: 1,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        LineIcon.box(color: secondaryColor),
+                                        SizedBox(width: 15,),
 
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Products", style: TextStyle(color: secondaryColor),),
-                                          _loading? SizedBox() : Text("${myProducts.length} Results", style: TextStyle(fontSize: 11, color: secondaryColor),)
-                                        ],
-                                      ),
-                                      Expanded(child: SizedBox()),
-                                      _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
-                                    ],
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Products", style: TextStyle(color: secondaryColor),),
+                                            _loading? SizedBox() : Text("${myProducts.length} Results", style: TextStyle(fontSize: 11, color: secondaryColor),)
+                                          ],
+                                        ),
+                                        Expanded(child: SizedBox()),
+                                        _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Divider(
-                                  color: reverse,
-                                  thickness: 0.1,
-                                  height: 1,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      Icon(CupertinoIcons.money_dollar_circle, color: secondaryColor),
-                                      SizedBox(width: 15,),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Purchases", style: TextStyle(color: secondaryColor),),
-                                          _loading? SizedBox() : Text("${myPurchases.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
-                                        ],
-                                      ),
-                                      Expanded(child: SizedBox()),
-                                      _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
-                                    ],
+                                  Divider(
+                                    color: reverse,
+                                    thickness: 0.1,
+                                    height: 1,
                                   ),
-                                ),
-                                Divider(
-                                  color: reverse,
-                                  thickness: 0.1,
-                                  height: 1,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      Icon(CupertinoIcons.cube_box, color: secondaryColor),
-                                      SizedBox(width: 15,),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Inventory", style: TextStyle(color: secondaryColor),),
-                                          _loading? SizedBox() : Text("${myInventory.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
-                                        ],
-                                      ),
-                                      Expanded(child: SizedBox()),
-                                      _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
-                                    ],
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        Icon(CupertinoIcons.money_dollar_circle, color: secondaryColor),
+                                        SizedBox(width: 15,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Purchases", style: TextStyle(color: secondaryColor),),
+                                            _loading? SizedBox() : Text("${myPurchases.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
+                                          ],
+                                        ),
+                                        Expanded(child: SizedBox()),
+                                        _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Divider(
-                                  color: reverse,
-                                  thickness: 0.1,
-                                  height: 1,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      Icon(CupertinoIcons.money_dollar, color: secondaryColor,),
-                                      SizedBox(width: 15,),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Sales", style: TextStyle(color: secondaryColor),),
-                                          _loading? SizedBox() : Text("${mySales.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
-                                        ],
-                                      ),
-                                      Expanded(child: SizedBox()),
-                                      _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
-                                    ],
+                                  Divider(
+                                    color: reverse,
+                                    thickness: 0.1,
+                                    height: 1,
                                   ),
-                                ),
-                                Divider(
-                                  color: reverse,
-                                  thickness: 0.1,
-                                  height: 1,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      Icon(CupertinoIcons.person_2, color: secondaryColor,size: 20,),
-                                      SizedBox(width: 15,),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Suppliers", style: TextStyle(color: secondaryColor),),
-                                          _loading? SizedBox() : Text("${mySuppliers.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
-                                        ],
-                                      ),
-                                      Expanded(child: SizedBox()),
-                                      _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
-                                    ],
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        Icon(CupertinoIcons.cube_box, color: secondaryColor),
+                                        SizedBox(width: 15,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Inventory", style: TextStyle(color: secondaryColor),),
+                                            _loading? SizedBox() : Text("${myInventory.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
+                                          ],
+                                        ),
+                                        Expanded(child: SizedBox()),
+                                        _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                Divider(
-                                  color: reverse,
-                                  thickness: 0.1,
-                                  height: 1,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      LineIcon.wallet(color: secondaryColor),
-                                      SizedBox(width: 15,),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Payments", style: TextStyle(color: secondaryColor),),
-                                          _loading? SizedBox() : Text("${myPayments.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
-                                        ],
-                                      ),
-                                      Expanded(child: SizedBox()),
-                                      _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
-                                    ],
+                                  Divider(
+                                    color: reverse,
+                                    thickness: 0.1,
+                                    height: 1,
                                   ),
-                                ),
-                                Divider(
-                                  color: reverse,
-                                  thickness: 0.1,
-                                  height: 1,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 10),
-                                  margin: EdgeInsets.symmetric(vertical: 10),
-                                  child: Row(
-                                    children: [
-                                      LineIcon.bell(color: secondaryColor),
-                                      SizedBox(width: 15,),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Notifications", style: TextStyle(color: secondaryColor),),
-                                          _loading? SizedBox() : Text("${myNotif.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
-                                        ],
-                                      ),
-                                      Expanded(child: SizedBox()),
-                                      _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
-                                    ],
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        Icon(CupertinoIcons.money_dollar, color: secondaryColor,),
+                                        SizedBox(width: 15,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Sales", style: TextStyle(color: secondaryColor),),
+                                            _loading? SizedBox() : Text("${mySales.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
+                                          ],
+                                        ),
+                                        Expanded(child: SizedBox()),
+                                        _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Divider(
+                                    color: reverse,
+                                    thickness: 0.1,
+                                    height: 1,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        Icon(CupertinoIcons.person_2, color: secondaryColor,size: 20,),
+                                        SizedBox(width: 15,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Suppliers", style: TextStyle(color: secondaryColor),),
+                                            _loading? SizedBox() : Text("${mySuppliers.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
+                                          ],
+                                        ),
+                                        Expanded(child: SizedBox()),
+                                        _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: reverse,
+                                    thickness: 0.1,
+                                    height: 1,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        LineIcon.wallet(color: secondaryColor),
+                                        SizedBox(width: 15,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Payments", style: TextStyle(color: secondaryColor),),
+                                            _loading? SizedBox() : Text("${myPayments.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
+                                          ],
+                                        ),
+                                        Expanded(child: SizedBox()),
+                                        _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
+                                      ],
+                                    ),
+                                  ),
+                                  Divider(
+                                    color: reverse,
+                                    thickness: 0.1,
+                                    height: 1,
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    margin: EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        LineIcon.bell(color: secondaryColor),
+                                        SizedBox(width: 15,),
+                                        Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Notifications", style: TextStyle(color: secondaryColor),),
+                                            _loading? SizedBox() : Text("${myNotif.length} Results", style: TextStyle(fontSize: 12, color: secondaryColor),)
+                                          ],
+                                        ),
+                                        Expanded(child: SizedBox()),
+                                        _loading?SizedBox():Icon(Icons.check, color: Colors.green,)
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
 
-                      ],
+                        ],
+                      ),
                     ),
                   ),
+                  SizedBox(height: 10 ,),
                   Center(
                     child: InkWell(
                       onTap: (){

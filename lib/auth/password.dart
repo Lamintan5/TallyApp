@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:country_picker/country_picker.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,7 +35,7 @@ class PasswordScreen extends StatefulWidget {
 class _PasswordScreenState extends State<PasswordScreen> {
   TextEditingController _newpass = TextEditingController();
   TextEditingController _repass = TextEditingController();
-  Country _country = CountryParser.parseCountryCode('US');
+  Country _country = CountryParser.parseCountryCode(deviceModel.country == null? 'US' : deviceModel.country.toString());
   final formKey = GlobalKey<FormState>();
   bool _loading = false;
 
@@ -92,7 +94,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
         sharedPreferences.setString('image', user.image.toString());
         sharedPreferences.setString('phone', user.phone.toString());
         sharedPreferences.setString('token', user.token.toString());
-        sharedPreferences.setString('password', _repass.text.toString());
+        sharedPreferences.setString('password', md5.convert(utf8.encode(_repass.text.trim().toString())).toString());
         sharedPreferences.setString('country', user.country.toString());
         currentUser = UserModel(
             uid: user.uid.toString(),
@@ -103,7 +105,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
             phone: user.phone.toString(),
             image: user.image.toString(),
             token: user.token.toString(),
-            password: _repass.text,
+            password: md5.convert(utf8.encode(_repass.text.trim().toString())).toString(),
             status: user.status,
             country: user.country
         );
@@ -151,14 +153,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
         phone: "",
         password: "",
         image: widget.user.photoUrl,
-        token: "",
+        token: deviceModel.token,
         status: "",
         country: "",
         time: DateTime.now().toString()
     );
-    if(Platform.isAndroid || Platform.isIOS){
-      initPlatform();
-    }
   }
 
   @override
@@ -448,16 +447,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
         ), context: context
     );
   }
-  Future<void> initPlatform() async {
-    // await OneSignal.shared.setAppId("41db0b95-b70f-44a5-a5bf-ad849c74352e");
-    // await OneSignal.shared.getDeviceState().then((value) {
-    //   print(value!.userId);
-    //   user.token = value.userId!;
-    //   setState(() {
-    //
-    //   });
-    // });
-  }
+
   void _change(UserModel userModel){
     user = userModel;
     _country = CountryParser.parseCountryCode(user.country.toString());

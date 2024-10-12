@@ -1,15 +1,14 @@
 import 'dart:io';
 
-import 'package:TallyApp/api/api_service.dart';
 import 'package:TallyApp/auth/fetching.dart';
 import 'package:TallyApp/home/web_home.dart';
+import 'package:TallyApp/models/device.dart';
 import 'package:TallyApp/resources/socket.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:TallyApp/auth/welcome.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -18,12 +17,11 @@ import 'home/homescreen.dart';
 import 'models/users.dart';
 import 'utils/colors.dart';
 
-import 'package:cached_network_image/cached_network_image.dart';
-
 late List<CameraDescription> cameras;
 DateTime today = DateTime.now();
 DateTime justToday = DateTime(today.year, today.month, today.day);
 UserModel currentUser = UserModel(uid: "");
+DeviceModel deviceModel = DeviceModel();
 String domain = "192.168.1.104";
 List<String> myEntity = [];
 List<String> notMyEntity = [];
@@ -140,18 +138,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  Future<void> initPlatform()async{
-    OneSignal.initialize("41db0b95-b70f-44a5-a5bf-ad849c74352e");
-    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-    OneSignal.Debug.setAlertLevel(OSLogLevel.none);
-    OneSignal.Notifications.requestPermission(true);
-
-    OneSignal.User.getOnesignalId().then((value){
-      APIService().getUserData(value!);
-    });
-
-
-  }
 
 
 
@@ -160,9 +146,7 @@ class _MyAppState extends State<MyApp> {
     // TODO: implement initState
     super.initState();
     getValidations();
-    if(Platform.isAndroid || Platform.isIOS){
-      initPlatform();
-    }
+    SocketManager().initPlatform();
   }
 
   @override

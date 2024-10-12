@@ -196,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Column(
                     children: [
-                      // Text("Token ${currentUser.token}"),
+                      // Text("Token ${currentUser.password}"),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

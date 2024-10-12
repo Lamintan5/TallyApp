@@ -293,7 +293,7 @@ class _SellOrBuyState extends State<SellOrBuy> {
                           borderWidth: 1,
                           iconAnimationType: AnimationType.onHover,
                           style: ToggleStyle(
-                            indicatorColor: CupertinoColors.systemGrey,
+                            indicatorColor: Colors.grey[800],
                             backgroundColor: color1,
                             borderColor: color2,
                             borderRadius: BorderRadius.circular(5),

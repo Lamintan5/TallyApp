@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:TallyApp/Widget/emailTextFormWidget.dart';
 import 'package:TallyApp/Widget/text_filed_input.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/data.dart';
 import 'package:TallyApp/utils/colors.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -81,7 +84,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a password.';
                               }
-                              if (value != currentUser.password) {
+                              if (md5.convert(utf8.encode(value!)).toString()!= currentUser.password) {
                                 return 'Please Enter the correct password';
                               }
 

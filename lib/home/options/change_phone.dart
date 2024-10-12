@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:TallyApp/models/data.dart';
 import 'package:TallyApp/resources/services.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/widget/text_filed_input.dart';
@@ -21,7 +24,7 @@ class _ChangePhoneState extends State<ChangePhone> {
   TextEditingController _phone = TextEditingController();
   TextEditingController _password = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  Country _country = CountryParser.parseCountryCode('US');
+  Country _country = CountryParser.parseCountryCode(currentUser.country.toString());
   
   bool obsecure = true;
   bool _loading = false;
@@ -128,7 +131,7 @@ class _ChangePhoneState extends State<ChangePhone> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a password.';
                               }
-                              if (value != currentUser.password) {
+                              if (md5.convert(utf8.encode(value!)).toString()!= currentUser.password) {
                                 return 'Please Enter the correct password';
                               }
                               return null;

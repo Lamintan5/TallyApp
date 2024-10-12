@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:TallyApp/Widget/dialogs/call_actions/single_call_action.dart';
 import 'package:TallyApp/Widget/logos/row_logo.dart';
 import 'package:TallyApp/auth/password.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:TallyApp/Widget/emailTextFormWidget.dart';
@@ -60,7 +62,7 @@ class _SignUpState extends State<SignUp> {
   DateTime now = DateTime.now();
 
   var pickedImage;
-  Country _country = CountryParser.parseCountryCode('US');
+  Country _country = CountryParser.parseCountryCode(deviceModel.country == null? 'US' : deviceModel.country.toString());
 
 
   @override
@@ -771,13 +773,14 @@ class _SignUpState extends State<SignUp> {
       lastname: _secondName.text.trim().toString(),
       email: _emailController.text.trim().toString(),
       phone: "+"+ _country.phoneCode+_phoneController.text.trim().toString(),
-      password: _passwordController.text.trim().toString(),
+      password: md5.convert(utf8.encode(_passwordController.text.trim().toString())).toString(),
       type: type,
       image: _image!=null?_image!.path:"",
       status: "",
       url: imageUrl,
       token: "",
       time: DateTime.now().toString(),
+      country: deviceModel.country == null? _country.countryCode : deviceModel.country.toString()
     );
     APIService.otpLogin(_emailController.text.trim()).then((response)async{
       print(response.data);

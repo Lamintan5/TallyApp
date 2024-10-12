@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:TallyApp/Widget/dialogs/call_actions/double_call_action.dart';
@@ -9,6 +10,7 @@ import 'package:TallyApp/models/data.dart';
 import 'package:TallyApp/resources/services.dart';
 import 'package:TallyApp/utils/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -332,7 +334,7 @@ class _EditProfileState extends State<EditProfile> {
                     labelText: "Password",
                     isPass: true,
                     validator: (value){
-                      if(value!=currentUser.password){
+                      if(md5.convert(utf8.encode(value!)).toString()!= currentUser.password){
                         return "Please enter the correct password";
                       }
                     },
