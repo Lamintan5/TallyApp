@@ -419,7 +419,6 @@ class _WebChatState extends State<WebChat> {
                                         children: [
                                           Text(selectedUser.username.toString(), style: TextStyle(color: reverse)),
                                           Text("${selectedUser.firstname.toString()} ${selectedUser.lastname.toString()}", style: TextStyle(color: secondaryColor,fontSize: 12),),
-                                          Text("${selectedUser.token.toString()}", style: TextStyle(color: secondaryColor,fontSize: 12),),
                                         ],
                                       ),
                                     ),
