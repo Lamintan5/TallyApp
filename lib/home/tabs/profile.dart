@@ -80,6 +80,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     // TODO: implement initState
     super.initState();
     _getEntities();
+
     // if(_entity.isEmpty && !myShowCases.contains('mobile_home_entity')){
     //   WidgetsBinding.instance.addPostFrameCallback((_) =>
     //       ShowCaseWidget.of(context).startShowCase([_one])
@@ -195,6 +196,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Column(
                     children: [
+                      // Text("Token ${currentUser.token}"),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

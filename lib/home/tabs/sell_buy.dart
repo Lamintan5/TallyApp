@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:TallyApp/home/tabs/scanner.dart';
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -124,6 +125,9 @@ class _SellOrBuyState extends State<SellOrBuy> {
     final color1 = Theme.of(context).brightness == Brightness.dark
         ? Colors.white10
         : Colors.black12;
+    final color2 = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white24
+        : Colors.black26;
     final secBtn = Theme.of(context).brightness == Brightness.dark
         ? Colors.cyanAccent
         : Colors.cyan;
@@ -274,95 +278,40 @@ class _SellOrBuyState extends State<SellOrBuy> {
                       ),
                       SizedBox(height: 10,),
                       Center(
-                        child: FrostedGlass(
-                          width: 200,
-                          height: 50,
-                          child: IntrinsicHeight(
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: InkWell(
-                                    onTap:(){
-                                      setState(() {
-                                        if(_scndPrch.isEmpty){
-                                          account = true;
-                                        } else {
-                                          dialogAlert(context, "sales");
-                                        }
-                                      });
-                                    },
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      bottomLeft: Radius.circular(10),
-                                    ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: account?Colors.cyanAccent:Colors.transparent,
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(10),
-                                            bottomLeft: Radius.circular(10),
-                                          )
-                                      ),
-                                      height: 45,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(CupertinoIcons.money_dollar, color: account?Colors.black:reverse, size: 20),
-                                          Text('Sale', style: TextStyle(
-                                            color: account?Colors.black:reverse,
-                                            fontWeight: account?FontWeight.w600:FontWeight.normal,
-                                          ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: VerticalDivider(
-                                    color: Colors.grey,
-                                    thickness: 3,
-                                    width: 3,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: InkWell(
-                                    onTap:(){
-                                      setState(() {
-                                        if(_scndSale.isEmpty){
-                                          account = false;
-                                        } else {
-                                          dialogAlert(context, "purchases");
-                                        }
-                                      });
-                                    },
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(10),
-                                      bottomRight: Radius.circular(10),
-                                    ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: account?Colors.transparent:Colors.cyanAccent,
-                                          borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            bottomRight: Radius.circular(10),
-                                          )
-                                      ),
-                                      height: 45,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(CupertinoIcons.cart,color: account?reverse:Colors.black, size: 19,),
-                                          Text('Purchase', style: TextStyle(color: account?reverse:Colors.black, fontWeight: !account?FontWeight.w600:FontWeight.normal,),)
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                        child: AnimatedToggleSwitch<bool>.size(
+                          current: account,
+                          values: const [true, false],
+                          iconOpacity: 0.5,
+                          height: 30,
+                          indicatorSize: const Size.fromWidth(90),
+                          customIconBuilder: (context, local, global) => Text(
+                            local.value ? "Sell" : "Buy",
+                            style: TextStyle(
+                                color: Color.lerp(reverse, reverse, local.animationValue)
                             ),
                           ),
+                          borderWidth: 1,
+                          iconAnimationType: AnimationType.onHover,
+                          style: ToggleStyle(
+                            indicatorColor: CupertinoColors.systemGrey,
+                            backgroundColor: color1,
+                            borderColor: color2,
+                            borderRadius: BorderRadius.circular(5),
+                            boxShadow: [
+                              const BoxShadow(
+                                color: Colors.black26,
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: Offset(0, 3)
+                              )
+                            ]
+                          ),
+                          selectedIconScale: 1,
+                          onChanged: (value){
+                            setState(() {
+                              account = value;
+                            });
+                          },
                         ),
                       ),
                       SizedBox(height: 10,),

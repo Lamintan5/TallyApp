@@ -449,14 +449,14 @@ class _PasswordScreenState extends State<PasswordScreen> {
     );
   }
   Future<void> initPlatform() async {
-    await OneSignal.shared.setAppId("41db0b95-b70f-44a5-a5bf-ad849c74352e");
-    await OneSignal.shared.getDeviceState().then((value) {
-      print(value!.userId);
-      user.token = value.userId!;
-      setState(() {
-
-      });
-    });
+    // await OneSignal.shared.setAppId("41db0b95-b70f-44a5-a5bf-ad849c74352e");
+    // await OneSignal.shared.getDeviceState().then((value) {
+    //   print(value!.userId);
+    //   user.token = value.userId!;
+    //   setState(() {
+    //
+    //   });
+    // });
   }
   void _change(UserModel userModel){
     user = userModel;

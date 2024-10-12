@@ -12,7 +12,6 @@ import 'package:TallyApp/models/users.dart';
 import 'package:TallyApp/resources/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -469,6 +468,5 @@ class _ItemManagersState extends State<ItemManagers> {
   }
 
   _callNumber(String number) async{
-    await FlutterPhoneDirectCaller.callNumber(number);
   }
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:TallyApp/resources/services.dart';
 import 'package:get/get.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../api/config.dart';
@@ -240,5 +241,12 @@ class SocketManager extends GetxController  {
     // }
     Data().addOrUpdateNotifList(notifications);
 
+  }
+  Future<void> initPlatform()async{
+    // await OneSignal.shared.setAppId("41db0b95-b70f-44a5-a5bf-ad849c74352e");
+    // await OneSignal.shared.getDeviceState().then((value) {
+    //   print(value!.userId);
+    //   token = value.userId!;
+    // });
   }
 }

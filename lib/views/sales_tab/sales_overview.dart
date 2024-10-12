@@ -1109,7 +1109,7 @@ class _SalesOverviewState extends State<SalesOverview> {
         useSafeArea: true,
         constraints: BoxConstraints(
             maxHeight: size.height - 50,
-            minHeight: size.height-100,
+            minHeight: 300,
             maxWidth: 500,minWidth: 400
         ),
         context: context,

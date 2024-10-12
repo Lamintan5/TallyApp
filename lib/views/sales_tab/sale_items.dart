@@ -8,7 +8,6 @@ import 'package:TallyApp/home/action_bar/chats/message_screen.dart';
 import 'package:TallyApp/home/action_bar/chats/web_chat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icon.dart';
@@ -1362,6 +1361,6 @@ class _SaleItemsState extends State<SaleItems> {
   _changeMess(MessModel mess){}
   _updateCount(){}
   _callNumber(String number) async{
-    await FlutterPhoneDirectCaller.callNumber(number);
+
   }
 }

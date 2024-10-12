@@ -11,7 +11,6 @@ import 'package:TallyApp/models/notifications.dart';
 import 'package:TallyApp/models/users.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -650,6 +649,6 @@ class _ItemPermissionState extends State<ItemPermission>  {
   _updateCount(){}
   _changeMess(MessModel mess){}
   _callNumber(String number) async{
-    await FlutterPhoneDirectCaller.callNumber(number);
+
   }
 }

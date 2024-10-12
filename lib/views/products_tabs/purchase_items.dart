@@ -8,7 +8,6 @@ import 'package:TallyApp/Widget/profile_images/current_profile.dart';
 import 'package:TallyApp/models/purchases.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icon.dart';
@@ -1360,6 +1359,6 @@ class _PurchaseItemsState extends State<PurchaseItems> {
     return formatter.format(number);
   }
   _callNumber(String number) async{
-    await FlutterPhoneDirectCaller.callNumber(number);
+
   }
 }

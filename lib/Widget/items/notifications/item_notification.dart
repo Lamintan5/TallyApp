@@ -13,7 +13,6 @@ import 'package:TallyApp/models/notifications.dart';
 import 'package:TallyApp/models/users.dart';
 import 'package:TallyApp/resources/services.dart';
 import 'package:TallyApp/utils/colors.dart';
-import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -700,6 +699,5 @@ class _ItemNotifState extends State<ItemNotif> {
   _updateCount(){}
   _changeMess(MessModel mess){}
   _callNumber(String number) async{
-    await FlutterPhoneDirectCaller.callNumber(number);
   }
 }

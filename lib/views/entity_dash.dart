@@ -546,7 +546,7 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
                   }, icon: LineIcon.users(), title: "Managers", subtitle: ""),
                   RowButton(onTap: (){
                     Get.to(()=>EntityPayments(entity: entity), transition: Transition.rightToLeftWithFade);
-                  }, icon: Icon(CupertinoIcons.money_dollar), title: 'Payments', subtitle: ''),
+                  }, icon: LineIcon.wallet(), title: 'Payments', subtitle: ''),
                   RowButton(onTap: (){
                     Get.to(()=>Reports(entity: widget.entity), transition: Transition.rightToLeftWithFade);
                   }, icon: Icon(CupertinoIcons.graph_square), title: 'Reports & Analytics', subtitle: ''),

@@ -152,34 +152,34 @@ class _DialogReceiptState extends State<DialogReceipt> {
               ),
             )
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: InkWell(
-            onTap: (){
-
-            },
-            borderRadius: BorderRadius.circular(5),
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-               border: Border.all(
-                 color: secColor,
-                 width: 1
-               )
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.download, color: secColor,),
-                  SizedBox(width: 10,),
-                  Text("Get PDF Receipt", style: TextStyle(color: secColor, fontWeight: FontWeight.w600),)
-                ],
-              ),
-            ),
-          ),
-        ),
-        SizedBox(height: 10,),
+        // Padding(
+        //   padding: EdgeInsets.symmetric(horizontal: 20),
+        //   child: InkWell(
+        //     onTap: (){
+        //
+        //     },
+        //     borderRadius: BorderRadius.circular(5),
+        //     child: Container(
+        //       padding: EdgeInsets.symmetric(vertical: 15),
+        //       decoration: BoxDecoration(
+        //         borderRadius: BorderRadius.circular(5),
+        //        border: Border.all(
+        //          color: secColor,
+        //          width: 1
+        //        )
+        //       ),
+        //       child: Row(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         children: [
+        //           Icon(Icons.download, color: secColor,),
+        //           SizedBox(width: 10,),
+        //           Text("Get PDF Receipt", style: TextStyle(color: secColor, fontWeight: FontWeight.w600),)
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(height: 10,),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: InkWell(

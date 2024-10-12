@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:TallyApp/api/api_service.dart';
 import 'package:TallyApp/auth/fetching.dart';
 import 'package:TallyApp/home/web_home.dart';
 import 'package:TallyApp/resources/socket.dart';
@@ -140,11 +141,19 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initPlatform()async{
-    await OneSignal.shared.setAppId("41db0b95-b70f-44a5-a5bf-ad849c74352e");
-    await OneSignal.shared.getDeviceState().then((value){
-      print("Token : ${value!.userId}");
+    OneSignal.initialize("41db0b95-b70f-44a5-a5bf-ad849c74352e");
+    OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+    OneSignal.Debug.setAlertLevel(OSLogLevel.none);
+    OneSignal.Notifications.requestPermission(true);
+
+    OneSignal.User.getOnesignalId().then((value){
+      APIService().getUserData(value!);
     });
+
+
   }
+
+
 
   @override
   void initState() {

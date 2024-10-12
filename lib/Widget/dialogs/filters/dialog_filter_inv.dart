@@ -270,51 +270,51 @@ class _DialogFilterInvState extends State<DialogFilterInv> {
               ],
             ),
           ),
-          SizedBox(height: 5,),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                  child:TextFieldInput(
-                    textEditingController: _bprice,
-                    textInputType: TextInputType.number,
-                    labelText: 'Buy Price',
-                    labelStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
-                    textAlign: TextAlign.center,
-                    validator: (value) {
-                      if(value==null || value.isEmpty){
-                        return null;
-                      }
-                      if (RegExp(r'^\d+(\.\d{0,2})?$').hasMatch(value)) {
-                        return null;
-                      } else {
-                        return 'Please enter a valid number';
-                      }
-                    },
-                  ),
-              ),
-              SizedBox(width: 5,),
-              Expanded(
-                  child: TextFieldInput(
-                    textEditingController: _sprice,
-                    textInputType: TextInputType.number,
-                    labelText: 'Sell Price',
-                    labelStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
-                    textAlign: TextAlign.center,
-                    validator: (value) {
-                      if(value==null || value.isEmpty){
-                        return null;
-                      }
-                      if (RegExp(r'^\d+(\.\d{0,2})?$').hasMatch(value)) {
-                        return null;
-                      } else {
-                        return 'Please enter a valid number';
-                      }
-                    },
-                  ),
-              )
-            ],
-          ),
+          // SizedBox(height: 5,),
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     Expanded(
+          //         child:TextFieldInput(
+          //           textEditingController: _bprice,
+          //           textInputType: TextInputType.number,
+          //           labelText: 'Buy Price',
+          //           labelStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+          //           textAlign: TextAlign.center,
+          //           validator: (value) {
+          //             if(value==null || value.isEmpty){
+          //               return null;
+          //             }
+          //             if (RegExp(r'^\d+(\.\d{0,2})?$').hasMatch(value)) {
+          //               return null;
+          //             } else {
+          //               return 'Please enter a valid number';
+          //             }
+          //           },
+          //         ),
+          //     ),
+          //     SizedBox(width: 5,),
+          //     Expanded(
+          //         child: TextFieldInput(
+          //           textEditingController: _sprice,
+          //           textInputType: TextInputType.number,
+          //           labelText: 'Sell Price',
+          //           labelStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+          //           textAlign: TextAlign.center,
+          //           validator: (value) {
+          //             if(value==null || value.isEmpty){
+          //               return null;
+          //             }
+          //             if (RegExp(r'^\d+(\.\d{0,2})?$').hasMatch(value)) {
+          //               return null;
+          //             } else {
+          //               return 'Please enter a valid number';
+          //             }
+          //           },
+          //         ),
+          //     )
+          //   ],
+          // ),
           DoubleCallAction(
             action: ()async{
               Navigator.pop(context);
