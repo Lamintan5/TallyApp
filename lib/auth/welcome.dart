@@ -58,7 +58,7 @@ class _WelcomeState extends State<Welcome> {
                   children: [
                     SizedBox(height: 20,),
                     Text('WELCOME TO TALLYAPP', style: TextStyle(fontSize: 20,color: Colors.white),),
-                    Expanded(child: Text(deviceModel.toJson().toString())),
+                    Expanded(child: SizedBox()),
                     Text(
                       welcome[activeIndex].title.toString(),
                       style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600, color: Colors.white),
