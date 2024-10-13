@@ -514,13 +514,13 @@ class _GoodsTabState extends State<GoodsTab> {
 
                             _layout==2
                                 ?  CardButton(
-                              text:'Save',
-                              backcolor: Colors.white,
-                              icon: Icon(Icons.download, size: 19, color: screenBackgroundColor,), forecolor: screenBackgroundColor,
-                              onTap: () {
+                                  text:'Save',
+                                  backcolor: Colors.white,
+                                  icon: Icon(Icons.download, size: 19, color: screenBackgroundColor,), forecolor: screenBackgroundColor,
+                                  onTap: () {
 
-                              },
-                            )
+                                  },
+                                )
                                 : SizedBox()
                           ],
                         ),
