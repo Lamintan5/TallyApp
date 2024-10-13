@@ -311,7 +311,7 @@ class _SellOrBuyState extends State<SellOrBuy> {
                           onChanged: (value){
                             setState(() {
                               if(_scannedPrds.isNotEmpty){
-                                dialogAlert(context, account?'purchase':'sales',value);
+                                dialogAlert(context, account?'purchase':'sales');
                               } else {
                                 account = value;
                               }
@@ -1128,7 +1128,7 @@ class _SellOrBuyState extends State<SellOrBuy> {
       );
     });
   }
-  void dialogAlert(BuildContext context, String accnt, bool value){
+  void dialogAlert(BuildContext context, String accnt){
     showDialog(context: context, builder: (context){
       return Dialog(
         alignment: Alignment.center,
