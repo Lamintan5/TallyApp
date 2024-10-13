@@ -259,7 +259,11 @@ class _ScannerState extends State<Scanner> {
                               selectedIconScale: 1,
                               onChanged: (value){
                                 setState(() {
-                                  account = value;
+                                  if(_scannedPrds.isNotEmpty){
+                                    dialogAlert(context, account?'purchase':'sales');
+                                  } else {
+                                    account = value;
+                                  }
                                 });
                               },
                             ),
@@ -449,7 +453,7 @@ class _ScannerState extends State<Scanner> {
                         Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text("${_scannedPrds.length} Items, S:${_scndSale.length}, P:${_scndPrch.length}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
+                            Text("${_scannedPrds.length} Items", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),),
                             Container(
                               width: 100,
                               height: 3,
