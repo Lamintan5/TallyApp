@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:TallyApp/Widget/basic_stats.dart';
 import 'package:TallyApp/Widget/logos/row_logo.dart';
-import 'package:TallyApp/Widget/logos/studio5ive.dart';
 import 'package:TallyApp/home/action_bar/chats/web_chat.dart';
 import 'package:TallyApp/home/options/options_screen.dart';
 import 'package:TallyApp/home/tabs/payments.dart';
@@ -16,7 +15,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icon.dart';
@@ -51,12 +49,15 @@ class WebHome extends StatefulWidget {
 
 class _WebHomeState extends State<WebHome> {
   TextEditingController _search = TextEditingController();
+
   List<EntityModel> _entity = [];
   List<SaleModel> _sale = [];
   List<SaleModel> _newSale = [];
   List<EntityModel> _newEntity = [];
   List<NotifModel> _notif = [];
+
   final socketManager = Get.find<SocketManager>();
+
 
   GlobalKey _one = GlobalKey();
   GlobalKey _two = GlobalKey();
@@ -67,6 +68,8 @@ class _WebHomeState extends State<WebHome> {
   int countNotif = 0;
 
   bool _expand = false;
+  bool isFilled = false;
+
   late double screenWidth;
 
   _getEntities()async{
@@ -443,7 +446,7 @@ class _WebHomeState extends State<WebHome> {
                     controller: _search,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
-                      hintText: "🔎  Search for your Entities...",
+                      hintText: "Search",
                       fillColor: color1,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(
@@ -451,11 +454,37 @@ class _WebHomeState extends State<WebHome> {
                         ),
                         borderSide: BorderSide.none,
                       ),
+                      hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+                      prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+                      prefixIconConstraints: BoxConstraints(
+                          minWidth: 40,
+                          minHeight: 30
+                      ),
+                      suffixIcon: isFilled?InkWell(
+                          onTap: (){
+                            _search.clear();
+                            setState(() {
+                              isFilled = false;
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(100),
+                          child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+                      ) :SizedBox(),
+                      suffixIconConstraints: BoxConstraints(
+                          minWidth: 40,
+                          minHeight: 30
+                      ),
+                      contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
                       filled: true,
                       isDense: true,
-                      contentPadding: EdgeInsets.all(10),
                     ),
-                    onChanged:  (value) => setState((){}),
+                    onChanged:  (value) => setState((){
+                      if(value.isNotEmpty){
+                        isFilled = true;
+                      } else {
+                        isFilled = false;
+                      }
+                    }),
                   ),
                   SizedBox(height: 20,),
                   Expanded(
