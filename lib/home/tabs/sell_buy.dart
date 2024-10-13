@@ -78,6 +78,7 @@ class _SellOrBuyState extends State<SellOrBuy> {
   bool _loading = false;
   bool close = false;
   bool _expanded = true;
+  bool isFilled = false;
 
   String saleId = "";
   String purchaseId = "";
@@ -309,7 +310,11 @@ class _SellOrBuyState extends State<SellOrBuy> {
                           selectedIconScale: 1,
                           onChanged: (value){
                             setState(() {
-                              account = value;
+                              if(_scannedPrds.isNotEmpty){
+                                dialogAlert(context, account?'purchase':'sales',value);
+                              } else {
+                                account = value;
+                              }
                             });
                           },
                         ),
@@ -327,27 +332,50 @@ class _SellOrBuyState extends State<SellOrBuy> {
                                         minWidth: 300
                                     ),
                                     padding: EdgeInsets.only(left: 10),
-                                    decoration: BoxDecoration(
-                                      color: color1,
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10)
-                                      ),
-                                    ),
+
                                     child: TextFormField(
                                       controller: _search,
                                       keyboardType: TextInputType.text,
                                       decoration: InputDecoration(
-                                          hintText: "Search for products...",
-                                          hintStyle: TextStyle(color: secondaryColor),
-                                          filled: false,
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.all(8),
-                                          icon: Icon(Icons.search, color: secondaryColor,),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide.none
-                                          )
+                                        hintText: "Search",
+                                        fillColor: color1,
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5)
+                                          ),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+                                        prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+                                        prefixIconConstraints: BoxConstraints(
+                                            minWidth: 40,
+                                            minHeight: 30
+                                        ),
+                                        suffixIcon: isFilled?InkWell(
+                                            onTap: (){
+                                              _search.clear();
+                                              setState(() {
+                                                isFilled = false;
+                                              });
+                                            },
+                                            borderRadius: BorderRadius.circular(100),
+                                            child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+                                        ) :SizedBox(),
+                                        suffixIconConstraints: BoxConstraints(
+                                            minWidth: 40,
+                                            minHeight: 30
+                                        ),
+                                        contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+                                        filled: true,
+                                        isDense: true,
                                       ),
-                                      onChanged:  (value) => setState((){}),
+                                      onChanged:  (value) => setState((){
+                                        if(value.isNotEmpty){
+                                          isFilled = true;
+                                        } else {
+                                          isFilled = false;
+                                        }
+                                      }),
                                     ),
                                   ),
                                   SizedBox(height: 10,),
@@ -1100,7 +1128,7 @@ class _SellOrBuyState extends State<SellOrBuy> {
       );
     });
   }
-  void dialogAlert(BuildContext context, String accnt){
+  void dialogAlert(BuildContext context, String accnt, bool value){
     showDialog(context: context, builder: (context){
       return Dialog(
         alignment: Alignment.center,
