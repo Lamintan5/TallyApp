@@ -54,6 +54,7 @@ class _InvReportTabState extends State<InvReportTab> {
   List<String> admin = [];
   bool _layout = true;
   bool _loading = false;
+  bool isFilled = false;
 
   int? sortColumnIndex;
   bool isAscending = false;
@@ -340,8 +341,10 @@ class _InvReportTabState extends State<InvReportTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          width: 300,
-                          padding: EdgeInsets.only(left: 10),
+                          constraints: BoxConstraints(
+                              maxWidth: 280,
+                              minWidth: 100
+                          ),
                           decoration: BoxDecoration(
                             border: Border.all(
                                 width: 1, color: Colors.black
@@ -355,16 +358,45 @@ class _InvReportTabState extends State<InvReportTab> {
                             keyboardType: TextInputType.text,
                             style: TextStyle(color: Colors.black),
                             decoration: InputDecoration(
-                                hintText: "Search for Inventory...",
-                                hintStyle: TextStyle(color: secondaryColor),
-                                isDense: true,
-                                contentPadding: EdgeInsets.all(8),
-                                icon: Icon(Icons.search, color: Colors.black,),
-                                border: OutlineInputBorder(
-                                    borderSide: BorderSide.none
-                                )
+                              hintText: "Search",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(5)
+                                ),
+                                borderSide: BorderSide.none,
+                              ),
+                              hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+                              prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+
+                              prefixIconConstraints: BoxConstraints(
+                                  minWidth: 40,
+                                  minHeight: 30
+                              ),
+                              suffixIcon: isFilled?InkWell(
+                                  onTap: (){
+                                    _search.clear();
+                                    setState(() {
+                                      isFilled = false;
+                                    });
+                                  },
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+                              ) :SizedBox(),
+                              suffixIconConstraints: BoxConstraints(
+                                  minWidth: 40,
+                                  minHeight: 30
+                              ),
+                              contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+                              filled: false,
+                              isDense: true,
                             ),
-                            onChanged:  (value) => setState((){}),
+                            onChanged:  (value) => setState((){
+                              if(value.isNotEmpty){
+                                isFilled = true;
+                              } else {
+                                isFilled = false;
+                              }
+                            }),
                           ),
                         ),
                         SizedBox(height: 20,),
