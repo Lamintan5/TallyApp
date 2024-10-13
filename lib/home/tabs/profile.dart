@@ -51,12 +51,16 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
   List<String> pidListAsList = [];
   String pidList = "";
   List<String> uniqueManagersList = [];
+
   bool _loadUser = false;
   bool _loadEntity = false;
+  bool isFilled = false;
+
   int noEntity = 0;
   int noSpplr = 0;
   int countNotif = 0;
   int countMess = 0;
+
   final socketManager = Get.find<SocketManager>();
 
 
@@ -300,7 +304,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                               controller: _search,
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
-                                hintText: "🔎  Search for your Entities...",
+                                hintText: "Search",
                                 fillColor: color1,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.all(
@@ -308,11 +312,37 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                   ),
                                   borderSide: BorderSide.none,
                                 ),
+                                hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+                                prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+                                prefixIconConstraints: BoxConstraints(
+                                    minWidth: 40,
+                                    minHeight: 30
+                                ),
+                                suffixIcon: isFilled?InkWell(
+                                    onTap: (){
+                                      _search.clear();
+                                      setState(() {
+                                        isFilled = false;
+                                      });
+                                    },
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+                                ) :SizedBox(),
+                                suffixIconConstraints: BoxConstraints(
+                                    minWidth: 40,
+                                    minHeight: 30
+                                ),
+                                contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
                                 filled: true,
                                 isDense: true,
-                                contentPadding: EdgeInsets.all(10),
                               ),
-                              onChanged:  (value) => setState((){}),
+                              onChanged:  (value) => setState((){
+                                if(value.isNotEmpty){
+                                  isFilled = true;
+                                } else {
+                                  isFilled = false;
+                                }
+                              }),
                             ),
                           ),
                           _entity.length == 0
