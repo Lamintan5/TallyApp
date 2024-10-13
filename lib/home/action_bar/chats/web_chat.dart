@@ -35,7 +35,8 @@ class WebChat extends StatefulWidget {
 }
 
 class _WebChatState extends State<WebChat> {
-  TextEditingController _serchController = TextEditingController();
+  TextEditingController _search = TextEditingController();
+
   UserModel selectedUser = UserModel(uid: "");
   final TextEditingController messageController = TextEditingController();
 
@@ -43,6 +44,8 @@ class _WebChatState extends State<WebChat> {
   late GlobalKey<AnimatedListState> _key;
 
   bool isShowEmojiContainer = false;
+  bool isFilled = false;
+
   final isDialOpen =ValueNotifier(false);
   FocusNode focusNode = FocusNode();
   bool isShowSendButton = false;
@@ -175,7 +178,7 @@ class _WebChatState extends State<WebChat> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _serchController.dispose();
+    _search.dispose();
   }
 
 
@@ -202,9 +205,9 @@ class _WebChatState extends State<WebChat> {
 
     List<ChatsModel> chats = [];
 
-    if (_serchController.text.isNotEmpty) {
+    if (_search.text.isNotEmpty) {
       chats = mychats.where((item) =>
-          item.title.toString().toLowerCase().contains(_serchController.text.toLowerCase()))
+          item.title.toString().toLowerCase().contains(_search.text.toLowerCase()))
           .toList();
     } else {
       chats = mychats;
@@ -308,23 +311,48 @@ class _WebChatState extends State<WebChat> {
                         ),
                         SizedBox(height: 10,),
                         TextFormField(
-                          controller: _serchController,
+                          controller: _search,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
-                            hintText: "Search...",
+                            hintText: "Search",
                             fillColor: color1,
-                            prefixIcon: Icon(CupertinoIcons.search, color: secondaryColor,),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(5)
+                              ),
                               borderSide: BorderSide.none,
                             ),
+                            hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+                            prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+                            prefixIconConstraints: BoxConstraints(
+                                minWidth: 40,
+                                minHeight: 30
+                            ),
+                            suffixIcon: isFilled?InkWell(
+                                onTap: (){
+                                  _search.clear();
+                                  setState(() {
+                                    isFilled = false;
+                                  });
+                                },
+                                borderRadius: BorderRadius.circular(100),
+                                child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+                            ) :SizedBox(),
+                            suffixIconConstraints: BoxConstraints(
+                                minWidth: 40,
+                                minHeight: 30
+                            ),
+                            contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
                             filled: true,
                             isDense: true,
-                            contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                           ),
-                          onChanged: (text) {
-                            setState(() {});
-                          },
+                          onChanged:  (value) => setState((){
+                            if(value.isNotEmpty){
+                              isFilled = true;
+                            } else {
+                              isFilled = false;
+                            }
+                          }),
                         ),
                         SizedBox(height: 10,),
                         Expanded(
