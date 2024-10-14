@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:TallyApp/models/entities.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../Widget/dialogs/dialog_add_managers.dart';
@@ -30,6 +31,7 @@ class _ManagersState extends State<Managers> {
   String duty = '';
   List<String> admin = [];
   bool _loading = false;
+  bool isFilled = false;
 
   _getDetails()async{
     _getData();
@@ -120,24 +122,50 @@ class _ManagersState extends State<Managers> {
                       ],
                     ),
                     SizedBox(height: 10,),
-                    TextFormField(
-                      controller: _search,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        hintText: "🔎  Search for Managers...",
-                        fillColor: color1,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(5)
-                          ),
-                          borderSide: BorderSide.none,
+                  TextFormField(
+                    controller: _search,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      fillColor: color1,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(5)
                         ),
-                        filled: true,
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(10),
+                        borderSide: BorderSide.none,
                       ),
-                      onChanged:  (value) => setState((){}),
+                      hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+                      prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+                      prefixIconConstraints: BoxConstraints(
+                          minWidth: 40,
+                          minHeight: 30
+                      ),
+                      suffixIcon: isFilled?InkWell(
+                          onTap: (){
+                            _search.clear();
+                            setState(() {
+                              isFilled = false;
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(100),
+                          child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+                      ) :SizedBox(),
+                      suffixIconConstraints: BoxConstraints(
+                          minWidth: 40,
+                          minHeight: 30
+                      ),
+                      contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+                      filled: true,
+                      isDense: true,
                     ),
+                    onChanged:  (value) => setState((){
+                      if(value.isNotEmpty){
+                        isFilled = true;
+                      } else {
+                        isFilled = false;
+                      }
+                    }),
+                  ),
                     Expanded(
                       child: ListView.builder(
                           itemCount: filteredList.length,
