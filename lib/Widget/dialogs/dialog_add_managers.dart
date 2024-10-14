@@ -35,6 +35,7 @@ class _DialogAddManagersState extends State<DialogAddManagers> {
   String selectedID = "";
   bool _loading = false;
   bool _isLoading = false;
+  bool isFilled = false;
 
   _getUsers()async{
     setState(() {
@@ -84,11 +85,11 @@ class _DialogAddManagersState extends State<DialogAddManagers> {
       padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
-          TextFormField(
+            TextFormField(
             controller: _search,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
-              hintText: "🔎  Search for Managers...",
+              hintText: "Search",
               fillColor: color1,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.all(
@@ -96,11 +97,37 @@ class _DialogAddManagersState extends State<DialogAddManagers> {
                 ),
                 borderSide: BorderSide.none,
               ),
+              hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+              prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+              prefixIconConstraints: BoxConstraints(
+                  minWidth: 40,
+                  minHeight: 30
+              ),
+              suffixIcon: isFilled?InkWell(
+                  onTap: (){
+                    _search.clear();
+                    setState(() {
+                      isFilled = false;
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(100),
+                  child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+              ) :SizedBox(),
+              suffixIconConstraints: BoxConstraints(
+                  minWidth: 40,
+                  minHeight: 30
+              ),
+              contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
               filled: true,
               isDense: true,
-              contentPadding: EdgeInsets.all(10),
             ),
-            onChanged:  (value) => setState((){}),
+            onChanged:  (value) => setState((){
+              if(value.isNotEmpty){
+                isFilled = true;
+              } else {
+                isFilled = false;
+              }
+            }),
           ),
           _isLoading?LinearProgressIndicator(color: reverse,backgroundColor: color1,):SizedBox(),
           Expanded(
