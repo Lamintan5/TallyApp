@@ -382,12 +382,7 @@ class _WebChatState extends State<WebChat> {
                                                 messages = mess.where((element) => "${element.sourceId},${element.targetId}".contains(currentUser.uid) && "${element.sourceId},${element.targetId}".contains(selectedUser.uid) && element.type.toString()== "individual").toList();
                                               });
                                             },
-                                            child: Column(
-                                              children: [
-                                                ItemChat(chatmodel: chat, from: "WEB",),
-                                                Text("Type : ${chat.type}")
-                                              ],
-                                            ))
+                                            child: ItemChat(chatmodel: chat, from: "WEB",))
                                           ;
                                   })
                           ),
