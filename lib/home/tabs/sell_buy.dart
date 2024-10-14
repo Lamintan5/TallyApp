@@ -164,7 +164,7 @@ class _SellOrBuyState extends State<SellOrBuy> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Sell/Purchase", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: reverse),),
+                          Text(" Sell/Purchase", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: reverse),),
                           Platform.isAndroid || Platform.isIOS
                               ?IconButton(
                               onPressed: (){
@@ -173,11 +173,12 @@ class _SellOrBuyState extends State<SellOrBuy> {
                               icon: Icon(CupertinoIcons.qrcode_viewfinder)) : SizedBox()
                         ],
                       ),
+                      SizedBox(height: 10,),
                       GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           gridDelegate:  const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 200,
+                              maxCrossAxisExtent: 150,
                               childAspectRatio: 3 / 2,
                               crossAxisSpacing: 1,
                               mainAxisSpacing: 1
@@ -185,7 +186,6 @@ class _SellOrBuyState extends State<SellOrBuy> {
                           itemCount: title.length,
                           itemBuilder: (context, index){
                             return Card(
-                              margin: EdgeInsets.all(5),
                               elevation: 3,
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
@@ -196,7 +196,6 @@ class _SellOrBuyState extends State<SellOrBuy> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
-                                  SizedBox(height: 10,),
                                   Text(
                                     index==0
                                         ? items.toString()

@@ -105,7 +105,7 @@ class _InvReportTabState extends State<InvReportTab> {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   gridDelegate:  const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
+                      maxCrossAxisExtent: 150,
                       childAspectRatio: 3 / 2,
                       crossAxisSpacing: 1,
                       mainAxisSpacing: 1
@@ -113,7 +113,6 @@ class _InvReportTabState extends State<InvReportTab> {
                   itemCount: title.length,
                   itemBuilder: (context, index){
                     return Card(
-                      margin: EdgeInsets.all(5),
                       elevation: 3,
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -124,7 +123,6 @@ class _InvReportTabState extends State<InvReportTab> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
-                          SizedBox(height: 10,),
                           Text(
                             _filteredPrdcts.length.toString(),
                             style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600,),

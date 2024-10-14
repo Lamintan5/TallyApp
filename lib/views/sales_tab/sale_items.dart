@@ -142,7 +142,7 @@ class _SaleItemsState extends State<SaleItems> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:  const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 200,
+                        maxCrossAxisExtent: 150,
                         childAspectRatio: 3 / 2,
                         crossAxisSpacing: 1,
                         mainAxisSpacing: 1
@@ -150,7 +150,6 @@ class _SaleItemsState extends State<SaleItems> {
                     itemCount: title.length,
                     itemBuilder: (context, index){
                       return Card(
-                        margin: EdgeInsets.all(5),
                         elevation: 3,
                         color: Colors.white,
                         shape: RoundedRectangleBorder(
@@ -161,7 +160,6 @@ class _SaleItemsState extends State<SaleItems> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
-                            SizedBox(height: 10,),
                             Text(index==0
                                 ?'Ksh.${formatNumberWithCommas(receivable)}'
                                 :index==1

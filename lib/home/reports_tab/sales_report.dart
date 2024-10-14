@@ -167,7 +167,7 @@ class _compSaleReportState extends State<SaleReport> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate:  const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
+                    maxCrossAxisExtent: 150,
                     childAspectRatio: 3 / 2,
                     crossAxisSpacing: 1,
                     mainAxisSpacing: 1
@@ -175,7 +175,6 @@ class _compSaleReportState extends State<SaleReport> {
                 itemCount: title.length,
                 itemBuilder: (context, index){
                   return Container(
-                    margin: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                         color: color1,
                         borderRadius: BorderRadius.circular(5)
