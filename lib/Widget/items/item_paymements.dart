@@ -95,7 +95,7 @@ class _ItemPaymentsState extends State<ItemPayments> {
             borderRadius: BorderRadius.circular(5),
             color: color1,
           ),
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
           child: Column(
             children: [
               Row(
@@ -131,7 +131,7 @@ class _ItemPaymentsState extends State<ItemPayments> {
 
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 5,),
               Row(
                 children: [
                   user.uid == ""
@@ -235,7 +235,7 @@ class _ItemPaymentsState extends State<ItemPayments> {
                   SizedBox(width: 15,),
                 ],
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 5,),
               Row(
                 children: [
                   Expanded(
