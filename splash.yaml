@@ -6,7 +6,7 @@ flutter_native_splash:
 
   android_12:
     color: "#00ffff"
-    color_dark: "#00ffff"
+    color_dark: "#00FFF"
     image: assets/logo/tally_480.png
     image_dark: assets/logo/tally_480.png
 
