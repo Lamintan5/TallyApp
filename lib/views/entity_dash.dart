@@ -549,7 +549,7 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
                   }, icon: LineIcon.wallet(), title: 'Payments', subtitle: ''),
                   RowButton(onTap: (){
                     Get.to(()=>Reports(entity: widget.entity), transition: Transition.rightToLeftWithFade);
-                  }, icon: Icon(CupertinoIcons.graph_square), title: 'Reports & Analytics', subtitle: ''),
+                  }, icon: Icon(CupertinoIcons.chart_bar_alt_fill), title: 'Reports & Analytics', subtitle: ''),
                   admin.first.toString() == currentUser.uid
                       ? RowButton(onTap: (){
                         dialogRemoveEntity(context);

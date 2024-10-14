@@ -189,7 +189,7 @@ class _WebHomeState extends State<WebHome> {
                               ),
                             ),
                           ),
-                          navButton(LineIcon.home(), "Home", (){setState(() {nav=0;});}, 0),
+                          navButton(Icon(CupertinoIcons.chart_bar_alt_fill), "Home", (){setState(() {nav=0;});}, 0),
                           SizedBox(height: 5,),
                           ShowMyCase(
                               mykey: _two,
