@@ -5,6 +5,7 @@ import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/inventories.dart';
 import 'package:TallyApp/models/products.dart';
 import 'package:TallyApp/views/enty_tabs/sales.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/sales.dart';
@@ -30,6 +31,7 @@ class _EntitySaleReportState extends State<EntitySaleReport> {
 
   int? sortColumnIndex;
   bool isAscending = false;
+  bool isFilled = false;
 
   _getDetails(){
     _getData();
@@ -94,7 +96,6 @@ class _EntitySaleReportState extends State<EntitySaleReport> {
               maxWidth: 280,
               minWidth: 100
           ),
-          padding: EdgeInsets.only(left: 10),
           decoration: BoxDecoration(
             border: Border.all(
                 width: 1, color: reverse
@@ -103,22 +104,49 @@ class _EntitySaleReportState extends State<EntitySaleReport> {
                 Radius.circular(10)
             ),
           ),
-          child: TextFormField(
+          child:TextFormField(
             controller: _search,
             keyboardType: TextInputType.text,
-            style: TextStyle(color: reverse),
             decoration: InputDecoration(
-                hintText: "Search...",
-                hintStyle: TextStyle(color: secondaryColor),
-                filled: false,
-                isDense: true,
-                contentPadding: EdgeInsets.all(8),
-                icon: Icon(Icons.search, color: reverse,),
-                border: OutlineInputBorder(
-                    borderSide: BorderSide.none
-                )
+              hintText: "Search",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(
+                    Radius.circular(5)
+                ),
+                borderSide: BorderSide.none,
+              ),
+              hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+              prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+
+              prefixIconConstraints: BoxConstraints(
+                  minWidth: 40,
+                  minHeight: 30
+              ),
+              suffixIcon: isFilled?InkWell(
+                  onTap: (){
+                    _search.clear();
+                    setState(() {
+                      isFilled = false;
+                    });
+                  },
+                  borderRadius: BorderRadius.circular(100),
+                  child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+              ) :SizedBox(),
+              suffixIconConstraints: BoxConstraints(
+                  minWidth: 40,
+                  minHeight: 30
+              ),
+              contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+              filled: false,
+              isDense: true,
             ),
-            onChanged:  (value) => setState((){}),
+            onChanged:  (value) => setState((){
+              if(value.isNotEmpty){
+                isFilled = true;
+              } else {
+                isFilled = false;
+              }
+            }),
           ),
         ),
         SingleChildScrollView(
