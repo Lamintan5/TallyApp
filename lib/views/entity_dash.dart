@@ -543,7 +543,7 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
                       ? SizedBox()
                       :RowButton(onTap: (){
                     Get.to(()=>Managers(entity: entity, getManagers: _getDetails,), transition: Transition.rightToLeftWithFade);
-                  }, icon: LineIcon.users(), title: "Managers", subtitle: ""),
+                  }, icon: Icon(CupertinoIcons.person_crop_circle), title: "Managers", subtitle: ""),
                   RowButton(onTap: (){
                     Get.to(()=>EntityPayments(entity: entity), transition: Transition.rightToLeftWithFade);
                   }, icon: LineIcon.wallet(), title: 'Payments', subtitle: ''),
