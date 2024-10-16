@@ -292,67 +292,60 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                 fontSize: 28, fontWeight: FontWeight.w900
                             ),
                           ),
-                        )
+                        ),
+                        _entity.length == 0
+                            ? SizedBox() : IconButton(
+                            onPressed: (){
+                              Get.to(()=> Create(getData: _getData,), transition: Transition.rightToLeft);
+                            },
+                            icon: Icon(Icons.add_circle))
                       ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 5),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _search,
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                hintText: "Search",
-                                fillColor: color1,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(5)
-                                  ),
-                                  borderSide: BorderSide.none,
-                                ),
-                                hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
-                                prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
-                                prefixIconConstraints: BoxConstraints(
-                                    minWidth: 40,
-                                    minHeight: 30
-                                ),
-                                suffixIcon: isFilled?InkWell(
-                                    onTap: (){
-                                      _search.clear();
-                                      setState(() {
-                                        isFilled = false;
-                                      });
-                                    },
-                                    borderRadius: BorderRadius.circular(100),
-                                    child: Icon(Icons.cancel, size: 20,color: secondaryColor)
-                                ) :SizedBox(),
-                                suffixIconConstraints: BoxConstraints(
-                                    minWidth: 40,
-                                    minHeight: 30
-                                ),
-                                contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
-                                filled: true,
-                                isDense: true,
-                              ),
-                              onChanged:  (value) => setState((){
-                                if(value.isNotEmpty){
-                                  isFilled = true;
-                                } else {
-                                  isFilled = false;
-                                }
-                              }),
+                      child: TextFormField(
+                        controller: _search,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          hintText: "Search",
+                          fillColor: color1,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(5)
                             ),
+                            borderSide: BorderSide.none,
                           ),
-                          _entity.length == 0
-                              ? SizedBox() : IconButton(
-                              onPressed: (){
-                                Get.to(()=> Create(getData: _getData,), transition: Transition.rightToLeft);
+                          hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+                          prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+                          prefixIconConstraints: BoxConstraints(
+                              minWidth: 40,
+                              minHeight: 30
+                          ),
+                          suffixIcon: isFilled?InkWell(
+                              onTap: (){
+                                _search.clear();
+                                setState(() {
+                                  isFilled = false;
+                                });
                               },
-                              icon: Icon(Icons.add_circle)),
-                          //IconButton(onPressed: (){}, icon: Icon(Icons.filter_list_outlined))
-                        ],
+                              borderRadius: BorderRadius.circular(100),
+                              child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+                          ) :SizedBox(),
+                          suffixIconConstraints: BoxConstraints(
+                              minWidth: 40,
+                              minHeight: 30
+                          ),
+                          contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+                          filled: true,
+                          isDense: true,
+                        ),
+                        onChanged:  (value) => setState((){
+                          if(value.isNotEmpty){
+                            isFilled = true;
+                          } else {
+                            isFilled = false;
+                          }
+                        }),
                       ),
                     ),
                     SizedBox(height: 10,),

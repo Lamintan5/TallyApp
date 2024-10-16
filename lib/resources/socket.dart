@@ -242,7 +242,6 @@ class SocketManager extends GetxController  {
     // }
     Data().addOrUpdateNotifList(notifications);
   }
-
   Future<void> initPlatform()async{
     if(Platform.isAndroid || Platform.isIOS){
       await OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
