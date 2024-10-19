@@ -82,23 +82,25 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.10
+  flutter_launcher_icons: ^0.13.1
 
 flutter_launcher_icons:
   android: true
   ios: true
   image_path_android: "assets/logos/android/res/mipmap-xxxhdpi/ic_launcher.png"
   image_path_ios: "assets/logos/ios/AppIcon@2x.png"
-  min_sdk_android: 21
   remove_alpha_ios: true
+
   web:
     generate: true
     image_path: "assets/logos/android/res/mipmap-mdpi/ic_launcher.png"
+
   windows:
     generate: true
     image_path: "assets/logos/android/res/mipmap-mdpi/ic_launcher.png"
     icon_size: 48
+
   macos:
     generate: true
     image_path: "assets/logos/web/icon-192.png"

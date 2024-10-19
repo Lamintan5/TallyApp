@@ -39,6 +39,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
   final formKey = GlobalKey<FormState>();
   bool _loading = false;
 
+  List<UserModel> _user = [];
+
+
   late UserModel user;
 
   _registerUsers()async{
@@ -55,7 +58,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
         _repass.text.toString(),
         user.image =="" || user.image!.contains("https://")? null : File(user.image!),
         "",
-        user.image.toString(),user.token!,user.country.toString()).then((response) async{
+        user.image.toString(),
+        user.token!,
+        user.country.toString()).then((response) async{
       final String responseString = await response.stream.bytesToString();
       print(responseString);
       if (responseString.contains('Exists')) {
@@ -83,8 +88,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
           icon: Icon(Icons.error, color: Colors.red),
         );
       }
-      else if (responseString.contains('Success'))
-      {
+      else if (responseString.contains('Success')) {
         final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
         sharedPreferences.setString('uid', user.uid);
         sharedPreferences.setString('first', user.firstname.toString());
@@ -125,13 +129,66 @@ class _PasswordScreenState extends State<PasswordScreen> {
         setState(() {
           _loading = false;
         });
-      } else {
+      }
+      else if(responseString.contains("Created")){
+        dialogUserCreated(context);
+
+      }
+      else {
         Get.snackbar(
           'Authentication',
           'An error occurred. please try again',
           maxWidth: 500,
           shouldIconPulse: true,
           icon: Icon(Icons.error, color: Colors.red),
+        );
+        setState(() {
+          _loading = false;
+        });
+      }
+    });
+  }
+  _updateApp()async{
+    Services.updateApp(user.email.toString()).then((response)async{
+      if(response=='success'){
+        _user = await Services().getUser(user.email.toString());
+        user = _user.first;
+        final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setString('uid', user.uid);
+        sharedPreferences.setString('first', user.firstname.toString());
+        sharedPreferences.setString('last', user.lastname.toString());
+        sharedPreferences.setString('username', user.username.toString());
+        sharedPreferences.setString('email', user.email.toString());
+        sharedPreferences.setString('image', user.image.toString());
+        sharedPreferences.setString('phone', user.phone.toString());
+        sharedPreferences.setString('token', user.token.toString());
+        sharedPreferences.setString('password', md5.convert(utf8.encode(_repass.text.trim().toString())).toString());
+        sharedPreferences.setString('country', user.country.toString());
+        currentUser = UserModel(
+            uid: user.uid.toString(),
+            firstname: user.firstname,
+            lastname: user.lastname,
+            username: user.username,
+            email: user.email.toString(),
+            phone: user.phone.toString(),
+            image: user.image.toString(),
+            token: user.token.toString(),
+            password: md5.convert(utf8.encode(_repass.text.trim().toString())).toString(),
+            status: user.status,
+            country: user.country
+        );
+        if(Platform.isAndroid || Platform.isIOS){
+          Get.offAll(()=>ShowCaseWidget(builder: (context) => HomeScreen()), transition: Transition.fadeIn);
+        } else {
+          Get.offAll(()=>ShowCaseWidget(builder : (context) => WebHome()), transition: Transition.fadeIn);
+        }
+        await GoogleSignInApi.logout();
+        Get.snackbar(
+          'Authentication',
+          'User account created successfully.',
+          maxWidth: 500,
+          shouldIconPulse: true,
+          icon: Icon(Icons.check, color: Colors.green),
         );
         setState(() {
           _loading = false;
@@ -153,9 +210,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
         phone: "",
         password: "",
         image: widget.user.photoUrl,
-        token: deviceModel.token,
+        token: deviceModel.id,
         status: "",
-        country: "",
+        country: deviceModel.country,
         time: DateTime.now().toString()
     );
   }
@@ -445,6 +502,31 @@ class _PasswordScreenState extends State<PasswordScreen> {
             ),
           ),
         ), context: context
+    );
+  }
+  void dialogUserCreated(BuildContext context){
+    showDialog(
+        context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: Text('Account'),
+        content: Text('It appears that you already have a Studio5ive account. Would you like to register your existing account with TallyApp?'),
+        actions: [
+          CupertinoDialogAction(
+              child: Text('Cancel'),
+              textStyle: TextStyle(color: CupertinoColors.activeBlue),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+          ),
+          CupertinoDialogAction(
+              child: Text('Continue'),
+            textStyle: TextStyle(color: CupertinoColors.activeBlue),
+              onPressed: (){
+                _updateApp();
+              },
+          ),
+        ],
+      ),
     );
   }
 

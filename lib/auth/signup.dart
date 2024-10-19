@@ -545,9 +545,7 @@ class _SignUpState extends State<SignUp> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DialogTitle(title: "C H O O S E  A V A T A R"),
-                SizedBox(height: 5,),
-                Text('${avatars.length.toString()} avatars'),
+                DialogTitle(title: "A V A T A R"),
                 SizedBox(height: 5,),
                 Expanded(
                   child: GridView.builder(
@@ -778,7 +776,7 @@ class _SignUpState extends State<SignUp> {
       image: _image!=null?_image!.path:"",
       status: "",
       url: imageUrl,
-      token: "",
+      token: deviceModel.id,
       time: DateTime.now().toString(),
       country: deviceModel.country == null? _country.countryCode : deviceModel.country.toString()
     );

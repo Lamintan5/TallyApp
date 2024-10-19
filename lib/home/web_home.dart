@@ -36,7 +36,6 @@ import '../resources/services.dart';
 import '../resources/socket.dart';
 import '../utils/colors.dart';
 import '../views/entity_dash.dart';
-import 'action_bar/chats/chat_screen.dart';
 import 'action_bar/notifications/notifications.dart';
 import 'options/edit_profile.dart';
 
@@ -57,7 +56,6 @@ class _WebHomeState extends State<WebHome> {
   List<NotifModel> _notif = [];
 
   final socketManager = Get.find<SocketManager>();
-
 
   GlobalKey _one = GlobalKey();
   GlobalKey _two = GlobalKey();
@@ -161,7 +159,8 @@ class _WebHomeState extends State<WebHome> {
               ),
               child: Column(
                 children: [
-                  Expanded(child:
+                  Expanded(
+                      child:
                     SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +229,7 @@ class _WebHomeState extends State<WebHome> {
                                                 borderRadius: BorderRadius.circular(30),
                                                 padding: EdgeInsets.all(5)
                                             ),
-                                            badgeContent: Text(NumberFormat.compact().format(countMess), style: TextStyle(fontSize: 10),),
+                                            badgeContent: Text(NumberFormat.compact().format(countMess), style: TextStyle(fontSize: 10, color: Colors.black),),
                                             showBadge: countMess==0?false:true,
                                             position: badges.BadgePosition.topEnd(end: -5, top: -4),
                                             child: Icon(CupertinoIcons.ellipses_bubble),
@@ -299,7 +298,7 @@ class _WebHomeState extends State<WebHome> {
                                                 borderRadius: BorderRadius.circular(30),
                                                 padding: EdgeInsets.all(5)
                                             ),
-                                            badgeContent: Text(NumberFormat.compact().format(countNotif), style: TextStyle(fontSize: 10),),
+                                            badgeContent: Text(NumberFormat.compact().format(countNotif), style: TextStyle(fontSize: 10, color: Colors.black),),
                                             showBadge: countNotif==0?false:true,
                                             position: badges.BadgePosition.topEnd(end: -5, top: -4),
                                             child: LineIcon.bell(),
@@ -337,7 +336,6 @@ class _WebHomeState extends State<WebHome> {
                               ),
                             ),
                           ),
-
                           SizedBox(height: 5,),
                           navButton(Icon(Icons.settings), "Settings", (){Get.to(() => Options(reload: (){setState(() {});},), transition: Transition.rightToLeft);},6),
                           SizedBox(height: 5,),
@@ -351,12 +349,14 @@ class _WebHomeState extends State<WebHome> {
                       image
                   ),
                   SizedBox(width: 5,),
-                  _expand?Text(
+                  _expand
+                      ?Text(
                     "S T U D I O 5 I V E",
                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w100),
                     maxLines: 1,
                     overflow: TextOverflow.fade,
-                  ):SizedBox(),
+                  )
+                      :SizedBox(),
                   SizedBox(height: 20,)
                 ],
               ),
@@ -436,7 +436,8 @@ class _WebHomeState extends State<WebHome> {
                   SizedBox(height: 20),
                   BasicStats(),
                   SizedBox(height: 20,),
-                  Text('Entities',
+                  Text(
+                    'Entities',
                     style: TextStyle(
                         fontSize: 25, fontWeight: FontWeight.w900
                     ),

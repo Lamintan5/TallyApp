@@ -16,18 +16,19 @@ import 'package:http/http.dart' as http;
 
 class Services{
   static String HOST = "http://${domain}/Tally/";
+  static String HOSTS5 = "http://${domain}/Studio5ive/";
   //static  HOST = "http://192.168.137.1/Tally/";
   //static  HOST = "http://192.168.100.10/Tally/";
 
 
-  static String _USERS = HOST + 'users.php';
+  static String _USERS = HOSTS5 + 'users.php';
   static String _ENTITY = HOST + 'entity.php';
   static String _INVENTORY = HOST + 'inventory.php';
   static String _SUPPLIERS = HOST + 'suppliers.php';
   static String _PRODUCTS = HOST + 'products.php';
   static String _PURCHASE = HOST + 'purchase.php';
   static String _SALE = HOST + 'sales.php';
-  static String _NOTIFICATIONS = HOST + 'notifications.php';
+  static String _NOTIFICATIONS = HOSTS5 + 'notifications.php';
   static String _PAYMENTS = HOST + 'payments.php';
   static String _DUTIES = HOST + 'duties.php';
 
@@ -39,6 +40,7 @@ class Services{
   static  String _GET_CURRENT  = 'GET_CURRENT';
   static  String _GET_BY_USER  = 'GET_BY_USER';
   static  String _GET_BY_ADMIN  = 'GET_BY_ADMIN';
+  static  String _GET_BY_APP  = 'GET_BY_APP';
   static  String _GET_ALL_BY_ADMIN  = 'GET_ALL_BY_ADMIN';
   static  String _GET_REC_BY_ADMIN  = 'GET_REC_BY_ADMIN';
   static  String _GET_COMPLETE  = 'GET_COMPLETE';
@@ -74,6 +76,7 @@ class Services{
   static  String _UPDATE_PHONE  = 'UPDATE_PHONE';
   static  String _UPDATE_EMAIL  = 'UPDATE_EMAIL';
   static  String _UPDATE_PASS  = 'UPDATE_PASS';
+  static  String _UPDATE_APP  = 'UPDATE_APP';
   static  String _UPDATE_QUANTITY = 'UPDATE_QUANTITY';
   static  String _UPDATE_ADMIN = 'UPDATE_ADMIN';
   static  String _REMOVE_ADMIN = 'REMOVE_ADMIN';
@@ -176,7 +179,8 @@ class Services{
   // GET ALL USERS
   Future<List<UserModel>> getAllUser()async{
     var map = new Map<String, dynamic>();
-    map["action"] = _GET_ALL;
+    map["action"] = _GET_BY_APP;
+    map["app"] = "Tally";
     final response = await http.post(Uri.parse(_USERS),body: map);
     if(response.statusCode==200) {
       List<UserModel> user = userFromJson(response.body);
@@ -204,6 +208,7 @@ class Services{
     var map = new Map<String, dynamic>();
     map["action"] = _GET_MY;
     map["uid"] = uid;
+    map["app"] = 'Tally';
     final response = await http.post(Uri.parse(_NOTIFICATIONS),body: map);
     if(response.statusCode==200) {
       List<NotifModel> notif = notifFromJson(response.body);
@@ -217,7 +222,7 @@ class Services{
   Future<List<DutiesModel>> getCrntDuties(String eid, String pid)async{
     var map = new Map<String, dynamic>();
     map["action"] = _GET_CURRENT;
-    map["eid"] = eid;
+    map["eid"] = eid; 
     map["pid"] = pid;
     final response = await http.post(Uri.parse(_DUTIES),body: map);
     if(response.statusCode==200) {
@@ -851,6 +856,7 @@ class Services{
       request.fields['status'] = status;
       request.fields['token'] = token;
       request.fields['country'] = country;
+      request.fields['app'] = 'Tally';
       if (image != null) {
         var pic = await http.MultipartFile.fromPath("image", image.path);
         request.files.add(pic);
@@ -879,6 +885,7 @@ class Services{
       map["actions"] = notif.actions;
       map["type"] = notif.type;
       map["seen"] = notif.seen;
+      map["app"] = 'Tally';
       final response = await http.post(Uri.parse(_NOTIFICATIONS), body: map);
       return response.body;
     } catch (e) {
@@ -1154,6 +1161,20 @@ class Services{
       map["action"] = _UPDATE_PASS;
       map["uid"] = uid;
       map["password"] = password;
+      final response = await http.post(Uri.parse(_USERS), body: map);
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  // UPDATE USER APP
+  static Future<String> updateApp(String email) async {
+    try {
+      var map = new Map<String, dynamic>();
+      map["action"] = _UPDATE_APP;
+      map["app"] = 'Tally';
+      map["email"] = email;
       final response = await http.post(Uri.parse(_USERS), body: map);
       return response.body;
     } catch (e) {

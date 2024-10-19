@@ -92,7 +92,6 @@ class _LoginState extends State<Login> {
     });
   }
   _loginUser()async{
-    print(email);
     setState(() {
       _isLoading = true;
     });
@@ -102,6 +101,7 @@ class _LoginState extends State<Login> {
     } else {
       response = await Services.loginUserWithEmail(email);
     }
+    print("Response $response");
     if(response.contains('Success')){
       _getUser();
     }

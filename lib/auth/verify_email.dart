@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:TallyApp/home/web_home.dart';
 import 'package:TallyApp/models/users.dart';
+import 'package:TallyApp/resources/socket.dart';
 import 'package:TallyApp/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
   bool _loading = false;
   String _hashCode = "";
   late UserModel user;
-  String token = '';
   String email = '';
   int targetTimestamp = 0;
 
@@ -122,8 +122,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
         user.phone!,
         user.password!,
         user.image ==""? null : File(user.image!),
-        "", user.url!,token, user.country.toString()).then((response) async{
+        "", user.url!,user.token.toString(), user.country.toString()).then((response) async{
       final String responseString = await response.stream.bytesToString();
+      print(responseString);
 
       if (responseString.contains('Exists')) {
         setState(() {
@@ -156,11 +157,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
         sharedPreferences.setString('last', user.lastname.toString());
         sharedPreferences.setString('username', user.username.toString());
         sharedPreferences.setString('email', user.email.toString());
-        sharedPreferences.setString('image', user.image.toString());
+        sharedPreferences.setString('image', user.image.toString().isEmpty?user.url.toString() : user.image.toString());
         sharedPreferences.setString('phone', user.phone.toString());
-        sharedPreferences.setString('type', user.type.toString());
-        sharedPreferences.setString('url', user.url.toString());
-        sharedPreferences.setString('token', token);
+        sharedPreferences.setString('token', user.token.toString());
         sharedPreferences.setString('password', user.password.toString());
         sharedPreferences.setString('country', user.country.toString());
         currentUser = UserModel(
@@ -170,13 +169,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
           username: user.username,
           email: user.email.toString(),
           phone: user.phone.toString(),
-          image: user.image.toString(),
+          image: user.image.toString().isEmpty?user.url : user.image.toString(),
           type: user.type,
           url: user.url,
-          token: token,
+          token: user.token.toString(),
           password: user.password,
           status: user.status,
-            country: user.country
+          country: user.country
         );
         if(Platform.isAndroid || Platform.isIOS){
           Get.offAll(()=>ShowCaseWidget(builder: (context) => HomeScreen()), transition: Transition.fadeIn);
@@ -268,8 +267,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(Platform.isAndroid || Platform.isIOS){
-      initPlatform();
+    if(deviceModel.id==null){
+      SocketManager().initPlatform();
     }
     setState(() {
       email = widget.email==""? widget.userModel.email!: widget.email;
@@ -303,115 +302,94 @@ class _VerifyEmailState extends State<VerifyEmail> {
     final dilogbg = Theme.of(context).brightness == Brightness.dark
         ? Colors.grey[900]
         : Colors.white;
-    final inputBorder =
-        OutlineInputBorder(borderSide: Divider.createBorderSide(context));
+    final inputBorder = OutlineInputBorder(borderSide: Divider.createBorderSide(context));
     final secColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.cyanAccent
         : Colors.cyan;
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          TimeCounter(time: targetTimestamp,),
+          SizedBox(width: 5,)
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(Icons.arrow_back_ios),
-                  iconSize: 20,
+                Text(
+                  "Verify Email",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 ),
-                Expanded(child: SizedBox()),
-                TimeCounter(time: targetTimestamp,)
+                Text(
+                  "We have sent an OTP to ${widget.userModel.email!.replaceRange(4, widget.userModel.email!.length - 5, "*******")}. Please enter the code below to verify your email address",
+                  style: TextStyle(color: secondaryColor),
+                ),
               ],
             ),
-            Expanded(
-                child: SizedBox(width: 450,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Verify Email",
-                          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "We have sent an OTP to ${widget.userModel.email!.replaceRange(4, widget.userModel.email!.length - 5, "*******")}. Please enter the code below to verify your email address",
-                          style: TextStyle(color: secondaryColor),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    SizedBox(
-                      width: 450,
-                      child: PinFieldAutoFill(
-                        autoFocus: true,
-                        decoration: BoxLooseDecoration(
-                          textStyle: TextStyle(color: isMatch ? revers : Colors.red),
-                          gapSpace: 5,
-                          strokeWidth: 1.5,
-                          radius: Radius.circular(5),
-                          strokeColorBuilder:
-                          FixedColorBuilder(isMatch ? color5 : Colors.red),
-                        ),
-                        currentCode: _otpCode,
-                        codeLength: _otpCodeLength,
-                        onCodeChanged: (code) {
-                          if (code!.length == _otpCodeLength) {
-                            _otpCode = code;
-                          }
-                        },
-                        onCodeSubmitted: (value) {
-                          print("Submitted");
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    TextButton(onPressed: (){
-                      if(_loading){
+            SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: 450,
+              child: PinFieldAutoFill(
+                autoFocus: true,
+                decoration: BoxLooseDecoration(
+                  textStyle: TextStyle(color: isMatch ? revers : Colors.red),
+                  gapSpace: 5,
+                  strokeWidth: 1.5,
+                  radius: Radius.circular(5),
+                  strokeColorBuilder:
+                  FixedColorBuilder(isMatch ? color5 : Colors.red),
+                ),
+                currentCode: _otpCode,
+                codeLength: _otpCodeLength,
+                onCodeChanged: (code) {
+                  if (code!.length == _otpCodeLength) {
+                    _otpCode = code;
+                  }
+                },
+                onCodeSubmitted: (value) {
+                  print("Submitted");
+                },
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            TextButton(onPressed: (){
+              if(_loading){
 
-                      } else{
-                        _resend();
-                      }
-                    }, child: _loading
-                        ? Text("Loading...")
-                        : Text("Resend")),
-                    Expanded(child: SizedBox()),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: MaterialButton(
-                          onPressed: (){
-                            if(_loading){
+              } else{
+                _resend();
+              }
+            }, child: _loading
+                ? Text("Loading...")
+                : Text("Resend")),
+            Expanded(child: SizedBox()),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: MaterialButton(
+                onPressed: (){
+                  if(_loading){
 
-                            } else {
-                              _verifyOTP();
-                            }
-                          },
-                          child: _loading ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2,)) : Text("Continue"),
-                          minWidth: 500,
-                          color: secColor,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    )
-                  ],
-                  ),
-                )
+                  } else {
+                    _verifyOTP();
+                  }
+                },
+                child: _loading ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2,)) : Text("Continue"),
+                minWidth: 500,
+                color: secColor,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                padding: EdgeInsets.symmetric(vertical: 15),
+              ),
+            ),
+            SizedBox(
+              height: 10,
             )
           ],
         ),
@@ -419,11 +397,4 @@ class _VerifyEmailState extends State<VerifyEmail> {
     );
   }
 
-  Future<void> initPlatform() async {
-    // await OneSignal.shared.setAppId("41db0b95-b70f-44a5-a5bf-ad849c74352e");
-    // await OneSignal.shared.getDeviceState().then((value) {
-    //   print(value!.userId);
-    //   token = value.userId!;
-    // });
-  }
 }

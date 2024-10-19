@@ -113,7 +113,7 @@ class _PurchaseReportState extends State<PurchaseReport> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate:  const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 150,
+                    maxCrossAxisExtent: 200,
                     childAspectRatio: 3 / 2,
                     crossAxisSpacing: 1,
                     mainAxisSpacing: 1
