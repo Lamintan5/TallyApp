@@ -21,14 +21,14 @@ class Services{
   //static  HOST = "http://192.168.100.10/Tally/";
 
 
-  static String _USERS = HOSTS5 + 'users.php';
+  static String _USERS = HOST + 'users.php';
   static String _ENTITY = HOST + 'entity.php';
   static String _INVENTORY = HOST + 'inventory.php';
   static String _SUPPLIERS = HOST + 'suppliers.php';
   static String _PRODUCTS = HOST + 'products.php';
   static String _PURCHASE = HOST + 'purchase.php';
   static String _SALE = HOST + 'sales.php';
-  static String _NOTIFICATIONS = HOSTS5 + 'notifications.php';
+  static String _NOTIFICATIONS = HOST + 'notifications.php';
   static String _PAYMENTS = HOST + 'payments.php';
   static String _DUTIES = HOST + 'duties.php';
 
@@ -40,7 +40,6 @@ class Services{
   static  String _GET_CURRENT  = 'GET_CURRENT';
   static  String _GET_BY_USER  = 'GET_BY_USER';
   static  String _GET_BY_ADMIN  = 'GET_BY_ADMIN';
-  static  String _GET_BY_APP  = 'GET_BY_APP';
   static  String _GET_ALL_BY_ADMIN  = 'GET_ALL_BY_ADMIN';
   static  String _GET_REC_BY_ADMIN  = 'GET_REC_BY_ADMIN';
   static  String _GET_COMPLETE  = 'GET_COMPLETE';
@@ -179,8 +178,7 @@ class Services{
   // GET ALL USERS
   Future<List<UserModel>> getAllUser()async{
     var map = new Map<String, dynamic>();
-    map["action"] = _GET_BY_APP;
-    map["app"] = "Tally";
+    map["action"] = _GET_ALL;
     final response = await http.post(Uri.parse(_USERS),body: map);
     if(response.statusCode==200) {
       List<UserModel> user = userFromJson(response.body);

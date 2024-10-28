@@ -220,18 +220,32 @@ class _LoginState extends State<Login> {
                                 ),
                                 prxIcon:Icon(Icons.lock_outline),
                               ),
-                              SizedBox(height: 30,),
+                              SizedBox(height: 10,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  InkWell(
+                                      onTap: (){
+
+                                      },
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: Text("Forgot your password?", style: TextStyle(color: secColor),)
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10,),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: InkWell(
                                   onTap: (){
                                     _loginUser();
                                   },
+                                  borderRadius: BorderRadius.circular(5),
                                   child: Container(
                                     padding: EdgeInsets.symmetric(vertical: 15),
                                     decoration: BoxDecoration(
                                       color: Colors.cyan,
-                                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                                      borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Center(child: _isLoading
                                         ? SizedBox(
