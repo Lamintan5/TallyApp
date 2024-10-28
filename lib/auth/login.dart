@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:TallyApp/Widget/emailTextFormWidget.dart';
+import 'package:TallyApp/auth/reset.dart';
 import 'package:TallyApp/auth/restore.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/data.dart';
@@ -226,7 +227,7 @@ class _LoginState extends State<Login> {
                                 children: [
                                   InkWell(
                                       onTap: (){
-
+                                        Get.to(() => Reset(), transition: Transition.rightToLeft);
                                       },
                                       borderRadius: BorderRadius.circular(5),
                                       child: Text("Forgot your password?", style: TextStyle(color: secColor),)

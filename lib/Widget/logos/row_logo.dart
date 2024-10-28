@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 class RowLogo extends StatelessWidget {
   final String text;
   final double height;
-  const RowLogo({super.key, required this.text, this.height = 40});
+  final double fontSize;
+  const RowLogo({super.key, required this.text, this.height = 40, this.fontSize = 13});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class RowLogo extends StatelessWidget {
               children: [
                 Text(
                   'T A L L Y A P P',
-                  style: TextStyle(fontWeight: FontWeight.w100),
+                  style: TextStyle(fontWeight: FontWeight.w100, fontSize: fontSize),
                   maxLines: 1,
                   overflow: TextOverflow.fade,
                 ),
