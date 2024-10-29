@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 
 class TimeCounter extends StatefulWidget {
   final int time;
-  const TimeCounter({super.key, required this.time});
+  final double fontSize;
+  const TimeCounter({super.key, required this.time, this.fontSize = 20});
 
   @override
   State<TimeCounter> createState() => _TimeCounterState();
@@ -48,7 +49,7 @@ class _TimeCounterState extends State<TimeCounter> {
     final secColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.cyanAccent
         : Colors.cyan;
-    return Text(_formatTime(_remainingTime), style: TextStyle(fontSize: 20, color: secColor, fontWeight: FontWeight.w600));
+    return Text(_formatTime(_remainingTime), style: TextStyle(fontSize: widget.fontSize, color: secColor, fontWeight: FontWeight.w600));
   }
 
   @override

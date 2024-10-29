@@ -1,6 +1,7 @@
 import 'package:TallyApp/Widget/logos/row_logo.dart';
 import 'package:TallyApp/Widget/text_filed_input.dart';
 import 'package:TallyApp/auth/signup.dart';
+import 'package:TallyApp/models/users.dart';
 import 'package:TallyApp/utils/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:email_validator/email_validator.dart';
@@ -10,7 +11,11 @@ import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
+import '../Widget/counter.dart';
 import '../Widget/emailTextFormWidget.dart';
+import '../api/api_service.dart';
+import '../models/data.dart';
+import '../resources/services.dart';
 
 class Reset extends StatefulWidget {
   const Reset({super.key, });
@@ -21,12 +26,24 @@ class Reset extends StatefulWidget {
 
 class _ResetState extends State<Reset> {
   final controller = CarouselSliderController();
+
   late TextEditingController _email;
   late TextEditingController _pass;
   late TextEditingController _repass;
+
+  List<UserModel> _user = [];
+
+  UserModel user = UserModel(uid: "");
+
   int activeIndex = 0;
+  int targetTimestamp = 0;
+
   String _otpCode = "";
+  String _hashCode = "";
+
   bool isMatch = true;
+  bool _loading = false;
+
   final int _otpCodeLength = 6;
 
   @override
@@ -84,7 +101,7 @@ class _ResetState extends State<Reset> {
                   carouselController: controller,
                   itemCount: cards.length,
                   options: CarouselOptions(
-                      // scrollPhysics: NeverScrollableScrollPhysics(),
+                      scrollPhysics: NeverScrollableScrollPhysics(),
                       initialPage: 0,
                       enlargeFactor: 0.5,
                       autoPlay: false,
@@ -110,13 +127,13 @@ class _ResetState extends State<Reset> {
                   onPressed: (){
                     Navigator.pop(context);
                   }, child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(CupertinoIcons.arrow_left, size: 15,),
-                    SizedBox(width: 5,),
-                    Text("Back to log in"),
-                  ],
-                )
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(CupertinoIcons.arrow_left, size: 15,),
+                      SizedBox(width: 5,),
+                      Text("Back to log in"),
+                    ],
+                  )
               ),
               const SizedBox(height: 20,),
               buildIndicator(cards.length),
@@ -193,7 +210,12 @@ class _ResetState extends State<Reset> {
           ),
           const SizedBox(height: 20,),
           InkWell(
-            onTap: (){},
+            onTap: (){
+              final form = formKey.currentState!;
+              if(form.validate()){
+                _sendOTP("New");
+              }
+            },
             borderRadius: BorderRadius.circular(5),
             child: Container(
               width: 450,
@@ -202,7 +224,9 @@ class _ResetState extends State<Reset> {
                   color: secColor,
                   borderRadius: BorderRadius.circular(5)
               ),
-              child: const Center(child: Text("Continue", style: TextStyle(color: Colors.black),)),
+              child: Center(child: _loading
+                  ? SizedBox(width: 15,height: 15,  child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2,))
+                  : Text("Continue", style: TextStyle(color: Colors.black),)),
             ),
           ),
           const SizedBox(height: 30,),
@@ -287,7 +311,7 @@ class _ResetState extends State<Reset> {
         ),
         const SizedBox(height: 20,),
         InkWell(
-          onTap: (){},
+          onTap: (){_verifyOTP();},
           borderRadius: BorderRadius.circular(5),
           child: Container(
             width: 450,
@@ -296,10 +320,12 @@ class _ResetState extends State<Reset> {
                 color: secColor,
                 borderRadius: BorderRadius.circular(5)
             ),
-            child: const Center(child: Text("Continue", style: TextStyle(color: Colors.black),)),
+            child: Center(child: _loading
+                ? SizedBox(width: 15,height: 15, child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2,))
+                : Text("Continue", style: TextStyle(color: Colors.black),)),
           ),
         ),
-        const SizedBox(height: 10,),
+        const SizedBox(height: 20,),
         RichText(
             text: TextSpan(
               children: [
@@ -309,7 +335,9 @@ class _ResetState extends State<Reset> {
                 ),
                 WidgetSpan(
                     child: InkWell(
-                      onTap: (){},
+                      onTap: (){
+                        _sendOTP("Reset");
+                      },
                       child: Text(
                           "Click to resend",
                           style: TextStyle(color: secColor, fontWeight: FontWeight.w600,decoration: TextDecoration.underline, fontSize: 12)
@@ -318,7 +346,9 @@ class _ResetState extends State<Reset> {
                 ),
               ]
             )
-        )
+        ),
+        SizedBox(height: 10,),
+        TimeCounter(time: targetTimestamp,fontSize: 15,)
 
       ],
     );
@@ -342,115 +372,222 @@ class _ResetState extends State<Reset> {
     final inputBorder = OutlineInputBorder(
         borderSide: Divider.createBorderSide(context, color: color1)
     );
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-                width: 1.5,
-                color: color2
+    final key = GlobalKey<FormState>();
+    return Form(
+      key: key,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                  width: 1.5,
+                  color: color2
+              ),
             ),
+            child: const Icon(Icons.password, size: 20,),
           ),
-          child: const Icon(Icons.password, size: 20,),
-        ),
-        const SizedBox(height: 20,),
-        const Text("Set new password", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
-        const Text(
-            "Password must be at least 6 characters",
-          style: TextStyle(color: secondaryColor),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 20,),
-        const Row(
-          children: [
-            Text("Password", ),
-          ],
-        ),
-        const SizedBox(height: 5,),
-        TextFormField(
-          controller: _pass,
-          enableSuggestions: true,
-          decoration: InputDecoration(
-            hintText: "Enter new password",
-            hintStyle: const TextStyle(color: secondaryColor),
-            border: inputBorder,
-            focusedBorder: inputBorder,
-            enabledBorder: inputBorder,
-            filled: true,
-            fillColor: color1,
-            contentPadding: const EdgeInsets.all(10),
+          const SizedBox(height: 20,),
+          const Text("Set new password", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+          const Text(
+              "Password must be at least 6 characters",
+            style: TextStyle(color: secondaryColor),
+            textAlign: TextAlign.center,
           ),
-          keyboardType: TextInputType.emailAddress,
-          autofillHints: [AutofillHints.email],
-          validator: (value){
-            if (value == null || value.isEmpty) {
-              return 'Please enter a password.';
-            }
-            if (value.length < 6) {
-              return 'Password must be at least 6 characters long.';
-            }
-            if (!value.contains(RegExp(r'[A-Z]'))) {
-              return 'Password must contain at least one uppercase letter.';
-            }
-            if (value.replaceAll(RegExp(r'[^0-9]'), '').length < 1) {
-              return 'Password must contain at least one digit.';
-            }
-            if (!value.contains(RegExp(r'[!@#\$%^&*()_+{}\[\]:;<>,.?~\\-]'))) {
-              return 'Password must contain at least one special character.';
-            }
-            return null;
-          },
-        ),
-        const SizedBox(height: 10,),
-        const Row(
-          children: [
-            Text("Confirm password",),
-          ],
-        ),
-        const SizedBox(height: 5,),
-        TextFormField(
-          controller: _repass,
-          enableSuggestions: true,
-          decoration: InputDecoration(
-            hintText: "Re-write password",
-            hintStyle: const TextStyle(color: secondaryColor),
-            border: inputBorder,
-            focusedBorder: inputBorder,
-            enabledBorder: inputBorder,
-            filled: true,
-            fillColor: color1,
-            contentPadding: const EdgeInsets.all(10),
+          const SizedBox(height: 20,),
+          const Row(
+            children: [
+              Text("Password", ),
+            ],
           ),
-          keyboardType: TextInputType.emailAddress,
-          autofillHints: [AutofillHints.email],
+          const SizedBox(height: 5,),
+          TextFormField(
+            controller: _pass,
+            enableSuggestions: true,
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: "Enter new password",
+              hintStyle: const TextStyle(color: secondaryColor),
+              border: inputBorder,
+              focusedBorder: inputBorder,
+              enabledBorder: inputBorder,
+              filled: true,
+              fillColor: color1,
+              contentPadding: const EdgeInsets.all(10),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: [AutofillHints.email],
             validator: (value){
-              if(value != _pass.text.trim()){
-                return 'Passwords don\'t match. Please check your new password';
+              if (value == null || value.isEmpty) {
+                return 'Please enter a password.';
+              }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters long.';
+              }
+              if (!value.contains(RegExp(r'[A-Z]'))) {
+                return 'Password must contain at least one uppercase letter.';
+              }
+              if (value.replaceAll(RegExp(r'[^0-9]'), '').length < 1) {
+                return 'Password must contain at least one digit.';
+              }
+              if (!value.contains(RegExp(r'[!@#\$%^&*()_+{}\[\]:;<>,.?~\\-]'))) {
+                return 'Password must contain at least one special character.';
               }
               return null;
-            }
-        ),
-        const SizedBox(height: 20,),
-        InkWell(
-          onTap: (){},
-          borderRadius: BorderRadius.circular(5),
-          child: Container(
-            width: 450,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-                color: secColor,
-                borderRadius: BorderRadius.circular(5)
-            ),
-            child: const Center(child: Text("Reset Password", style: TextStyle(color: Colors.black),)),
+            },
           ),
-        ),
-        const SizedBox(height: 10,)
-
-      ],
+          const SizedBox(height: 10,),
+          const Row(
+            children: [
+              Text("Confirm password",),
+            ],
+          ),
+          const SizedBox(height: 5,),
+          TextFormField(
+            controller: _repass,
+            enableSuggestions: true,
+            obscureText: true,
+            decoration: InputDecoration(
+              hintText: "Re-write password",
+              hintStyle: const TextStyle(color: secondaryColor),
+              border: inputBorder,
+              focusedBorder: inputBorder,
+              enabledBorder: inputBorder,
+              filled: true,
+              fillColor: color1,
+              contentPadding: const EdgeInsets.all(10),
+            ),
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: [AutofillHints.email],
+              validator: (value){
+                if(value != _pass.text.trim()){
+                  return 'Passwords don\'t match. Please check your new password';
+                }
+                return null;
+              }
+          ),
+          const SizedBox(height: 20,),
+          InkWell(
+            onTap: _resetPass,
+            borderRadius: BorderRadius.circular(5),
+            child: Container(
+              width: 450,
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                  color: secColor,
+                  borderRadius: BorderRadius.circular(5)
+              ),
+              child: const Center(child: Text("Reset Password", style: TextStyle(color: Colors.black),)),
+            ),
+          ),
+          const SizedBox(height: 10,)
+        ],
+      ),
     );
+  }
+
+  _sendOTP(String action)async{
+    setState(() {
+      _loading = true;
+    });
+    APIService.otpLogin(_email.text.trim()).then((response)async{
+      if(response.data != null){
+        _hashCode = response.data.toString();
+        targetTimestamp = int.parse(_hashCode.split(".").last);
+        setState(() {
+          _loading = false;
+        });
+        if(action=="New"){
+          controller.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeIn,
+          );
+        }
+      } else {
+        setState(() {
+          _loading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(Data().failed),
+              showCloseIcon: true,
+            )
+        );
+      }
+    });
+  }
+  _verifyOTP(){
+    setState(() {
+      _loading = true;
+    });
+    APIService.verifyOTP(_email.text.toString(), _hashCode, _otpCode)
+        .then((response) async {
+      if (response.data == "Success") {
+        _getUser();
+        controller.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeIn,
+        );
+      } else {
+        setState(() {
+          _otpCode = "";
+          _loading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            "Email Verification : ${response.data}",
+          ),
+          showCloseIcon: true,
+        ));
+      }
+    });
+  }
+  _resetPass()async{
+    setState(() {
+      _loading = true;
+    });
+    Services.updatePassword(user.uid, _repass.text.trim()).then((response){
+      print("Response : $response");
+      if(response=="success"){
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Password update. Kindly log in again",),
+              behavior: SnackBarBehavior.floating,
+              showCloseIcon: true,
+            )
+        );
+      } else if(response=="error"){
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Password was not update.",),
+              behavior: SnackBarBehavior.floating,
+              action: SnackBarAction(
+                label: "Try Again",
+                onPressed: _resetPass,
+              ),
+            )
+        );
+      }else{
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(Data().failed),
+              behavior: SnackBarBehavior.floating,
+              showCloseIcon: true,
+            )
+        );
+      }
+      setState(() {
+        _loading = false;
+      });
+    });
+  }
+  _getUser()async{
+    _user = await Services().getUser(_email.text.trim().toString());
+    user = _user.first;
   }
 
   Widget buildIndicator(int length) {
