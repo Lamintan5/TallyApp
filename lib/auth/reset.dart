@@ -69,11 +69,7 @@ class _ResetState extends State<Reset> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> cards = [
-      emailCard(),
-      otpCard(),
-      passCard(),
-    ];
+
 
     return Scaffold(
       appBar: AppBar(
@@ -138,7 +134,7 @@ class _ResetState extends State<Reset> {
                   )
               ),
               const SizedBox(height: 20,),
-              buildIndicator(cards.length),
+              buildIndicator(),
               const SizedBox(height: 30,)
             ],
           ),
@@ -592,7 +588,7 @@ class _ResetState extends State<Reset> {
     user = _user.first;
   }
 
-  Widget buildIndicator(int length) {
+  Widget buildIndicator() {
     final secColor = Theme.of(context).brightness == Brightness.dark
         ? Colors.cyanAccent
         : Colors.cyan;
@@ -601,7 +597,7 @@ class _ResetState extends State<Reset> {
         : Colors.black26;
     return AnimatedSmoothIndicator(
       activeIndex: activeIndex,
-      count: length,
+      count: 3,
       effect: WormEffect(
         activeDotColor: secColor,
         dotColor: color2,
