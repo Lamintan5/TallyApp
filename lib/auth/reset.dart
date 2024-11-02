@@ -416,8 +416,8 @@ class _ResetState extends State<Reset> {
               fillColor: color1,
               contentPadding: const EdgeInsets.all(10),
             ),
-            keyboardType: TextInputType.emailAddress,
-            autofillHints: [AutofillHints.email],
+            keyboardType: TextInputType.text,
+            autofillHints: [AutofillHints.password],
             validator: (value){
               if (value == null || value.isEmpty) {
                 return 'Please enter a password.';
@@ -458,8 +458,7 @@ class _ResetState extends State<Reset> {
               fillColor: color1,
               contentPadding: const EdgeInsets.all(10),
             ),
-            keyboardType: TextInputType.emailAddress,
-            autofillHints: [AutofillHints.email],
+              keyboardType: TextInputType.text,
               validator: (value){
                 if(value != _pass.text.trim()){
                   return 'Passwords don\'t match. Please check your new password';
