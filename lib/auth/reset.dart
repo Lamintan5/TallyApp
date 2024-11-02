@@ -31,6 +31,9 @@ class _ResetState extends State<Reset> {
   late TextEditingController _pass;
   late TextEditingController _repass;
 
+  final key = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
+
   List<UserModel> _user = [];
 
   UserModel user = UserModel(uid: "");
@@ -97,13 +100,18 @@ class _ResetState extends State<Reset> {
             children: [
               const SizedBox(),
               Expanded(
-                child: CarouselSlider.builder(
+                child: CarouselSlider(
                   carouselController: controller,
-                  itemCount: cards.length,
+                  items: [
+                    emailCard(),
+                    otpCard(),
+                    passCard(),
+                  ],
                   options: CarouselOptions(
                       scrollPhysics: NeverScrollableScrollPhysics(),
                       initialPage: 0,
                       enlargeFactor: 0.5,
+                      height: MediaQuery.of(context).size.height * 3/4,
                       autoPlay: false,
                       viewportFraction: 1,
                       enableInfiniteScroll: false,
@@ -115,12 +123,6 @@ class _ResetState extends State<Reset> {
                           activeIndex = index;
                         });
                       }),
-                  itemBuilder: (context, index, realIndex) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: cards[index],
-                    );
-                  },
                 ),
               ),
               TextButton(
@@ -165,16 +167,16 @@ class _ResetState extends State<Reset> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
                   width: 1.5,
                   color: color2
-                ),
               ),
-              child: const Icon(CupertinoIcons.mail, size: 20,),
             ),
+            child: const Icon(CupertinoIcons.mail, size: 20,),
+          ),
           const SizedBox(height: 10,),
           const Text("Forgot password?", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
           const Text(
@@ -190,7 +192,7 @@ class _ResetState extends State<Reset> {
           ),
           const SizedBox(height: 5,),
           TextFormField(
-              controller: _email,
+            controller: _email,
             enableSuggestions: true,
             decoration: InputDecoration(
               hintText: "Enter you email",

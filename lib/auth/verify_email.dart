@@ -41,6 +41,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   String email = '';
   int targetTimestamp = 0;
 
+
   _resend() {
     final revers = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
