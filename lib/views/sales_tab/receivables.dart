@@ -693,24 +693,6 @@ class _ReceivablesState extends State<Receivables> {
 
                                                       },
                                                     ),
-                                                    PopupMenuItem(
-                                                      value: 'receipt',
-                                                      child: Row(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          Icon(CupertinoIcons.doc_plaintext,
-                                                            color: revers,
-                                                          ),
-                                                          SizedBox(width: 5,),
-                                                          Text('Receipt', style: TextStyle(
-                                                              color: revers),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      onTap: (){
-                                                        dialogReceipt(context, sale);
-                                                      },
-                                                    ),
                                                   ];
                                                 },
                                               )
@@ -878,12 +860,14 @@ class _ReceivablesState extends State<Receivables> {
                                                   actionColor: Colors.black,
                                                   backColor: Colors.red.withOpacity(0.9),
                                                   title: "Upload"
-                                              ) : SizedBox(),
+                                              )
+                                                  : SizedBox(),
                                               sale.checked == "false" || sale.checked == "false, EDIT" || sale.checked.toString().contains("REMOVED")
                                                   ?VerticalDivider(
                                                 thickness: 0.5,
                                                 width: 15,color: Colors.black12,
-                                              ) : SizedBox(),
+                                              )
+                                                  : SizedBox(),
                                               BottomCallButtons(
                                                   onTap: (){
                                                     admin.contains(currentUser.uid) || _dutiesList.contains("RECEIVABLE")
@@ -936,20 +920,6 @@ class _ReceivablesState extends State<Receivables> {
                                                   title: sale.checked.toString().contains("DELETE")
                                                       ? 'Restore'
                                                       :"Edit"
-                                              ),
-                                              VerticalDivider(
-                                                thickness: 0.5,
-                                                width: 15,color: Colors.black12,
-                                              ),
-                                              BottomCallButtons(
-                                                  onTap: (){
-                                                    dialogReceipt(context, sale);
-                                                  },
-                                                  icon: Icon(
-                                                    CupertinoIcons.doc_plaintext,
-                                                    color: Colors.black,),
-                                                  actionColor: Colors.black,
-                                                  title: "Receipt"
                                               ),
                                               VerticalDivider(
                                                 thickness: 0.5,
@@ -1117,34 +1087,6 @@ class _ReceivablesState extends State<Receivables> {
         )
     );
   }
-  void dialogReceipt(BuildContext context, SaleModel sale) {
-    final size = MediaQuery.of(context).size;
-    showModalBottomSheet(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(10),
-              topLeft: Radius.circular(10),
-            )
-        ),
-        isScrollControlled: true,
-        useRootNavigator: true,
-        useSafeArea: true,
-        constraints: BoxConstraints(
-            maxHeight: size.height - 50,
-            minHeight: size.height-100,
-            maxWidth: 500,minWidth: 400
-        ),
-        context: context,
-        builder: (context) {
-          return Column(
-            children: [
-              DialogTitle(title: 'R E C E I P T'),
-              Expanded(child: DialogReceipt(sale: sale,))
-            ],
-          );
-        });
-  }
-
   _restore(String saleid)async{
     List<String> uniqueSale = [];
     List<String> uniqueInv = [];
