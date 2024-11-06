@@ -4,11 +4,12 @@ class EntityModel {
   String? admin;
   String? title;
   String? category;
+  String? location;
   String? image;
   String? time;
   String checked;
 
-  EntityModel({required this.eid, this.pid, this.admin, this.title, this.category,this.image, this.time, this.checked = "false"});
+  EntityModel({required this.eid, this.pid, this.admin, this.title, this.category, this.location, this.image, this.time, this.checked = "false"});
 
   factory EntityModel.fromJson(Map<String, dynamic> json) {
     return EntityModel(
@@ -17,6 +18,7 @@ class EntityModel {
       admin: json['admin'] as String,
       title: json['title'] as String,
       category: json['category'] as String,
+      location: json['location'] as String,
       image: json['image'] as String,
       time: json['time'] as String,
       checked: json['checked'] as String,
@@ -29,6 +31,7 @@ class EntityModel {
       'admin': admin,
       'title': title,
       'category': category,
+      'location': location,
       'image': image,
       'checked': checked,
       'time': time,

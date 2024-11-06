@@ -74,9 +74,11 @@ dependencies:
   vibration: ^1.9.0
   audioplayers: ^6.0.0
   crypto: ^3.0.5
+  encrypt: ^5.0.3
   showcaseview: ^3.0.0
   animated_toggle_switch: ^0.8.3
   permission_handler: ^11.3.1
+
 
 dev_dependencies:
   flutter_test:

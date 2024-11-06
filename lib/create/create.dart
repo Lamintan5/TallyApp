@@ -13,6 +13,8 @@ import 'package:uuid/uuid.dart';
 import '../main.dart';
 import '../models/entities.dart';
 
+import 'package:encrypt/encrypt.dart' as encrypt;
+
 class Create extends StatefulWidget {
   final Function getData;
   const Create({super.key, required this.getData});
@@ -23,6 +25,7 @@ class Create extends StatefulWidget {
 
 class _CreateState extends State<Create> {
   final TextEditingController _title = TextEditingController();
+  TextEditingController _location = TextEditingController();
   File? _image; String? category;
   bool _loading = false;
   bool _isLoading = false;
@@ -33,6 +36,10 @@ class _CreateState extends State<Create> {
   List<EntityModel> _entity = [];
   String eid = '';
   final formKey = GlobalKey<FormState>();
+
+  final _key = encrypt.Key.fromUtf8('f2caaf40-68db-11ee-b339-f1847070'); // 256-bit key
+  final _iv = encrypt.IV.fromLength(16);
+
 
   Future getValidations() async{
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -51,6 +58,13 @@ class _CreateState extends State<Create> {
       _loading = false;
     });
   }
+
+  String encryptText(String text) {
+    final encrypter = encrypt.Encrypter(encrypt.AES(_key, mode: encrypt.AESMode.cbc));
+    final encrypted = encrypter.encrypt(text, iv: _iv);
+    return encrypted.base64;
+  }
+
   Future<void> publish()async {
     List<EntityModel> _entity = [];
     List<String> uniqueEntities = [];
@@ -67,6 +81,7 @@ class _CreateState extends State<Create> {
       admin: currentUser.uid,
       title: _title.text.trim().toString(),
       category: category.toString(),
+      location: _location.text.trim().toString(),
       image: _image==null?"":_image!.path,
       checked: "false",
       time: DateTime.now().toString(),
@@ -79,7 +94,8 @@ class _CreateState extends State<Create> {
     widget.getData();
     Navigator.pop(context);
 
-    final response =  await Services.addEntity(eid, pids, _title.text.trim().toString(), category.toString(), _image);
+    final response =  await Services.addEntity(eid, pids, _title.text.trim().toString(), category.toString(),
+        _location.text.trim().toString(), _image);
     final String responseString = await response.stream.bytesToString();
     if(responseString.contains("Success")){
       _entity.firstWhere((test) => test.eid == eid).checked = "true";
@@ -99,7 +115,9 @@ class _CreateState extends State<Create> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    category = "Store One";
     getValidations();
+
   }
 
   @override
@@ -220,36 +238,48 @@ class _CreateState extends State<Create> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 30,),
-                      Row(
-                        children: [
-                          Text(' Category :  ', style: TextStyle(color: secondaryColor),),
-                          Expanded(
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12,),
-                              decoration: BoxDecoration(
-                                color: color1,
-                                  borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                  width: 1,
-                                  color: color1
-                                )
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  dropdownColor: appBarColor,
-                                  value: category,
-                                  icon: Icon(Icons.arrow_drop_down, color: Colors.white),
-                                  isExpanded: true,
-                                  items: items.map(buildMenuItem).toList(),
-                                  onChanged: (value) => setState(() => this.category = value),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                      SizedBox(height: 20,),
+                      // Row(
+                      //   children: [
+                      //     Text(' Category :  ', style: TextStyle(color: secondaryColor),),
+                      //     Expanded(
+                      //       child: Container(
+                      //         padding: EdgeInsets.symmetric(horizontal: 12,),
+                      //         decoration: BoxDecoration(
+                      //           color: color1,
+                      //             borderRadius: BorderRadius.circular(5),
+                      //           border: Border.all(
+                      //             width: 1,
+                      //             color: color1
+                      //           )
+                      //         ),
+                      //         child: DropdownButtonHideUnderline(
+                      //           child: DropdownButton<String>(
+                      //             dropdownColor: appBarColor,
+                      //             value: category,
+                      //             icon: Icon(Icons.arrow_drop_down, color: Colors.white),
+                      //             isExpanded: true,
+                      //             items: items.map(buildMenuItem).toList(),
+                      //             onChanged: (value) => setState(() => this.category = value),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // SizedBox(height: 30,),
+                      TextFieldInput(
+                        textEditingController: _location,
+                        labelText: 'Location',
+                        textInputType: TextInputType.text,
+                        srfIcon: IconButton(icon: Icon(Icons.location_on_outlined), onPressed: (){},),
+                        validator: (value){
+                          if(value == null || value == ""){
+                            return 'Please enter your property location';
+                          }
+                        },
                       ),
-                      SizedBox(height: 30,),
+                      SizedBox(height: 20,),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 30),
                         child: InkWell(

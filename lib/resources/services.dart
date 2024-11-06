@@ -1074,7 +1074,7 @@ class Services{
   }
 
   // ADD_ENTITY
-  static Future addEntity(String eid, List pid, String title, String category, File? image) async {
+  static Future addEntity(String eid, List pid, String title, String category, String location, File? image) async {
     try {
       var request = http.MultipartRequest('POST', Uri.parse(_ENTITY));
       request.fields['action'] = _ADD;
@@ -1083,6 +1083,7 @@ class Services{
       request.fields['admin'] = currentUser.uid;
       request.fields['title'] = title;
       request.fields['category'] = category;
+      request.fields['location'] = location;
       if (image != null) {
         var pic = await http.MultipartFile.fromPath("image", image.path);
         request.files.add(pic);

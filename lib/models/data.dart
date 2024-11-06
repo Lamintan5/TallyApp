@@ -1947,6 +1947,7 @@ class Data{
           entityModel.pid!.split(","),
           entityModel.title.toString(),
           entityModel.category.toString(),
+          entityModel.location.toString(),
           File(entityModel.image.toString()),
         );
         final String responseString = await response.stream.bytesToString();
@@ -2347,6 +2348,7 @@ class Data{
             entity.pid.toString().split(","),
             entity.title.toString(),
             entity.category.toString(),
+            entity.location.toString(),
             entity.image == ""? null
                 : File(entity.image.toString())
         );

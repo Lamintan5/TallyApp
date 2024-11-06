@@ -774,6 +774,7 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
         entity.pid!.split(","),
         entity.title.toString(),
         entity.category.toString(),
+        entity.location.toString(),
         entity.image.toString() == ""? null : _image);
     final String responseString = await response.stream.bytesToString();
     print("Response : $responseString");
