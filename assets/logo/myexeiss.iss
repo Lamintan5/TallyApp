@@ -3,14 +3,14 @@
 
 #define MyAppName "TallyApp"
 #define MyAppVersion "1.0.0"
-#define MyAppPublisher "Studio5ive, org"
+#define MyAppPublisher "Studio5ive, Org."
 #define MyAppURL "https://www.studio5ive.org/"
 #define MyAppExeName "TallyApp.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{6077B8D2-B043-4159-B411-10B2323828CF}
+AppId={{02EAEDCB-609C-4BE6-B4A0-0E93CFEFB1D8}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -49,8 +49,7 @@ Source: "C:\Users\billc\Desktop\android\TallyApp\build\windows\x64\runner\Releas
 Source: "C:\Users\billc\Desktop\android\TallyApp\build\windows\x64\runner\Release\emoji_picker_flutter_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\billc\Desktop\android\TallyApp\build\windows\x64\runner\Release\file_selector_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\billc\Desktop\android\TallyApp\build\windows\x64\runner\Release\flutter_windows.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\billc\Desktop\android\TallyApp\build\windows\x64\runner\Release\pdfium.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\billc\Desktop\android\TallyApp\build\windows\x64\runner\Release\printing_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\billc\Desktop\android\TallyApp\build\windows\x64\runner\Release\permission_handler_windows_plugin.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\billc\Desktop\android\TallyApp\build\windows\x64\runner\Release\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
