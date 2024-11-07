@@ -854,7 +854,7 @@ class _SuppliersState extends State<Suppliers> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 DialogTitle(title: 'E D I T'),
-                Text('enter the new details for ${supplier.name} inorder to keep update your data',
+                Text('enter the new details for ${TFormat().decryptField(supplier.name.toString(), supplier.eid.toString())} inorder to keep update your data',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: secondaryColor, fontSize: 12),
                 ),
