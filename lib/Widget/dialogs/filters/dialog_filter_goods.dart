@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/entities.dart';
 import 'package:flutter/material.dart';
@@ -193,8 +194,8 @@ class _DialogFilterGoodsState extends State<DialogFilterGoods> {
                 isExpanded: true,
                 items: _sppler.map((SupplierModel supplier) {
                   return DropdownMenuItem<SupplierModel>(
-                    value: supplier, // Use the unique SupplierModel as the value
-                    child: Text(supplier.name.toString(),style: TextStyle(fontWeight: FontWeight.normal),),
+                    value: supplier,
+                    child: Text(TFormat().decryptField(supplier.name.toString(), supplier.eid.toString()),style: TextStyle(fontWeight: FontWeight.normal),),
                   );
                 }).toList(),
                 onChanged: (SupplierModel? newValue) {

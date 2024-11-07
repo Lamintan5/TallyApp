@@ -1271,6 +1271,8 @@ class Data{
     myProducts = uniqueProduct;
     update();
 
+    String name  = TFormat().decryptField(product.name.toString(), product.eid.toString());
+
     await Services.updateProduct(product).then((response)async{
       if(response=="success") {
         _product.firstWhere((element) => element.prid == product.prid).checked = "true";
@@ -1280,7 +1282,7 @@ class Data{
         update();
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Product ${product.name} was updated Successfully"),
+              content: Text("Product ${name} was updated Successfully"),
               showCloseIcon: true,
             )
         );
@@ -1295,7 +1297,7 @@ class Data{
             update();
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Product ${product.name} was uploaded with changes"),
+                  content: Text("Product ${name} was uploaded with changes"),
                   showCloseIcon: true,
                 )
             );
@@ -1313,7 +1315,7 @@ class Data{
       else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Product ${product.name} was updated Successfully. Awaiting internet connection"),
+              content: Text("Product ${name} was updated Successfully. Awaiting internet connection"),
               showCloseIcon: true,
             )
         );
