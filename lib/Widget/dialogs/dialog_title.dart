@@ -41,7 +41,7 @@ class DialogTitle extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 10,),
+        SizedBox(height: 5,),
       ],
     );
   }
