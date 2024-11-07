@@ -5,6 +5,7 @@ import 'package:TallyApp/models/entities.dart';
 import 'package:TallyApp/models/suppliers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icon.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../models/data.dart';
@@ -13,6 +14,7 @@ import '../../models/products.dart';
 import '../../resources/services.dart';
 import '../../utils/colors.dart';
 import '../items/item_products.dart';
+import '../text/text_format.dart';
 
 class DialogAddInv extends StatefulWidget {
   final EntityModel entity;
@@ -30,10 +32,12 @@ class _DialogAddInvState extends State<DialogAddInv> {
   List<ProductModel> _newPrd = [];
   List<InventModel> _inv = [];
   List<SupplierModel> _newSpplr = [];
+  List<SupplierModel> _spplr = [];
   String iid = "";
   bool _loading = false;
   bool _uploading = false;
   bool isAllSelected  = false;
+  bool isFilled = false;
 
   int count = 0;
 
@@ -49,6 +53,7 @@ class _DialogAddInvState extends State<DialogAddInv> {
 
   _getData()async{
     prd = myProducts.map((jsonString) => ProductModel.fromJson(json.decode(jsonString))).toList();
+    _spplr = mySuppliers.map((jsonString) => SupplierModel.fromJson(json.decode(jsonString))).toList();
     prd = prd.where((element) => element.eid == widget.entity.eid).toList();
     List<ProductModel> itemsToRemove = prd.where((a) => widget.products.any((b) => b.prid == a.prid)).toList();
     prd.removeWhere((a) => itemsToRemove.contains(a));
@@ -79,9 +84,8 @@ class _DialogAddInvState extends State<DialogAddInv> {
     List filteredList = [];
     if (_search.text.isNotEmpty) {
       prd.forEach((item) {
-        if (item.name.toString().toLowerCase().contains(_search.text.toString().toLowerCase())
-            || item.category.toString().toLowerCase().contains(_search.text.toString().toLowerCase())
-            || item.supplier.toString().toLowerCase().contains(_search.text.toString().toLowerCase()))
+        if (TFormat().decryptField(item.name.toString(), widget.entity.eid).toLowerCase().contains(_search.text.toString().toLowerCase())
+            || TFormat().decryptField(item.category.toString(), widget.entity.eid).toLowerCase().contains(_search.text.toString().toLowerCase()))
           filteredList.add(item);
       });
     } else {
@@ -90,38 +94,57 @@ class _DialogAddInvState extends State<DialogAddInv> {
     final size = MediaQuery.of(context).size;
     return Column(
       children: [
-        SizedBox(height: 8,),
         prd.isEmpty
             ? SizedBox()
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text('Select an item from the products list below and add to inventory list in order to start monetization',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: secondaryColor, fontSize: 12),
-                ),
+            : Text('Select an item from the products list below and add to inventory list in order to start monetization.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: secondaryColor, fontSize: 12),
               ),
         prd.isEmpty
             ? SizedBox()
-            : Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: TextFormField(
-            controller: _search,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              hintText: "🔎  Search for Products...",
-              fillColor: color1,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                    Radius.circular(5)
-                ),
-                borderSide: BorderSide.none,
+            : TextFormField(
+          controller: _search,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            hintText: "Search",
+            fillColor: color1,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5)
               ),
-              filled: true,
-              isDense: true,
-              contentPadding: EdgeInsets.all(10),
+              borderSide: BorderSide.none,
             ),
-            onChanged:  (value) => setState((){}),
+            hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+            prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+            prefixIconConstraints: BoxConstraints(
+                minWidth: 40,
+                minHeight: 30
+            ),
+            suffixIcon: isFilled?InkWell(
+                onTap: (){
+                  _search.clear();
+                  setState(() {
+                    isFilled = false;
+                  });
+                },
+                borderRadius: BorderRadius.circular(100),
+                child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+            ) :SizedBox(),
+            suffixIconConstraints: BoxConstraints(
+                minWidth: 40,
+                minHeight: 30
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+            filled: true,
+            isDense: true,
           ),
+          onChanged:  (value) => setState((){
+            if(value.isNotEmpty){
+              isFilled = true;
+            } else {
+              isFilled = false;
+            }
+          }),
         ),
         prd.isEmpty
             ? SizedBox()
@@ -147,8 +170,8 @@ class _DialogAddInvState extends State<DialogAddInv> {
                             eid: widget.entity.eid.toString(),
                             pid: widget.entity.pid,
                             productid: prd[index].prid,
-                            quantity: '1',
-                            type: 'PRODUCT',
+                            quantity: TFormat().encryptText('1', widget.entity.eid),
+                            type: TFormat().encryptText('PRODUCT', widget.entity.eid),
                             checked: 'false',
                             time: DateTime.now().toString()
                         ));
@@ -168,23 +191,20 @@ class _DialogAddInvState extends State<DialogAddInv> {
         ),
         prd.isEmpty
             ? Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset("assets/add/box.png"),
-                    Text("You do not have any items yet",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                      textAlign: TextAlign.center,
-                    ),
-                    Text("Please navigate to the products section and add items to your list.",
-                      style: TextStyle(color: secondaryColor),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset("assets/add/box.png"),
+                  Text("You do not have any items yet",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    textAlign: TextAlign.center,
+                  ),
+                  Text("Please navigate to the products section and add items to your list.",
+                    style: TextStyle(color: secondaryColor),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             )
             : Expanded(
@@ -192,12 +212,53 @@ class _DialogAddInvState extends State<DialogAddInv> {
               itemCount: filteredList.length,
               itemBuilder: (context, index){
                 ProductModel product = filteredList[index];
+                String name = TFormat().decryptField(product.name.toString(), widget.entity.eid.toString());
+                String category = TFormat().decryptField(product.category.toString(), widget.entity.eid.toString());
+                String volume = TFormat().decryptField(product.volume.toString(), widget.entity.eid.toString());
+                String supplier = _spplr.isEmpty
+                    ? 'Supplier not available'
+                    :  TFormat().decryptField(_spplr.firstWhere((sup) => sup.sid == product.supplier).name.toString(), widget.entity.eid.toString());
                 return Row(
                   children: [
                     Expanded(
-                      child: ItemProducts(
-                        eid: widget.entity.eid,
-                        product: product,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.white12,
+                              child: Center(child: LineIcon.box(color: Colors.white,)),
+                            ),
+                            SizedBox(width: 10,),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+                                      SizedBox(width: 10,),
+                                      Text('${category}', style: TextStyle(color: Colors.white54, fontSize: 11),),
+                                    ],
+                                  ),
+                                  Wrap(
+                                    spacing: 5,
+                                    children: [
+                                      Text("Volume : ${volume}",style: TextStyle(fontSize: 11, color: Colors.white)),
+                                      _loading
+                                          ? Text('Loading Suppliers...', style: TextStyle(fontSize: 11, color: secondaryColor, fontStyle: FontStyle.italic),)
+                                          : Text('Supplier : ${supplier}', style: TextStyle(fontSize: 11, color: Colors.white),)
+                                    ],
+                                  ),
+
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
                       ),
                     ),
                     CupertinoCheckbox(
@@ -215,8 +276,8 @@ class _DialogAddInvState extends State<DialogAddInv> {
                                 eid: widget.entity.eid.toString(),
                                 pid: widget.entity.pid,
                                 productid: product.prid,
-                                quantity: '1',
-                                type: 'PRODUCT',
+                                quantity: TFormat().encryptText('1', widget.entity.eid),
+                                type: TFormat().encryptText('PRODUCT', widget.entity.eid),
                                 checked: 'false',
                                 time: DateTime.now().toString()
                             );

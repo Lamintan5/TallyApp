@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/suppliers.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,10 @@ class ItemProducts extends StatefulWidget {
 class _ItemProductsState extends State<ItemProducts> {
   List<SupplierModel> _spplr = [];
   String iid = "";
+  String name = "";
+  String category = "";
+  String volume = "";
+  String supplier = "";
 
   bool _adding = false;
   bool _loading = false;
@@ -29,6 +34,10 @@ class _ItemProductsState extends State<ItemProducts> {
   _getSuppliers()async{
     _spplr = mySuppliers.map((jsonString) => SupplierModel.fromJson(json.decode(jsonString))).toList();
     _spplr = _spplr.where((sup) => sup.sid == widget.product.supplier).toList();
+    name = TFormat().decryptField(widget.product.name.toString(), widget.product.eid.toString());
+    category = TFormat().decryptField(widget.product.category.toString(), widget.product.eid.toString());
+    volume = TFormat().decryptField(widget.product.volume.toString(), widget.product.eid.toString());
+    supplier = _spplr.isEmpty ? 'Supplier not available' :  TFormat().decryptField(_spplr.first.name.toString(), widget.product.eid.toString());
     setState(() {
 
     });
@@ -45,8 +54,9 @@ class _ItemProductsState extends State<ItemProducts> {
   }
   @override
   Widget build(BuildContext context) {
+
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: Container(
         child: Row(
           children: [
@@ -63,18 +73,18 @@ class _ItemProductsState extends State<ItemProducts> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(widget.product.name.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+                      Text(name.toString(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
                       SizedBox(width: 10,),
-                      Text('${widget.product.category}', style: TextStyle(color: Colors.white54, fontSize: 11),),
+                      Text('${category}', style: TextStyle(color: Colors.white54, fontSize: 11),),
                     ],
                   ),
                   Wrap(
                     spacing: 5,
                     children: [
-                      Text("Volume : ${widget.product.volume}",style: TextStyle(fontSize: 11, color: Colors.white)),
+                      Text("Volume : ${volume}",style: TextStyle(fontSize: 11, color: Colors.white)),
                       _loading
                           ? Text('Loading Suppliers...', style: TextStyle(fontSize: 11, color: secondaryColor, fontStyle: FontStyle.italic),)
-                          : Text(_spplr.length == 0 ? 'Supplier not available' : 'Supplier : ${_spplr.first.name}', style: TextStyle(fontSize: 11, color: Colors.white),)
+                          : Text('Supplier : ${supplier}', style: TextStyle(fontSize: 11, color: Colors.white),)
                     ],
                   ),
 
