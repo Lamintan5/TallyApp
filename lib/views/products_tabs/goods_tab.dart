@@ -197,9 +197,8 @@ class _GoodsTabState extends State<GoodsTab> {
     List filteredList = [];
     if (_search.text.isNotEmpty) {
       _prd.forEach((item) {
-        if (item.name.toString().toLowerCase().contains(_search.text.toString().toLowerCase())
-            || item.category.toString().toLowerCase().contains(_search.text.toString().toLowerCase())
-            || item.supplier.toString().toLowerCase().contains(_search.text.toString().toLowerCase()))
+        if (TFormat().decryptField(item.name.toString(), widget.entity.eid).toLowerCase().contains(_search.text.toString().toLowerCase())
+            || TFormat().decryptField(item.category.toString(), widget.entity.eid).toLowerCase().contains(_search.text.toString().toLowerCase()))
           filteredList.add(item);
       });
     } else {
