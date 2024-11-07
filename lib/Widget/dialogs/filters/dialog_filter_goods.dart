@@ -209,7 +209,12 @@ class _DialogFilterGoodsState extends State<DialogFilterGoods> {
         DoubleCallAction(
           action: ()async{
             Navigator.pop(context);
-            widget.filter(category, volume, selectedSupplier?.sid, entity.eid);
+            widget.filter(
+                TFormat().encryptText(category.toString(), entity.eid),
+                TFormat().encryptText(volume.toString(), entity.eid),
+                selectedSupplier?.sid,
+                entity.eid
+            );
           },
           title: "Filter",
         ),
