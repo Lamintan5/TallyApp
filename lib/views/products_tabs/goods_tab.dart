@@ -1384,8 +1384,8 @@ class _GoodsTabState extends State<GoodsTab> {
   }
   void _filter(String? cat, String? vol, String? sid, String entityEid){
     supplierId = sid==null?"":sid;
-    category = cat==null?"":cat;
-    volume = vol==null?"":vol;
+    category = cat==null?"":TFormat().encryptText(cat, widget.entity.eid);
+    volume = vol==null?"":TFormat().encryptText(vol, widget.entity.eid);
     _getData();
   }
 
