@@ -2,12 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:TallyApp/Widget/profile_images/current_profile.dart';
-import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/data.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:crypto/crypto.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
@@ -66,8 +63,6 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
 
   final socketManager = Get.find<SocketManager>();
 
-  final _key = encrypt.Key.fromUtf8('f2caaf40-68db-11ee-b339-f1847070');
-  final _iv = encrypt.IV.fromLength(16);
 
   _getEntities()async{
     _getData();
@@ -82,7 +77,6 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
     setState(() {
     });
   }
-
 
 
   @override
@@ -493,30 +487,12 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Text(
-                                                    entity.title.toString().toUpperCase(),
+                                                    entity.title!.toUpperCase(),
                                                     maxLines: 2,
                                                     overflow: TextOverflow.ellipsis,
                                                     style: TextStyle(
                                                         fontSize: 14,
                                                         fontWeight: FontWeight.w600
-                                                    ),
-                                                  ),
-                                                  entity.location.toString()==""?SizedBox()
-                                                      : Container(
-                                                    margin: EdgeInsets.only(bottom: 2),
-                                                    child: RichText(
-                                                        textAlign: TextAlign.center,
-                                                        text: TextSpan(
-                                                            children: [
-                                                              WidgetSpan(
-                                                                child: Icon(CupertinoIcons.location, size: 12,color: secondaryColor,),
-                                                              ),
-                                                              TextSpan(
-                                                                  text:  " ${entity.location}",
-                                                                  style: secondary
-                                                              ),
-                                                            ]
-                                                        )
                                                     ),
                                                   ),
                                                   RichText(
@@ -532,7 +508,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                                             )
                                                           ]
                                                       )
-                                                  ),
+                                                  ) ,
                                                   RichText(
                                                       text: TextSpan(
                                                           children: [

@@ -1,21 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/Widget/text_filed_input.dart';
 import 'package:TallyApp/models/data.dart';
 import 'package:TallyApp/resources/services.dart';
 import 'package:TallyApp/utils/colors.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
-
 import '../main.dart';
 import '../models/entities.dart';
 
+import 'package:encrypt/encrypt.dart' as encrypt;
 
 class Create extends StatefulWidget {
   final Function getData;
@@ -39,6 +37,8 @@ class _CreateState extends State<Create> {
   String eid = '';
   final formKey = GlobalKey<FormState>();
 
+  final _key = encrypt.Key.fromUtf8('f2caaf40-68db-11ee-b339-f1847070'); // 256-bit key
+  final _iv = encrypt.IV.fromLength(16);
 
 
   Future getValidations() async{
@@ -59,6 +59,11 @@ class _CreateState extends State<Create> {
     });
   }
 
+  String encryptText(String text) {
+    final encrypter = encrypt.Encrypter(encrypt.AES(_key, mode: encrypt.AESMode.cbc));
+    final encrypted = encrypter.encrypt(text, iv: _iv);
+    return encrypted.base64;
+  }
 
   Future<void> publish()async {
     List<EntityModel> _entity = [];
@@ -89,8 +94,8 @@ class _CreateState extends State<Create> {
     widget.getData();
     Navigator.pop(context);
 
-    final response =  await Services.addEntity(eid, pids, entityModel.title.toString(), entityModel.category.toString(),
-        entityModel.location.toString(), _image);
+    final response =  await Services.addEntity(eid, pids, _title.text.trim().toString(), category.toString(),
+        _location.text.trim().toString(), _image);
     final String responseString = await response.stream.bytesToString();
     if(responseString.contains("Success")){
       _entity.firstWhere((test) => test.eid == eid).checked = "true";
@@ -103,6 +108,8 @@ class _CreateState extends State<Create> {
       widget.getData();
     }
   }
+
+
 
   @override
   void initState() {
@@ -147,7 +154,7 @@ class _CreateState extends State<Create> {
                       Text('Create Business', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),),
                       Text(
                         'Embark on Your Entrepreneurial Journey with TallyApp: Simplify your first business venture with TallyApp\'s user-friendly tools for inventory management, record-keeping, expense tracking, and financial reporting. Elevate your business growth by focusing on what truly matters while we handle the details. Start shaping your success story today!',
-                        style: TextStyle(fontWeight: FontWeight.w200, color: secondaryColor),
+                      style: TextStyle(fontWeight: FontWeight.w200, color: secondaryColor),
                       ),
                       SizedBox(height: 10,),
                       Row(

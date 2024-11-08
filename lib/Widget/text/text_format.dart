@@ -1,8 +1,5 @@
 import 'package:country_picker/country_picker.dart';
-import 'package:crypto/crypto.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'package:encrypt/encrypt.dart' as encrypt;
 
 import '../../main.dart';
 
@@ -22,6 +19,7 @@ class TFormat{
 
     return camelCaseString;
   }
+
 
   String getOrdinal(int floor) {
     if (floor % 100 >= 11 && floor % 100 <= 13) {
@@ -61,21 +59,6 @@ class TFormat{
       return 10000000;
     }
     return number;
-  }
-
-  String encryptText(String text, String id){
-    final aesKey = encrypt.Key.fromUtf8(sha256.convert(utf8.encode(id)).toString().substring(0, 32));
-    final iv = encrypt.IV.allZerosOfLength(16);
-    final encrypter = encrypt.Encrypter(encrypt.AES(aesKey));
-    final encryptedText = encrypter.encrypt(text, iv: iv).base64;
-    return encryptedText;
-  }
-  // Decryption
-  String decryptField(String encryptedText, String eid) {
-    final aesKey = encrypt.Key.fromUtf8(sha256.convert(utf8.encode(eid)).toString().substring(0, 32));
-    final iv = encrypt.IV.allZerosOfLength(16);
-    final encrypter = encrypt.Encrypter(encrypt.AES(aesKey));
-    return encrypter.decrypt64(encryptedText, iv: iv);
   }
 
   String getCurrency() {
