@@ -12,7 +12,6 @@ import '../../models/inventories.dart';
 import '../../models/products.dart';
 import '../../models/purchases.dart';
 import '../../models/suppliers.dart';
-import '../items/item_select_product.dart';
 
 class DialogSelectProduct extends StatefulWidget {
   final EntityModel entity;
@@ -42,6 +41,7 @@ class _DialogSelectProductState extends State<DialogSelectProduct> {
   bool isAllSelected  = false;
   bool _loading = false;
   bool _uploading = false;
+  bool isFilled = false;
 
   int count = 0;
   int noQuantity = 0;
@@ -94,6 +94,12 @@ class _DialogSelectProductState extends State<DialogSelectProduct> {
     final secBtn = Theme.of(context).brightness == Brightness.dark
         ? Colors.cyanAccent
         : Colors.cyan;
+    final normal = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
+    final color5 = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white54
+        : Colors.black54;
     List filteredList = [];
     if (_search.text.isNotEmpty) {
       _filteredPrdcts.forEach((item) {
@@ -150,26 +156,49 @@ class _DialogSelectProductState extends State<DialogSelectProduct> {
           style: TextStyle(color: secondaryColor, fontSize: 12),
         ),
         SizedBox(height: 8,),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: TextFormField(
-            controller: _search,
-            keyboardType: TextInputType.text,
-            decoration: InputDecoration(
-              hintText: "🔎  Search for Products...",
-              fillColor: color1,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                    Radius.circular(5)
-                ),
-                borderSide: BorderSide.none,
+        TextFormField(
+          controller: _search,
+          keyboardType: TextInputType.text,
+          decoration: InputDecoration(
+            hintText: "Search",
+            fillColor: color1,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                  Radius.circular(5)
               ),
-              filled: true,
-              isDense: true,
-              contentPadding: EdgeInsets.all(10),
+              borderSide: BorderSide.none,
             ),
-            onChanged:  (value) => setState((){}),
+            hintStyle: TextStyle(color: secondaryColor, fontWeight: FontWeight.normal),
+            prefixIcon: Icon(CupertinoIcons.search, size: 20,color: secondaryColor),
+            prefixIconConstraints: BoxConstraints(
+                minWidth: 40,
+                minHeight: 30
+            ),
+            suffixIcon: isFilled?InkWell(
+                onTap: (){
+                  _search.clear();
+                  setState(() {
+                    isFilled = false;
+                  });
+                },
+                borderRadius: BorderRadius.circular(100),
+                child: Icon(Icons.cancel, size: 20,color: secondaryColor)
+            ) :SizedBox(),
+            suffixIconConstraints: BoxConstraints(
+                minWidth: 40,
+                minHeight: 30
+            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+            filled: true,
+            isDense: true,
           ),
+          onChanged:  (value) => setState((){
+            if(value.isNotEmpty){
+              isFilled = true;
+            } else {
+              isFilled = false;
+            }
+          }),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end  ,
@@ -233,10 +262,48 @@ class _DialogSelectProductState extends State<DialogSelectProduct> {
                 return Row(
                   children: [
                     Expanded(
-                      child: ItemSelectProduct(
-                        product: product,
-                        quantity: qnty,
-                        supplier: supplier!,
+                      child: Container(
+                        child: Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.white12,
+                              child: Center(child: LineIcon.box(color: normal,)),
+                            ),
+                            SizedBox(width: 10,),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(product.name.toString(), style: TextStyle(color: normal, fontWeight: FontWeight.w600),),
+                                      SizedBox(width: 10,),
+                                      Text('${product.category}, ', style: TextStyle(color: color5, fontSize: 11),),
+                                    ],
+                                  ),
+                                  Wrap(
+                                    spacing: 5,
+                                    children: [
+                                      Text('Volume : ${product.volume},', style: TextStyle(fontSize: 11, color: normal)),
+                                      Text('Supplier : ${supplier}', style: TextStyle(fontSize: 11, color: normal),),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            Text('quantity :  ${qnty}',style: TextStyle(color: normal, fontSize: 11, fontWeight: FontWeight.w700),),
+                            // _prch.length != 0 ? SizedBox()
+                            //     :IconButton(
+                            //     onPressed: (){
+                            //       _addInventory(_inventories.first);
+                            //
+                            //     },
+                            //     icon: Icon(Icons.add)
+                            // )
+                          ],
+                        ),
                       ),
                     ),
                     CupertinoCheckbox(

@@ -343,26 +343,32 @@ class _CreatePurchaseState extends State<CreatePurchase> {
                                           _filtPurchas = _purchase.where((element) => element.productid == product.prid).toList();
                                           var prchs = _filtPurchas.isEmpty ? PurchaseModel(purchaseid: ""): _filtPurchas.first;
                                           var qnty = _filtPurchas.isEmpty? 0 : int.parse(_filtPurchas.first.quantity.toString());
-                                          var suppName = _fltSpplr.isEmpty ? 'N/A' : _fltSpplr.first.name.toString();;
-                                          var bprice = _purchase.isEmpty? 0.0: double.parse(_filtPurchas.first.bprice.toString());
+                                          String name = product.name.toString();
+                                          String category = product.category.toString();
+                                          String volume = product.volume.toString();
+                                          double buy = double.parse(prchs.bprice.toString());
+                                          double sell = double.parse(product.selling.toString());
+                                          String supplier = _spplr.isEmpty
+                                              ? 'N/A'
+                                              :  _spplr.firstWhere((sup) => sup.sid == product.supplier).name.toString();
                                           return DataRow(
                                               cells: [
                                                 DataCell(
-                                                    Text(product.name.toString(),style: TextStyle(color: Colors.black),),
+                                                    Text(name.toString(),style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text(product.category.toString(),style: TextStyle(color: Colors.black),),
+                                                    Text(category.toString(),style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text(product.volume.toString(),style: TextStyle(color: Colors.black),),
+                                                    Text(volume.toString(),style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
@@ -374,21 +380,21 @@ class _CreatePurchaseState extends State<CreatePurchase> {
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text(suppName,style: TextStyle(color: Colors.black),),
+                                                    Text(supplier,style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text('Ksh.${formatNumberWithCommas(bprice*qnty)}',style: TextStyle(color: Colors.black),),
+                                                    Text('Ksh.${formatNumberWithCommas(buy*qnty)}',style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text('Ksh.${formatNumberWithCommas(double.parse(product.selling.toString())*qnty)}',style: TextStyle(color: Colors.black),),
+                                                    Text('Ksh.${formatNumberWithCommas(sell*qnty)}',style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
@@ -459,11 +465,17 @@ class _CreatePurchaseState extends State<CreatePurchase> {
                                         itemBuilder: (context, index){
                                           ProductModel product = filteredList[index];
                                           _filtPurchas = _purchase.where((element) => element.productid == product.prid).toList();
-                                          _fltSpplr = _spplr.where((sup) => sup.sid == product.supplier).toList();
+
                                           var prchs = _filtPurchas.isEmpty ? PurchaseModel(purchaseid: ""): _filtPurchas.first;
                                           var qnty = _filtPurchas.isEmpty? 0 : int.parse(_filtPurchas.first.quantity.toString());
-                                          var suppName = _fltSpplr.isEmpty ? 'N/A' : _fltSpplr.first.name.toString();;
-                                          var bprice = _purchase.isEmpty? 0.0: double.parse(_filtPurchas.first.bprice.toString());
+                                          String name = product.name.toString();
+                                          String category = product.category.toString();
+                                          String volume = product.volume.toString();
+                                          double buy = double.parse(prchs.bprice.toString());
+                                          double sell = double.parse(product.selling.toString());
+                                          String supplier = _spplr.isEmpty
+                                              ? 'N/A'
+                                              :  _spplr.firstWhere((sup) => sup.sid == product.supplier).name.toString();
                                           return Column(
                                             children: [
                                               InkWell(
@@ -500,22 +512,22 @@ class _CreatePurchaseState extends State<CreatePurchase> {
                                                           children: [
                                                             Row(
                                                               children: [
-                                                                Text(product.name.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
+                                                                Text(name.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
                                                                 SizedBox(width: 10,),
-                                                                Text('${product.category}', style: TextStyle(color: Colors.black54, fontSize: 11),),
+                                                                Text('${category}', style: TextStyle(color: Colors.black54, fontSize: 11),),
                                                                 Expanded(child: SizedBox()),
                                                                 Text("Units : ${qnty},", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 11)),
                                                                 SizedBox(width: 5,),
-                                                                Text('ML : ${product.volume}', style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w700, fontSize: 11),),
+                                                                Text('ML : ${volume}', style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w700, fontSize: 11),),
 
                                                               ],
                                                             ),
                                                             Row(
                                                               children: [
-                                                                Text(_fltSpplr.length == 0 ? 'Supplier not available' : 'Supplier : ${_fltSpplr.first.name}', style: TextStyle(fontSize: 11, color: Colors.black),),
+                                                                Text( 'Supplier : ${supplier}', style: TextStyle(fontSize: 11, color: Colors.black),),
                                                                 Expanded(child: SizedBox()),
                                                                 Text(
-                                                                  "BP: Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))} SP: Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}",
+                                                                  "BP: Ksh.${formatNumberWithCommas(buy*qnty)} SP: Ksh.${formatNumberWithCommas(sell*qnty)}",
                                                                   style: TextStyle(fontSize: 11, color: Colors.black),
                                                                 )
                                                               ],
@@ -641,11 +653,14 @@ class _CreatePurchaseState extends State<CreatePurchase> {
               children: [
                 DialogTitle(title: 'P R O D U C T S'),
                 Expanded(
-                    child: DialogSelectProduct(
-                      entity: widget.entity,
-                      addProducts: _addProducts,
-                      purchaseId: purchaseId,
-                      products: _products,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: DialogSelectProduct(
+                        entity: widget.entity,
+                        addProducts: _addProducts,
+                        purchaseId: purchaseId,
+                        products: _products,
+                      ),
                     )
                 )
               ],
@@ -946,14 +961,18 @@ class _CreatePurchaseState extends State<CreatePurchase> {
   _addProducts(List<ProductModel> products, List<PurchaseModel> purchase){
     _products.addAll(products);
     _purchase.addAll(purchase);
-    totalPrice = _purchase.fold(0.0, (previousValue, element) => previousValue + (double.parse(element.bprice.toString()) * double.parse(element.quantity.toString())));
+    _purchase.forEach((p){
+      print(p.toJson());
+    });
+    totalPrice = _purchase.fold(0.0, (previousValue, element) =>
+    previousValue + (double.parse(element.bprice.toString()) * int.parse(element.quantity.toString())));
     setState(() {
-
     });
   }
   _updateQuantity(PurchaseModel purchase, String quantity){
     _purchase.firstWhere((element) => element.prcid == purchase.prcid).quantity = quantity;
-    totalPrice = _purchase.fold(0.0, (previousValue, element) => previousValue + (double.parse(element.bprice.toString()) * double.parse(element.quantity.toString())));
+    totalPrice = _purchase.fold(0.0, (previousValue, element) =>
+    previousValue + (double.parse(element.bprice.toString()) * int.parse(element.quantity.toString())));
     setState(() {
 
     });
