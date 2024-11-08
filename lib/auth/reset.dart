@@ -91,7 +91,7 @@ class _ResetState extends State<Reset> {
       body: Center(
         child: Container(
           width: 450,
-          margin: const EdgeInsets.symmetric(horizontal: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
               const SizedBox(),
