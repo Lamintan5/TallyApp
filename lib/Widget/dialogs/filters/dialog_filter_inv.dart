@@ -6,7 +6,6 @@ import '../../../main.dart';
 import '../../../models/entities.dart';
 import '../../../models/suppliers.dart';
 import '../../../utils/colors.dart';
-import '../../text/text_format.dart';
 import '../../text_filed_input.dart';
 import '../call_actions/double_call_action.dart';
 
@@ -175,8 +174,8 @@ class _DialogFilterInvState extends State<DialogFilterInv> {
                   isExpanded: true,
                   items: _sppler.map((SupplierModel supplier) {
                     return DropdownMenuItem<SupplierModel>(
-                      value: supplier,
-                      child: Text(TFormat().decryptField(supplier.name.toString(), widget.entity.eid),style: TextStyle(fontWeight: FontWeight.normal),),
+                      value: supplier, // Use the unique SupplierModel as the value
+                      child: Text(supplier.name.toString(),style: TextStyle(fontWeight: FontWeight.normal),),
                     );
                   }).toList(),
                   onChanged: (SupplierModel? newValue) {

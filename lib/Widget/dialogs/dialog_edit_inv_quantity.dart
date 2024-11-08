@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/data.dart';
-import '../text/text_format.dart';
 
 class DialogEditInvQuantity extends StatefulWidget {
   final InventModel inventory;
@@ -27,7 +26,7 @@ class _DialogEditInvQuantityState extends State<DialogEditInvQuantity> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _quantity.text =  TFormat().decryptField(widget.inventory.quantity.toString(), widget.inventory.eid.toString());
+    _quantity.text = widget.inventory.quantity.toString();
   }
 
   @override
@@ -163,7 +162,7 @@ class _DialogEditInvQuantityState extends State<DialogEditInvQuantity> {
                             setState(() {
                               _loading = true;
                             });
-                            await Data().editInventory(widget.inventory, context, widget.reload, TFormat().encryptText(_quantity.text, widget.inventory.eid.toString())).then((response){
+                            await Data().editInventory(widget.inventory, context, widget.reload, _quantity.text).then((response){
                               setState(() {
                                 _loading = response;
                               });

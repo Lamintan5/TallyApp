@@ -22,7 +22,6 @@ import '../../Widget/dialogs/call_actions/double_call_action.dart';
 import '../../Widget/dialogs/dialog_add_inv.dart';
 import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
-import '../../Widget/text/text_format.dart';
 import '../../models/duties.dart';
 import '../../resources/services.dart';
 import '../../utils/colors.dart';
@@ -90,8 +89,9 @@ class _InvReportTabState extends State<InvReportTab> {
     List filteredList = [];
     if (_search.text.isNotEmpty) {
       _filteredPrdcts.forEach((item) {
-        if (TFormat().decryptField(item.name.toString(), widget.entity.eid).toLowerCase().contains(_search.text.toString().toLowerCase())
-            || TFormat().decryptField(item.category.toString(), widget.entity.eid).toLowerCase().contains(_search.text.toString().toLowerCase()))
+        if (item.name.toString().toLowerCase().contains(_search.text.toString().toLowerCase())
+            || item.category.toString().toLowerCase().contains(_search.text.toString().toLowerCase())
+            || item.supplier.toString().toLowerCase().contains(_search.text.toString().toLowerCase()))
           filteredList.add(item);
       });
     } else {
@@ -465,22 +465,15 @@ class _InvReportTabState extends State<InvReportTab> {
                                 ),
                               ],
                               rows: filteredList.map((product){
+                                _fltSpplr = _spplr.where((sup) => sup.sid == product.supplier).toList();
                                 filtInv = _inv.where((inv) => inv.productid == product.prid).toList();
-                                var qnty = filtInv.length == 0 ? 0 : int.parse(TFormat().decryptField(filtInv.first.quantity.toString(), widget.entity.eid));
+                                var qnty = filtInv.length == 0 ? 0 : int.parse(filtInv.first.quantity.toString());
                                 var invento = _inv.isEmpty? InventModel(iid: "") : _inv.firstWhere((inv) => inv.productid == product.prid);
-                                String name = TFormat().decryptField(product.name.toString(), widget.entity.eid.toString());
-                                String category = TFormat().decryptField(product.category.toString(), widget.entity.eid.toString());
-                                String volume = TFormat().decryptField(product.volume.toString(), widget.entity.eid.toString());
-                                double buy = double.parse(TFormat().decryptField(product.buying.toString(), widget.entity.eid.toString()));
-                                double sell = double.parse(TFormat().decryptField(product.selling.toString(), widget.entity.eid.toString()));
-                                String supplier = _spplr.isEmpty
-                                    ? 'N/A'
-                                    :  TFormat().decryptField(_spplr.firstWhere((sup) => sup.sid == product.supplier).name.toString(), widget.entity.eid.toString());
                                 return DataRow(
                                     cells: [
                                       DataCell(
                                           Text(
-                                            name,style: TextStyle(color: Colors.black),),
+                                            product.name.toString(),style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
@@ -488,7 +481,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            category,
+                                            product.category.toString(),
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -497,7 +490,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            volume,
+                                            product.volume.toString(),
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -506,7 +499,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            supplier,
+                                            _fltSpplr.length == 0 ? 'N/A' : _fltSpplr.first.name.toString(),
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -566,7 +559,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            'Ksh.${formatNumberWithCommas(buy)}',
+                                            'Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))}',
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -575,7 +568,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            'Ksh.${formatNumberWithCommas(sell)}',
+                                            'Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}',
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -584,7 +577,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            filtInv.length == 0 ? '0' : 'Ksh.${formatNumberWithCommas(qnty * buy)}',
+                                            filtInv.length == 0 ? '0' : 'Ksh.${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString()) * double.parse(product.buying.toString()))}',
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -593,7 +586,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            filtInv.length == 0 ? '0' : 'Ksh.${formatNumberWithCommas(qnty * sell)}',
+                                            filtInv.length == 0 ? '0' : 'Ksh.${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.selling.toString()))}',
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -759,16 +752,8 @@ class _InvReportTabState extends State<InvReportTab> {
                                 ProductModel product = filteredList[index];
                                 _fltSpplr = _spplr.where((sup) => sup.sid == product.supplier).toList();
                                 filtInv = _inv.where((inv) => inv.productid == product.prid).toList();
-                                var qnty = filtInv.length == 0 ? 0 : int.parse(TFormat().decryptField(filtInv.first.quantity.toString(), widget.entity.eid));
+                                var qnty = filtInv.length == 0 ? 0 : int.parse(filtInv.first.quantity.toString());
                                 var invento = filtInv.isEmpty || filtInv.length == 0 ? InventModel(iid: "") :filtInv.first;
-                                String name = TFormat().decryptField(product.name.toString(), widget.entity.eid.toString());
-                                String category = TFormat().decryptField(product.category.toString(), widget.entity.eid.toString());
-                                String volume = TFormat().decryptField(product.volume.toString(), widget.entity.eid.toString());
-                                double buy = double.parse(TFormat().decryptField(product.buying.toString(), widget.entity.eid.toString()));
-                                double sell = double.parse(TFormat().decryptField(product.selling.toString(), widget.entity.eid.toString()));
-                                String supplier = _spplr.isEmpty
-                                    ? 'N/A'
-                                    :  TFormat().decryptField(_spplr.firstWhere((sup) => sup.sid == product.supplier).name.toString(), widget.entity.eid.toString());
                                 return Container(
                                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                                   child: Column(
@@ -814,24 +799,24 @@ class _InvReportTabState extends State<InvReportTab> {
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      Text(name.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
+                                                      Text(product.name.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
                                                       Expanded(child: SizedBox()),
-                                                      Text('Quantity : ${qnty.toString()}, ML : ${volume}',
+                                                      Text('Quantity : ${filtInv.length == 0 ? '0' : filtInv.first.quantity.toString()}, ML : ${product.volume}',
                                                         style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 11),),
                                                     ],
                                                   ),
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
-                                                      Text('BP:Ksh.${formatNumberWithCommas(buy)}, SP:Ksh.${formatNumberWithCommas(sell)}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontSize: 11),),
-                                                      Text('Supplier : ${supplier}', style: TextStyle(fontSize: 11, color: Colors.black),)
+                                                      Text('BP:Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))}, SP:Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontSize: 11),),
+                                                      Text(_fltSpplr.length == 0 ? 'Supplier not available' : 'Supplier : ${_fltSpplr.first.name}', style: TextStyle(fontSize: 11, color: Colors.black),)
                                                     ],
                                                   ),
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
-                                                      Text('IV:Ksh.${formatNumberWithCommas(qnty * buy)}, SV:Ksh.${formatNumberWithCommas(qnty * sell)}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontSize: 11),),
-                                                      Text('${category}', style: TextStyle(color: Colors.black, fontSize: 11),),
+                                                      Text('IV:Ksh.${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.buying.toString()))}, SV:Ksh.${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.selling.toString()))}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontSize: 11),),
+                                                      Text('${product.category}', style: TextStyle(color: Colors.black, fontSize: 11),),
                                                     ],
                                                   ),
                                                 ],
@@ -953,6 +938,7 @@ class _InvReportTabState extends State<InvReportTab> {
                   ),
                 ),
               ),
+               
             ],
           ),
         )
@@ -981,12 +967,11 @@ class _InvReportTabState extends State<InvReportTab> {
             )
         ),
         builder: (context){
-          return  Container(width: 450,
-            padding: EdgeInsets.all(8),
+          return  SizedBox(width: 450,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                DialogTitle(title: 'A D D  I N V E N T O R Y'),
+                DialogTitle(title: 'A D D  N E W  I N V E N T O R Y'),
                 Expanded(
                     child: DialogAddInv(entity: widget.entity, addInv: _addInv, products: _filteredPrdcts)
                 )
@@ -1310,11 +1295,11 @@ class _InvReportTabState extends State<InvReportTab> {
   }
   _filter(String? cat, String? vol, String? sid, String? qnty, String? buy, String? sell){
     supplierId = sid==null?"":sid;
-    category = cat==null?"":TFormat().encryptText(cat, widget.entity.eid);
-    volume = vol==null?"":TFormat().encryptText(vol, widget.entity.eid);
-    quantity = qnty==null?"":TFormat().encryptText(qnty, widget.entity.eid);
-    // bprice = buy==null?"":buy;
-    // sprice = sell==null?"":sell;
+    category = cat==null?"":cat;
+    volume = vol==null?"":vol;
+    quantity = qnty==null?"":qnty;
+    bprice = buy==null?"":buy;
+    sprice = sell==null?"":sell;
     _getData();
   }
 
