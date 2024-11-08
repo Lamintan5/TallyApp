@@ -897,7 +897,7 @@ class _SuppliersState extends State<Suppliers> {
         sharedPreferences.setStringList('mysuppliers', uniqueSuppliers);
         mySuppliers = uniqueSuppliers;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Supplier ${TFormat().decryptField(supplier.name.toString(), supplier.eid.toString())} was added to Suppliers list Succesfully"),
+          content: Text("Supplier ${supplier.name} was added to Suppliers list Succesfully"),
           showCloseIcon: true,
         ));
         _getData();

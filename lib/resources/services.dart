@@ -1037,11 +1037,11 @@ class Services{
       map["sid"] = supplier.sid;
       map["pid"] = supplier.pid;
       map["eid"] = supplier.eid;
-      map["name"] = supplier.name;
-      map["category"] = supplier.category;
-      map["company"] = supplier.company;
-      map["phone"] = supplier.phone;
-      map["email"] = supplier.email;
+      map["name"] = TFormat().encryptText(supplier.name!, supplier.eid!);
+      map["category"] = TFormat().encryptText(supplier.category!, supplier.eid!);
+      map["company"] = TFormat().encryptText(supplier.company!, supplier.eid!);
+      map["phone"] = TFormat().encryptText(supplier.phone!, supplier.eid!);
+      map["email"] = TFormat().encryptText(supplier.email!, supplier.eid!);
       final response = await http.post(Uri.parse(_SUPPLIERS), body: map);
       return response.body;
     } catch (e) {

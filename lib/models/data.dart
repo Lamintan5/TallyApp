@@ -21,7 +21,6 @@ import 'package:get/get.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Widget/text/text_format.dart';
 import '../main.dart';
 import '../resources/services.dart';
 import '../resources/socket.dart';
@@ -1209,7 +1208,7 @@ class Data{
         update();
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text("Supplier ${TFormat().decryptField(supplier.name.toString(), supplier.eid.toString())} was updated Successfully"),
+                content: Text("Supplier ${supplier.name} was updated Successfully"),
                 showCloseIcon: true,
             )
         );
@@ -1223,7 +1222,7 @@ class Data{
             update();
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text("Supplier ${TFormat().decryptField(supplier.name.toString(), supplier.eid.toString())} was uploaded with changes"),
+                  content: Text("Supplier ${supplier.name} was uploaded with changes"),
                   showCloseIcon: true,
                 )
             );
@@ -1239,7 +1238,7 @@ class Data{
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-                content: Text("Supplier ${TFormat().decryptField(supplier.name.toString(), supplier.eid.toString())} has been successfully updated. Awaiting internet connection."),
+                content: Text("Supplier ${supplier.name} has been successfully updated. Awaiting internet connection."),
               showCloseIcon: true,
             )
         );

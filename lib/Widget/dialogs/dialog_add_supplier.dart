@@ -8,7 +8,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../utils/colors.dart';
 import '../emailTextFormWidget.dart';
-import '../text/text_format.dart';
 import '../text_filed_input.dart';
 
 class DialogAddSupplier extends StatefulWidget {
@@ -169,11 +168,11 @@ class _DialogAddSupplierState extends State<DialogAddSupplier> {
                                     sid: sid,
                                     eid: widget.entity.eid,
                                     pid: widget.entity.pid,
-                                    name: TFormat().encryptText(_name.text.toString().trim(), widget.entity.eid.toString()),
-                                    category: TFormat().encryptText(category.toString(), widget.entity.eid.toString()),
-                                    company: TFormat().encryptText(_company.text.toString().trim(), widget.entity.eid.toString()),
-                                    email: TFormat().encryptText(_email.text.toString().trim(), widget.entity.eid.toString()),
-                                    phone: TFormat().encryptText(_phone.text.toString().trim(), widget.entity.eid.toString()),
+                                    name: _name.text.toString().trim(),
+                                    category: category!,
+                                    company: _company.text.toString().trim(),
+                                    phone: _phone.text.toString().trim(),
+                                    email: _email.text.toString().trim(),
                                     time: DateTime.now().toString(),
                                     checked: 'false'
                                 );
