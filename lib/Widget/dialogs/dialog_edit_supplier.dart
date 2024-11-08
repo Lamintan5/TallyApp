@@ -1,4 +1,3 @@
-import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/models/data.dart';
 import 'package:TallyApp/models/suppliers.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,11 +35,11 @@ class _DialogEditSupplierState extends State<DialogEditSupplier> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _name.text = TFormat().decryptField(widget.supplier.name.toString(), widget.supplier.eid.toString());
-    _company.text = TFormat().decryptField(widget.supplier.company.toString(), widget.supplier.eid.toString());
-    _phone.text = TFormat().decryptField(widget.supplier.phone.toString(), widget.supplier.eid.toString());
-    _email.text = TFormat().decryptField(widget.supplier.email.toString(), widget.supplier.eid.toString());
-    category = TFormat().decryptField(widget.supplier.category.toString(), widget.supplier.eid.toString());
+    _name.text = widget.supplier.name.toString();
+    _company.text = widget.supplier.company.toString();
+    _phone.text = widget.supplier.phone.toString();
+    _email.text = widget.supplier.email.toString();
+    category = widget.supplier.category.toString();
     setState(() {
 
     });

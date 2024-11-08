@@ -6,7 +6,6 @@ import 'package:TallyApp/Widget/dialogs/call_actions/double_call_action.dart';
 import 'package:TallyApp/Widget/dialogs/dialog_edit_supplier.dart';
 import 'package:TallyApp/Widget/dialogs/dialog_title.dart';
 import 'package:TallyApp/Widget/empty_data.dart';
-import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/data.dart';
 import 'package:TallyApp/models/duties.dart';
@@ -419,160 +418,159 @@ class _SuppliersState extends State<Suppliers> {
                                     numeric: false,
                                   ),
                                 ],
-                                rows: filteredList.map((supplier){
-                                  return DataRow(
-                                      cells: [
-                                        DataCell(
-                                            Text(TFormat().decryptField(supplier.name, supplier.eid),style: TextStyle(color: Colors.black),),
-                                            onTap: (){
-                                              // _setValues(inventory);
-                                              // _selectedInv = inventory;
-                                            }
-                                        ),
-                                        DataCell(
-                                            Text(TFormat().decryptField(supplier.company, supplier.eid),style: TextStyle(color: Colors.black),),
-                                            onTap: (){
-                                              // _setValues(inventory);
-                                              // _selectedInv = inventory;
-                                            }
-                                        ),
-                                        DataCell(
-                                            Text(TFormat().decryptField(supplier.category, supplier.eid),style: TextStyle(color: Colors.black),),
-                                            onTap: (){
-                                              // _setValues(inventory);
-                                              // _selectedInv = inventory;
-                                            }
-                                        ),
-                                        DataCell(
-                                            Text(TFormat().decryptField(supplier.phone, supplier.eid),style: TextStyle(color: Colors.black),),
-                                            onTap: (){
-                                              // _setValues(inventory);
-                                              // _selectedInv = inventory;
-                                            }
-                                        ),
-                                        DataCell(
-                                            Text(TFormat().decryptField(supplier.email, supplier.eid),style: TextStyle(color: Colors.black),),
-                                            onTap: (){
-                                              // _setValues(inventory);
-                                              // _selectedInv = inventory;
-                                            }
-                                        ),
-                                        DataCell(
-                                          Center(
-                                              child: PopupMenuButton<String>(
-                                                tooltip: 'Show options',
-                                                child: Icon(
-                                                  supplier.checked == "false"
-                                                      ?Icons.cloud_upload
-                                                      :supplier.checked.contains("DELETE") || supplier.checked.contains("REMOVED")
-                                                      ?CupertinoIcons.delete
-                                                      :supplier.checked.contains("EDIT")
-                                                      ?Icons.edit_rounded
-                                                      :Icons.more_vert,
-                                                  color
-                                                      : supplier.checked == "false" || supplier.checked.contains("DELETE") || supplier.checked.contains("EDIT")
-                                                      || supplier.checked.contains("REMOVED")
-                                                      ? Colors.red
-                                                      :screenBackgroundColor,
-                                                ),
-                                                onSelected: (value) {
-                                                  print('Selected: $value');
-                                                },
-                                                itemBuilder: (BuildContext context) {
-                                                  return [
-                                                    if (supplier.checked == "false" || supplier.checked == "false, EDIT" || supplier.checked.toString().contains("REMOVED"))
-                                                      PopupMenuItem(
-                                                        value: 'upload',
-                                                        child: Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            Icon(Icons.cloud_upload, color: Colors.red,),
-                                                            SizedBox(width: 5,),
-                                                            Text(
-                                                              'Upload', style: TextStyle(
-                                                              color:Colors.red,),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        onTap: (){
-                                                          _upload(supplier);
-                                                        },
-                                                      ),
-                                                    PopupMenuItem(
-                                                      value: 'delete',
-                                                      child: Row(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          Icon(CupertinoIcons.delete,
-                                                            color: admin.contains(currentUser.uid)
-                                                                ? reverse
-                                                                : _dutiesList.contains("SUPPLIER")
-                                                                ?reverse
-                                                                :Colors.red,),
-                                                          SizedBox(width: 5,),
-                                                          Text(
-                                                            'Delete',
-                                                            style: TextStyle(
-                                                              color: admin.contains(currentUser.uid)
-                                                                  ? reverse
-                                                                  : _dutiesList.contains("SUPPLIER")
-                                                                  ?reverse
-                                                                  :Colors.red,
-                                                            ),),
-                                                        ],
-                                                      ),
-                                                      onTap: (){
-                                                        supplier.checked.contains("DELETE")
-                                                            ?dialogCloudDelete(context, supplier)
-                                                            :dialogDelete(context, supplier);
-                                                      },
-                                                    ),
-
-                                                    PopupMenuItem(
-                                                      value: supplier.checked.contains("DELETE")
-                                                          ?'Restore'
-                                                          :'Edit',
-                                                      child: Row(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        children: [
-                                                          Icon(
-                                                            supplier.checked.contains("DELETE")
-                                                                ?Icons.restore
-                                                                :Icons.edit,
-                                                            color: admin.contains(currentUser.uid)
-                                                                ? reverse
-                                                                : _dutiesList.contains("SUPPLIER")
-                                                                ?reverse
-                                                                :Colors.red,
-                                                          ),
-                                                          SizedBox(width: 5,),
-                                                          Text(supplier.checked.contains("DELETE")? 'Restore' : 'Edit',
-                                                            style: TextStyle(
-                                                              color: admin.contains(currentUser.uid)
-                                                                  ? reverse
-                                                                  : _dutiesList.contains("SUPPLIER")
-                                                                  ?reverse
-                                                                  :Colors.red,),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      onTap: (){
-                                                        supplier.checked.contains("DELETE")
-                                                            ?_restore(supplier)
-                                                            :dialogEdit(context, supplier);
-                                                      },
-                                                    ),
-
-                                                  ];
-                                                },
-                                              )
-                                          ),
-
-                                        ),
-                                      ]);
-                                }).toList(),
+                                rows: filteredList.map((supplier) => DataRow(cells: [
+                                  DataCell(
+                                      Text(supplier.name.toString(),style: TextStyle(color: Colors.black),),
+                                      onTap: (){
+                                        // _setValues(inventory);
+                                        // _selectedInv = inventory;
+                                      }
                                   ),
-                                ),
+                                  DataCell(
+                                      Text(supplier.company.toString(),style: TextStyle(color: Colors.black),),
+                                      onTap: (){
+                                        // _setValues(inventory);
+                                        // _selectedInv = inventory;
+                                      }
+                                  ),
+                                  DataCell(
+                                      Text(supplier.category.toString(),style: TextStyle(color: Colors.black),),
+                                      onTap: (){
+                                        // _setValues(inventory);
+                                        // _selectedInv = inventory;
+                                      }
+                                  ),
+                                  DataCell(
+                                      Text(supplier.phone.toString(),style: TextStyle(color: Colors.black),),
+                                      onTap: (){
+                                        // _setValues(inventory);
+                                        // _selectedInv = inventory;
+                                      }
+                                  ),
+                                  DataCell(
+                                      Text(supplier.email.toString(),style: TextStyle(color: Colors.black),),
+                                      onTap: (){
+                                        // _setValues(inventory);
+                                        // _selectedInv = inventory;
+                                      }
+                                  ),
+                                  DataCell(
+                                    Center(
+                                        child: PopupMenuButton<String>(
+                                          tooltip: 'Show options',
+                                          child: Icon(
+                                            supplier.checked == "false"
+                                                ?Icons.cloud_upload
+                                                :supplier.checked.contains("DELETE") || supplier.checked.contains("REMOVED")
+                                                ?CupertinoIcons.delete
+                                                :supplier.checked.contains("EDIT")
+                                                ?Icons.edit_rounded
+                                                :Icons.more_vert,
+                                            color
+                                              : supplier.checked == "false" || supplier.checked.contains("DELETE") || supplier.checked.contains("EDIT")
+                                                || supplier.checked.contains("REMOVED")
+                                              ? Colors.red
+                                              :screenBackgroundColor,
+                                          ),
+                                          onSelected: (value) {
+                                            print('Selected: $value');
+                                          },
+                                          itemBuilder: (BuildContext context) {
+                                            return [
+                                              if (supplier.checked == "false" || supplier.checked == "false, EDIT" || supplier.checked.toString().contains("REMOVED"))
+                                                PopupMenuItem(
+                                                  value: 'upload',
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      Icon(Icons.cloud_upload, color: Colors.red,),
+                                                      SizedBox(width: 5,),
+                                                      Text(
+                                                        'Upload', style: TextStyle(
+                                                        color:Colors.red,),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  onTap: (){
+                                                    _upload(supplier);
+                                                  },
+                                                ),
+                                              PopupMenuItem(
+                                                value: 'delete',
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Icon(CupertinoIcons.delete,
+                                                      color: admin.contains(currentUser.uid)
+                                                        ? reverse
+                                                        : _dutiesList.contains("SUPPLIER")
+                                                        ?reverse
+                                                        :Colors.red,),
+                                                    SizedBox(width: 5,),
+                                                    Text(
+                                                      'Delete',
+                                                      style: TextStyle(
+                                                      color: admin.contains(currentUser.uid)
+                                                          ? reverse
+                                                          : _dutiesList.contains("SUPPLIER")
+                                                          ?reverse
+                                                          :Colors.red,
+                                                    ),),
+                                                  ],
+                                                ),
+                                                onTap: (){
+                                                  supplier.checked.contains("DELETE")
+                                                      ?dialogCloudDelete(context, supplier)
+                                                      :dialogDelete(context, supplier);
+                                                },
+                                              ),
+
+                                              PopupMenuItem(
+                                                value: supplier.checked.contains("DELETE")
+                                                    ?'Restore'
+                                                    :'Edit',
+                                                child: Row(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Icon(
+                                                      supplier.checked.contains("DELETE")
+                                                          ?Icons.restore
+                                                          :Icons.edit,
+                                                      color: admin.contains(currentUser.uid)
+                                                        ? reverse
+                                                        : _dutiesList.contains("SUPPLIER")
+                                                        ?reverse
+                                                        :Colors.red,
+                                                    ),
+                                                    SizedBox(width: 5,),
+                                                    Text(supplier.checked.contains("DELETE")? 'Restore' : 'Edit',
+                                                      style: TextStyle(
+                                                      color: admin.contains(currentUser.uid)
+                                                          ? reverse
+                                                          : _dutiesList.contains("SUPPLIER")
+                                                          ?reverse
+                                                          :Colors.red,),
+                                                    ),
+                                                  ],
+                                                ),
+                                                onTap: (){
+                                                  supplier.checked.contains("DELETE")
+                                                      ?_restore(supplier)
+                                                      :dialogEdit(context, supplier);
+                                                },
+                                              ),
+
+                                            ];
+                                          },
+                                        )
+                                    ),
+
+                                  ),
+
+                                ]),
+                                ).toList(),
+                                                            ),
+                                                          ),
                               )
                               : SizedBox(width: 450,
                             child: ListView.builder(
@@ -621,17 +619,16 @@ class _SuppliersState extends State<Suppliers> {
                                                           child: Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
-                                                              Text(TFormat().decryptField(supplier.name.toString(), supplier.eid.toString()), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
-                                                              Text('${TFormat().decryptField(supplier.company.toString(), supplier.eid.toString())},  ${TFormat().decryptField(supplier.category.toString(), supplier.eid.toString())}',
-                                                                style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black),),
+                                                              Text(supplier.name.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
+                                                              Text('${supplier.company},  ${supplier.category}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black),),
                                                             ],
                                                           ),
                                                         ),
                                                         Column(
                                                           crossAxisAlignment: CrossAxisAlignment.end,
                                                           children: [
-                                                            Text('${TFormat().decryptField(supplier.phone.toString(), supplier.eid.toString())}', style: TextStyle(color: secondaryColor, fontWeight: FontWeight.w400, fontSize: 11),),
-                                                            Text('${TFormat().decryptField(supplier.email.toString(), supplier.eid.toString())}', style: TextStyle(color: secondaryColor, fontWeight: FontWeight.w400, fontSize: 11),),
+                                                            Text('${supplier.phone}', style: TextStyle(color: secondaryColor, fontWeight: FontWeight.w400, fontSize: 11),),
+                                                            Text('${supplier.email}', style: TextStyle(color: secondaryColor, fontWeight: FontWeight.w400, fontSize: 11),),
                                                           ],
                                                         )
                                                       ],

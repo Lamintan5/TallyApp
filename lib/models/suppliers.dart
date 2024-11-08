@@ -1,5 +1,3 @@
-import 'package:TallyApp/Widget/text/text_format.dart';
-
 class SupplierModel {
   String sid;
   String? eid;
@@ -19,7 +17,7 @@ class SupplierModel {
       sid: json['sid'] as String,
       eid: json['eid'] as String,
       pid: json['pid'] as String,
-      name: json['name'],
+      name: json['name'] as String,
       category: json['category'] as String,
       company: json['company'] as String,
       phone: json['phone'] as String,
