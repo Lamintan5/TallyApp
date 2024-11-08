@@ -11,7 +11,6 @@ import 'package:uuid/uuid.dart';
 
 import '../../models/suppliers.dart';
 import '../../utils/colors.dart';
-import '../text/text_format.dart';
 import '../text_filed_input.dart';
 
 class DialogAddProduct extends StatefulWidget {
@@ -172,7 +171,7 @@ class _DialogAddProductState extends State<DialogAddProduct> {
                       items: _sppler.map((SupplierModel supplier) {
                         return DropdownMenuItem<SupplierModel>(
                           value: supplier, // Use the unique SupplierModel as the value
-                          child: Text(TFormat().decryptField(supplier.name.toString(), widget.entity.eid.toString()),),
+                          child: Text(supplier.name.toString(),),
                         );
                       }).toList(),
                       onChanged: (SupplierModel? newValue) {
@@ -263,18 +262,17 @@ class _DialogAddProductState extends State<DialogAddProduct> {
                                       prid: prid,
                                       eid: widget.entity.eid.toString(),
                                       pid: widget.entity.pid.toString(),
-                                      name: TFormat().encryptText(_name.text.trim(), widget.entity.eid.toString()),
-                                      category: TFormat().encryptText(category.toString(), widget.entity.eid.toString()),
-                                      quantity:  TFormat().encryptText('0', widget.entity.eid.toString()),
-                                      volume: TFormat().encryptText(volume.toString(), widget.entity.eid.toString()),
+                                      name: _name.text.trim().toString(),
+                                      category: category.toString(),
+                                      quantity:  '0',
+                                      volume: volume.toString(),
                                       supplier: selectedSupplier!.sid.toString(),
-                                      buying: TFormat().encryptText(_buy.text.trim(), widget.entity.eid.toString()),
-                                      selling: TFormat().encryptText(_sell.text.trim(), widget.entity.eid.toString()),
+                                      buying: _buy.text.trim().toString(),
+                                      selling: _sell.text.trim().toString(),
                                       checked: 'false',
-                                      type: TFormat().encryptText('PRODUCT', widget.entity.eid.toString()),
+                                      type: 'PRODUCT',
                                       time: DateTime.now().toString()
                                   );
-                                  print("This is ${product.buying}");
                                   widget.addProduct(product);
                                   _clear();
                                 }

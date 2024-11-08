@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import '../../models/data.dart';
 import '../../models/suppliers.dart';
 import '../../utils/colors.dart';
-import '../text/text_format.dart';
 import '../text_filed_input.dart';
 
 class DialogEditProduct extends StatefulWidget {
@@ -54,16 +53,16 @@ class _DialogEditProductState extends State<DialogEditProduct> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _name.text = TFormat().decryptField(widget.product.name.toString(), widget.product.eid.toString());
+    _name.text = widget.product.name.toString();
     volume = widget.product.volume == null
         ? "225ml"
-        : TFormat().decryptField(widget.product.volume.toString(), widget.product.eid.toString());
+        : widget.product.volume.toString();
         //:widget.product.volume.toString();
-    _buy.text = TFormat().decryptField(widget.product.buying.toString(), widget.product.eid.toString());
-    _sell.text = TFormat().decryptField(widget.product.selling.toString(), widget.product.eid.toString());
+    _buy.text = widget.product.buying.toString();
+    _sell.text = widget.product.selling.toString();
     category = widget.product.category == null
         ? 'Whiskey'
-        : TFormat().decryptField(widget.product.category.toString(), widget.product.eid.toString());
+        : widget.product.category.toString();
         //: widget.product.category;
     _getSupplier();
   }
@@ -183,7 +182,7 @@ class _DialogEditProductState extends State<DialogEditProduct> {
                   items: _suppliers.map((SupplierModel supplier) {
                     return DropdownMenuItem<SupplierModel>(
                       value: supplier,
-                      child: Text(TFormat().decryptField(supplier.name.toString(), widget.product.eid.toString())),
+                      child: Text(supplier.name.toString()),
                     );
                   }).toList(),
                   onChanged: (SupplierModel? newValue) {
@@ -235,6 +234,7 @@ class _DialogEditProductState extends State<DialogEditProduct> {
                 ),
               ],
             ),
+            SizedBox(height: 10,),
             Divider(
               thickness: 0.1,
               color: reverse,
@@ -271,14 +271,14 @@ class _DialogEditProductState extends State<DialogEditProduct> {
                               prid: widget.product.prid,
                               eid: widget.product.eid,
                               pid: widget.product.pid,
-                              name: TFormat().encryptText(_name.text.trim(), widget.product.eid.toString()),
-                              category: TFormat().encryptText(category.toString(), widget.product.eid.toString()),
-                              quantity:  TFormat().encryptText('0', widget.product.eid.toString()),
-                              volume: TFormat().encryptText(volume.toString(), widget.product.eid.toString()),
+                              name: _name.text.toString(),
+                              category: category.toString(),
+                              type: widget.product.type,
+                              quantity: '0',
+                              volume: volume.toString(),
                               supplier: selectedSupplier!.sid.toString(),
-                              buying: TFormat().encryptText(_buy.text.trim(), widget.product.eid.toString()),
-                              selling: TFormat().encryptText(_sell.text.trim(), widget.product.eid.toString()),
-                              type: widget.product.type
+                              buying: _buy.text.toString(),
+                              selling: _sell.text.toString(),
                             );
                             await Data().editProduct(product, context, widget.getData).then((response){
                               Navigator.pop(context);

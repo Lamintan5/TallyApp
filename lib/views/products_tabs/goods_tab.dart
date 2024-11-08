@@ -20,7 +20,6 @@ import '../../Widget/dialogs/dialog_edit_product.dart';
 import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
 import '../../Widget/dialogs/filters/dialog_filter_goods.dart';
-import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/data.dart';
 import '../../models/duties.dart';
@@ -98,7 +97,6 @@ class _GoodsTabState extends State<GoodsTab> {
     _duties = myDuties.map((jsonString) => DutiesModel.fromJson(json.decode(jsonString))).toList();
     _spplr = mySuppliers.map((jsonString) => SupplierModel.fromJson(json.decode(jsonString))).toList();
     _dutiesString = _duties.isEmpty? "": _duties.firstWhere((test) => test.eid == widget.entity.eid && test.pid == currentUser.uid, orElse: ()=>DutiesModel(did: "", duties: "")).duties.toString();
-
     _prd = _prd.where((element) {
       bool matchesEid = element.eid == widget.entity.eid;
       bool matchesCategory = category.isEmpty || element.category == category;
@@ -136,13 +134,12 @@ class _GoodsTabState extends State<GoodsTab> {
     setState(() {
       _loading = true;
     });
-    String name = TFormat().decryptField(product.name.toString(), product.eid.toString());
     Services.addProduct(product).then((response){
       if (response == "Success")
       {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Product ${name} was uploaded Successfully"),
+            content: Text("Product ${product.name} was uploaded Successfully"),
             showCloseIcon: true,
           )
         );
@@ -150,7 +147,7 @@ class _GoodsTabState extends State<GoodsTab> {
       {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Product ${name} was not uploaded. Please try again"),
+              content: Text("Product ${product.name} was not uploaded. Please try again"),
               showCloseIcon: true,
               action: SnackBarAction(label: "Try Again", onPressed: _upload(product)),
             )
@@ -159,7 +156,7 @@ class _GoodsTabState extends State<GoodsTab> {
       {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Product ${name} already Exists"),
+              content: Text("Product ${product.name} already Exists"),
               showCloseIcon: true,
             )
         );
@@ -588,51 +585,45 @@ class _GoodsTabState extends State<GoodsTab> {
                               ],
                               rows: filteredList.map((product){
                                 _fltSpplr = _spplr.where((sup) => sup.sid == product.supplier).toList();
-                                double buy = double.parse(TFormat().decryptField(product.buying.toString(), widget.entity.eid.toString()));
-                                double sell = double.parse(TFormat().decryptField(product.selling.toString(), widget.entity.eid.toString()));
-                                String supplier = _fltSpplr.length == 0 ? 'N/A' : TFormat().decryptField(_fltSpplr.first.name.toString(), widget.entity.eid.toString());
-                                String name = TFormat().decryptField(product.name.toString(), widget.entity.eid.toString());
-                                String category = TFormat().decryptField(product.category.toString(), widget.entity.eid.toString());
-                                String vol = TFormat().decryptField(product.volume.toString(), widget.entity.eid.toString());
                                 return DataRow(
                                     cells: [
                                       DataCell(
-                                          Text(name,style: TextStyle(color: Colors.black),),
+                                          Text(product.name.toString(),style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
                                           }
                                       ),
                                       DataCell(
-                                          Text(category,style: TextStyle(color: Colors.black),),
+                                          Text(product.category.toString(),style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
                                           }
                                       ),
                                       DataCell(
-                                          Text(vol,style: TextStyle(color: Colors.black),),
+                                          Text(product.volume.toString(),style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
                                           }
                                       ),
                                       DataCell(
-                                          Text(supplier,style: TextStyle(color: Colors.black),),
+                                          Text(_fltSpplr.length == 0 ? 'N/A' : _fltSpplr.first.name.toString(),style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(buy)}',style: TextStyle(color: Colors.black),),
+                                          Text('Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))}',style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(sell)}',style: TextStyle(color: Colors.black),),
+                                          Text('Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}',style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
@@ -778,12 +769,11 @@ class _GoodsTabState extends State<GoodsTab> {
                                 );
                               }
                               ).toList(),
-                            ),
-                          ),
+                                                        ),
+                                                      ),
                             )
                             : _layout == 1
-                            ?SizedBox(
-                          width: 450,
+                            ?SizedBox(width: 450,
                           child: ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
@@ -791,12 +781,6 @@ class _GoodsTabState extends State<GoodsTab> {
                               itemBuilder: (context, index){
                                 ProductModel product = filteredList[index];
                                 _fltSpplr = _spplr.where((sup) => sup.sid == product.supplier).toList();
-                                double buy = double.parse(TFormat().decryptField(product.buying.toString(), widget.entity.eid.toString()));
-                                double sell = double.parse(TFormat().decryptField(product.selling.toString(), widget.entity.eid.toString()));
-                                String supplier = _fltSpplr.length == 0 ? 'Supplier not available' : TFormat().decryptField(_fltSpplr.first.name.toString(), widget.entity.eid.toString());
-                                String name = TFormat().decryptField(product.name.toString(), widget.entity.eid.toString());
-                                String category = TFormat().decryptField(product.category.toString(), widget.entity.eid.toString());
-                                String vol = TFormat().decryptField(product.volume.toString(), widget.entity.eid.toString());
                                 return Column(
                                   children: [
                                     InkWell(
@@ -833,19 +817,20 @@ class _GoodsTabState extends State<GoodsTab> {
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      Text(name, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
+                                                      Text(product.name.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
                                                       SizedBox(width: 10,),
-                                                      Text(category, style: TextStyle(color: Colors.black54, fontSize: 11),),
+                                                      Text('${product.category}', style: TextStyle(color: Colors.black54, fontSize: 11),),
                                                       Expanded(child: SizedBox()),
-                                                      Text('ML : ${vol}', style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w700, fontSize: 11),),
+                                                      Text('ML : ${product.volume}', style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w700, fontSize: 11),),
+
                                                     ],
                                                   ),
                                                   Row(
                                                     children: [
-                                                      Text('Supplier : ${supplier}', style: TextStyle(fontSize: 11, color: Colors.black),),
+                                                      Text(_fltSpplr.length == 0 ? 'Supplier not available' : 'Supplier : ${_fltSpplr.first.name}', style: TextStyle(fontSize: 11, color: Colors.black),),
                                                       Expanded(child: SizedBox()),
                                                       Text(
-                                                        "BP: Ksh.${formatNumberWithCommas(buy)} SP: Ksh.${formatNumberWithCommas(sell)}",
+                                                        "BP: Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))} SP: Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}",
                                                         style: TextStyle(fontSize: 11, color: Colors.black),
                                                       )
                                                     ],
@@ -988,7 +973,6 @@ class _GoodsTabState extends State<GoodsTab> {
                             ),
                             itemBuilder: (context, index){
                               ProductModel product = filteredList[index];
-                              String name = TFormat().decryptField(product.name.toString(), widget.entity.eid.toString());
                               return DottedBorder(
                                 color: secondaryColor,
                                 borderType: BorderType.RRect,
@@ -1024,7 +1008,7 @@ class _GoodsTabState extends State<GoodsTab> {
                                       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
                                       child: Column(
                                         children: [
-                                          Text(name, style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18),),
+                                          Text(product.name.toString(), style: TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18),),
                                           // Row(
                                           //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           //   children: [
@@ -1097,7 +1081,6 @@ class _GoodsTabState extends State<GoodsTab> {
     List<String> uniqueProduct = [];
     List<ProductModel> _product = [];
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String name = TFormat().decryptField(product.name.toString(), widget.entity.eid.toString());
     _product = myProducts.map((jsonString) => ProductModel.fromJson(json.decode(jsonString))).toList();
 
     _product.add(product);
@@ -1107,10 +1090,11 @@ class _GoodsTabState extends State<GoodsTab> {
     sharedPreferences.setStringList("myproducts", uniqueProduct);
     myProducts = uniqueProduct;
     countPrd = _prd.length;
-    _getData();
+    setState(() {
+    });
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Product ${name} was added to Products list"),
+          content: Text("Product ${product.name} was added to Products list"),
           showCloseIcon: true,
         )
     );
@@ -1135,6 +1119,9 @@ class _GoodsTabState extends State<GoodsTab> {
     });
   }
   void dialogQRCode(BuildContext context, ProductModel product) {
+    final dilogbg = Theme.of(context).brightness == Brightness.dark
+        ? Colors.grey[900]
+        : Colors.white;
     final normal = Theme.of(context).brightness == Brightness.dark
         ? Colors.white
         : Colors.black;
@@ -1142,6 +1129,7 @@ class _GoodsTabState extends State<GoodsTab> {
         context: context,
         builder: (context) => Dialog(
           alignment: Alignment.center,
+          backgroundColor: dilogbg,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10)
           ),
@@ -1152,20 +1140,9 @@ class _GoodsTabState extends State<GoodsTab> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DialogTitle(title: 'Q R C O D E'),
-                  RichText(
+                  Text('Scan the QR Code below to quickly record sale for product : ${product.name}',
                     textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Scan the QR Code below to quickly record sale for product ',
-                            style: TextStyle(color: secondaryColor, fontSize: 12),
-                          ),
-                          TextSpan(
-                            text: TFormat().decryptField(product.name.toString(), product.eid.toString()),
-                            style: TextStyle(color: normal)
-                          )
-                        ]
-                      )
+                    style: TextStyle(color: secondaryColor, fontSize: 12),
                   ),
                   SizedBox(height: 20,),
                   Container(height: 300, width: 300,
