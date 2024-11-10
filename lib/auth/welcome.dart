@@ -140,7 +140,6 @@ class _WelcomeState extends State<Welcome> {
   }
 
   Widget buildIndicator() {
-
     return AnimatedSmoothIndicator(
       activeIndex: activeIndex,
       count: welcome.length,
