@@ -88,10 +88,12 @@ class _SuppliersState extends State<Suppliers> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15),
-          child: Text('Suppliers', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),),
+          child: Text('Suppliers', style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600)),
         ),
         Expanded(
           child: SingleChildScrollView(
+            primary: Platform.isAndroid || Platform.isIOS? true :  false,
+            physics: BouncingScrollPhysics(),
             child: Column(
               children: [
                 GridView.builder(

@@ -140,6 +140,8 @@ class _PurchaseTabState extends State<PurchaseTab> {
         : Colors.black;
     return Expanded(
         child: SingleChildScrollView(
+          primary: Platform.isAndroid || Platform.isIOS? true :  false,
+          physics: BouncingScrollPhysics(),
           child: Column(
             children: [
               GridView.builder(

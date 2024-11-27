@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:TallyApp/models/entities.dart';
 import 'package:TallyApp/resources/socket.dart';
@@ -135,6 +136,8 @@ class _DashboardState extends State<Dashboard> {
     bool isLargeText = textScaleFactor >= largeTextThreshold;
     final width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
+      primary: Platform.isAndroid || Platform.isIOS? true :  false,
+      physics: BouncingScrollPhysics(),
       child: Column(
         children: [
           Text('Overview', style: TextStyle(color: Colors.black, fontSize: 30, fontWeight: FontWeight.w600),),
