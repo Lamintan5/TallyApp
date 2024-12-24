@@ -151,6 +151,13 @@ flutter:
     - assets/add/apple_2.png
     - assets/add/box.png
     - assets/add/removed.png
+    - assets/pay/cash.png
+    - assets/pay/master.png
+    - assets/pay/mpesa.png
+    - assets/pay/paypal.png
+    - assets/pay/strip.png
+    - assets/pay/visa.png
+    - assets/pay/card.png
     - assets/1.jpg
     - assets/2.jpg
     - assets/3.jpg
