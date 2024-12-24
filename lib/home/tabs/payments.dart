@@ -1,15 +1,21 @@
 import 'dart:convert';
 
+import 'package:TallyApp/Widget/logos/prop_logo.dart';
+import 'package:TallyApp/home/tabs/receipt.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/entities.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Widget/buttons/card_button.dart';
 import '../../Widget/items/item_paymements.dart';
+import '../../Widget/shimmer_widget.dart';
+import '../../Widget/text/text_format.dart';
 import '../../models/data.dart';
 import '../../models/payments.dart';
 import '../../resources/services.dart';
@@ -29,7 +35,7 @@ class _PaymentsState extends State<Payments> {
   List<PaymentModel> _sale = [];
   List<PaymentModel> _purchase = [];
   List<EntityModel> _newEnt = [];
-
+  List<EntityModel> _entity = [];
 
 
   bool _loading = false;
@@ -51,6 +57,7 @@ class _PaymentsState extends State<Payments> {
   }
 
   _getData(){
+    _entity = myEntity.map((jsonString) => EntityModel.fromJson(json.decode(jsonString))).toList();
     _pay = myPayments.map((jsonString) => PaymentModel.fromJson(json.decode(jsonString))).toList();
     _pay = _pay.where((test) => test.admin.toString().contains(currentUser.uid)||test.payerid==currentUser.uid).toList();
     _sale = _pay.where((element) => element.type == "SALE" || element.type == "RECEIVABLE").toList();
@@ -73,10 +80,15 @@ class _PaymentsState extends State<Payments> {
 
   @override
   Widget build(BuildContext context) {
+    final reverse = Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : Colors.black;
     final color1 = Theme.of(context).brightness == Brightness.dark
         ? Colors.white10
         : Colors.black12;
-
+    final secBtn = Theme.of(context).brightness == Brightness.dark
+        ? Colors.cyanAccent
+        : Colors.cyan;
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -247,7 +259,7 @@ class _PaymentsState extends State<Payments> {
                             return Center(
                               child: Container(
                                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                                margin: EdgeInsets.symmetric(vertical: 10),
+                                margin: EdgeInsets.only(bottom: 10),
                                 decoration: BoxDecoration(
                                   color: color1,
                                   borderRadius: BorderRadius.circular(4),
@@ -265,7 +277,79 @@ class _PaymentsState extends State<Payments> {
                           },
                           itemComparator: (item1, item2) => DateTime.parse(item1.time.toString()).compareTo(DateTime.parse(item2.time.toString())),
                           indexedItemBuilder : (BuildContext context, PaymentModel payment, int index) {
-                            return ItemPayments(payment: payment);
+                            EntityModel entity = _entity.firstWhere((test) => test.eid == payment.eid, orElse: () =>
+                                EntityModel(eid: "", title: "--", image: ""));
+                            bool _isAdmin = entity.admin.toString().contains(currentUser.uid);
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Slidable(
+                                endActionPane:  ActionPane(
+                                  motion: ScrollMotion(),
+                                  children: [
+                                    SizedBox(width: _isAdmin? 5 : 0,),
+                                    _isAdmin? SlidableAction(
+                                      onPressed: null,
+                                      backgroundColor: CupertinoColors.systemRed.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(25),
+                                      foregroundColor: CupertinoColors.systemRed,
+                                      icon: CupertinoIcons.delete,
+                                    ) : SizedBox(),
+                                    SizedBox(width: 5,),
+                                    SlidableAction(
+                                      onPressed: (context){
+                                        Get.to(() => Receipt(payment: payment), transition: Transition.rightToLeft);
+                                      },
+                                      backgroundColor: color1,
+                                      borderRadius: BorderRadius.circular(25),
+                                      foregroundColor: reverse,
+                                      icon: CupertinoIcons.doc_plaintext,
+                                    ),
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: (){
+                                    Get.to(() => Receipt(payment: payment), transition: Transition.rightToLeft);
+                                  },
+                                  borderRadius: BorderRadius.circular(25),
+                                  splashColor: secBtn,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                                    decoration: BoxDecoration(
+                                        color: color1,
+                                        borderRadius: BorderRadius.circular(25)
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        entity.eid == ""
+                                            ? ShimmerWidget.circular(width: 40, height: 40)
+                                            : PropLogo(entity: entity),
+                                        SizedBox(width: 15,),
+                                        Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(entity.title.toString(), style: TextStyle(fontSize: 16)),
+                                                Text(
+                                                    '${TFormat().toCamelCase(payment.type.toString())} ● ${payment.items} Items',
+                                                    style: TextStyle(color: secondaryColor)
+                                                ),
+                                              ],
+                                            )
+                                        ),
+                                        Text(
+                                          '${payment.type.toString() == "PURCHASE"||payment.type.toString() =="PAYABLE"?'-':'+'}${TFormat().getCurrency()}${TFormat().formatNumberWithCommas(double.parse(payment.amount.toString()))}',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700,
+                                              color: payment.type.toString() == "PURCHASE"||payment.type.toString() =="PAYABLE"? CupertinoColors.activeOrange : CupertinoColors.activeGreen
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ),
