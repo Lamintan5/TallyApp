@@ -48,8 +48,8 @@
 		<key>UIStatusBarHidden</key>
 		<false/>
 		<key>LSApplicationQueriesSchemes</key>
-        <array>
-          <string>tel</string>
-        </array>
+		<array>
+			<string>tel</string>
+		</array>
 	</dict>
 </plist>
