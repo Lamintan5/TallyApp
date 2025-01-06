@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:TallyApp/Widget/dialogs/call_actions/double_call_action.dart';
+import 'package:TallyApp/Widget/dialogs/dialog_title.dart';
 import 'package:TallyApp/Widget/logos/prop_logo.dart';
+import 'package:TallyApp/Widget/profile_images/user_profile.dart';
 import 'package:TallyApp/home/tabs/receipt.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/entities.dart';
@@ -18,11 +21,13 @@ import '../../Widget/shimmer_widget.dart';
 import '../../Widget/text/text_format.dart';
 import '../../models/data.dart';
 import '../../models/payments.dart';
+import '../../models/users.dart';
 import '../../resources/services.dart';
 import '../../utils/colors.dart';
 
 class Payments extends StatefulWidget {
-  const Payments({super.key});
+  final EntityModel entity;
+  const Payments({super.key, required this.entity});
 
   @override
   State<Payments> createState() => _PaymentsState();
@@ -36,6 +41,7 @@ class _PaymentsState extends State<Payments> {
   List<PaymentModel> _purchase = [];
   List<EntityModel> _newEnt = [];
   List<EntityModel> _entity = [];
+  List<UserModel> _users = [];
 
 
   bool _loading = false;
@@ -59,7 +65,19 @@ class _PaymentsState extends State<Payments> {
   _getData(){
     _entity = myEntity.map((jsonString) => EntityModel.fromJson(json.decode(jsonString))).toList();
     _pay = myPayments.map((jsonString) => PaymentModel.fromJson(json.decode(jsonString))).toList();
-    _pay = _pay.where((test) => test.admin.toString().contains(currentUser.uid)||test.payerid==currentUser.uid).toList();
+    _users = myUsers.map((jsonString) => UserModel.fromJson(json.decode(jsonString))).toList();
+
+    if(!_users.contains(currentUser)){
+      _users.add(currentUser);
+    }
+
+    _pay = _pay.where((test) {
+      bool eidFilter = widget.entity.eid.isNotEmpty ? test.eid == widget.entity.eid : true;
+      bool adminOrPayerFilter = test.admin.toString().contains(currentUser.uid) || test.payerid == currentUser.uid;
+
+      return eidFilter && adminOrPayerFilter;
+    }).toList();
+
     _sale = _pay.where((element) => element.type == "SALE" || element.type == "RECEIVABLE").toList();
     _purchase = _pay.where((element) => element.type == "PURCHASE" || element.type == "PAYABLE").toList();
     inPay = _sale.fold(0, (previousValue, element) => previousValue + double.parse(element.paid.toString()));
@@ -96,7 +114,24 @@ class _PaymentsState extends State<Payments> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(" Payments", style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30),),
+              Row(
+                children: [
+                  widget.entity.eid == ""? SizedBox() : Container(
+                    margin: EdgeInsets.only(right: 10),
+                    child: InkWell(
+                        onTap: (){
+                          Navigator.pop(context);
+                        },
+                        borderRadius: BorderRadius.circular(5),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.arrow_back),
+                        )
+                    ),
+                  ),
+                  Text(" Payments", style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30),),
+                ],
+              ),
               SizedBox(height: 10,),
               Expanded(child:
                 SingleChildScrollView(
@@ -280,6 +315,7 @@ class _PaymentsState extends State<Payments> {
                             EntityModel entity = _entity.firstWhere((test) => test.eid == payment.eid, orElse: () =>
                                 EntityModel(eid: "", title: "--", image: ""));
                             bool _isAdmin = entity.admin.toString().contains(currentUser.uid);
+                            UserModel cashier = _users.firstWhere((test) => test.uid ==payment.payerid!, orElse: () => UserModel(uid: "", image: "", username: "--"));
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 10),
                               child: Slidable(
@@ -288,7 +324,9 @@ class _PaymentsState extends State<Payments> {
                                   children: [
                                     SizedBox(width: _isAdmin? 5 : 0,),
                                     _isAdmin? SlidableAction(
-                                      onPressed: null,
+                                      onPressed: (context){
+                                        dialogDelete(context,payment);
+                                      },
                                       backgroundColor: CupertinoColors.systemRed.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(25),
                                       foregroundColor: CupertinoColors.systemRed,
@@ -322,13 +360,17 @@ class _PaymentsState extends State<Payments> {
                                       children: [
                                         entity.eid == ""
                                             ? ShimmerWidget.circular(width: 40, height: 40)
-                                            : PropLogo(entity: entity),
+                                            : widget.entity.eid == ""
+                                            ? PropLogo(entity: entity)
+                                            : UserProfile(image: cashier.image.toString()),
                                         SizedBox(width: 15,),
                                         Expanded(
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text(entity.title.toString(), style: TextStyle(fontSize: 16)),
+                                                widget.entity.eid == ""
+                                                    ?Text(entity.title.toString(), style: TextStyle(fontSize: 16))
+                                                    :Text(cashier.username.toString(), style: TextStyle(fontSize: 16)) ,
                                                 Text(
                                                     '${TFormat().toCamelCase(payment.type.toString())} ● ${payment.items} Items',
                                                     style: TextStyle(color: secondaryColor)
@@ -336,6 +378,7 @@ class _PaymentsState extends State<Payments> {
                                               ],
                                             )
                                         ),
+
                                         Text(
                                           '${payment.type.toString() == "PURCHASE"||payment.type.toString() =="PAYABLE"?'-':'+'}${TFormat().getCurrency()}${TFormat().formatNumberWithCommas(double.parse(payment.amount.toString()))}',
                                           style: TextStyle(
@@ -344,6 +387,19 @@ class _PaymentsState extends State<Payments> {
                                               color: payment.type.toString() == "PURCHASE"||payment.type.toString() =="PAYABLE"? CupertinoColors.activeOrange : CupertinoColors.activeGreen
                                           ),
                                         ),
+                                        payment.checked == "true"? SizedBox() : Container(
+                                          margin: EdgeInsets.only(left: 10),
+                                            child: Icon(
+                                                payment.checked.toString().toLowerCase().contains("removed") || payment.checked.toString().toLowerCase().contains("delete")
+                                                    ? CupertinoIcons.delete
+                                                    :  payment.checked.toString().toLowerCase().contains("false")
+                                                    ? Icons.cloud_upload
+                                                    : payment.checked.toString().toLowerCase().contains("edit")
+                                                    ? Icons.edit
+                                                    : CupertinoIcons.question,
+                                              color: CupertinoColors.systemRed,
+                                            )
+                                        )
                                       ],
                                     ),
                                   ),
@@ -363,6 +419,51 @@ class _PaymentsState extends State<Payments> {
       ),
     );
   }
+
+  void dialogDelete(BuildContext context, PaymentModel payment){
+    showDialog(
+        context: context,
+        builder: (BuildContext context){
+      return Dialog(
+        alignment: Alignment.center,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10)
+        ),
+        child: Container(
+          width: 450,
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DialogTitle(title: "D E L E T E"),
+              Text(
+                "Are sure you want to delete this payment? If so press the delete button to proceed.",
+                style: TextStyle(color: secondaryColor),
+                textAlign: TextAlign.center,
+              ),
+              DoubleCallAction(
+                  action: (){
+                    Navigator.pop(context);
+                    _delete(payment);
+                  },
+                  title: "Delete",
+                  titleColor: CupertinoColors.systemRed,
+              )
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  _delete(PaymentModel payment){
+    Data().removePayment(payment, _getData, context).then((value){
+
+    });
+
+  }
+
+
   _removeAll()async{
     List<String> uniquePayment = [];
     List<PaymentModel> _payments = [];
