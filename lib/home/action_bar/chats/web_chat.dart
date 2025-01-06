@@ -237,7 +237,7 @@ class _WebChatState extends State<WebChat> {
                       borderRadius: BorderRadius.circular(5),
                       color: CupertinoColors.activeBlue
                     ),
-                    child: Text("Beta", style: TextStyle(fontSize: 12),),
+                    child: Text("Beta", style: TextStyle(fontSize: 12, color: Colors.black),),
                   )
                 ],
               ),
