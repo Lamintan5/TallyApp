@@ -10,6 +10,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../api/api_service.dart';
 import '../api/config.dart';
 import '../main.dart';
+import '../models/billing.dart';
 import '../models/chats.dart';
 import '../models/data.dart';
 import '../models/duties.dart';
@@ -44,6 +45,7 @@ class SocketManager extends GetxController  {
   List<MessModel> _newmess = [];
   List<ChatsModel> _chat = [];
   List<NotifModel> _newNotif = [];
+  List<BillingModel> _bill = [];
 
   SocketManager._();
 
@@ -132,6 +134,7 @@ class SocketManager extends GetxController  {
     _duties = await Services().getMyDuties(currentUser.uid);
     _inventory = await Services().getMyInv(currentUser.uid);
     _payments = await Services().getMyPayments(currentUser.uid);
+    _bill = await Services().getMyBills(currentUser.uid);
 
 
     await Data().addOrUpdateNotifList(_newNotif);
@@ -143,6 +146,7 @@ class SocketManager extends GetxController  {
     await Data().addOrUpdateDutyList(_duties);
     await Data().addOrUpdateInvList(_inventory);
     await Data().addOrUpdatePayments(_payments);
+    await Data().addOrUpdateBillList(_bill);
     return false;
   }
   void setData(){
