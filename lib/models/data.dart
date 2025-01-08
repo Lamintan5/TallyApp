@@ -24,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 import '../resources/services.dart';
 import '../resources/socket.dart';
+import 'billing.dart';
 import 'chats.dart';
 import 'entities.dart';
 import 'messages.dart';
@@ -359,6 +360,39 @@ class Data{
     }
     sharedPreferences.setStringList('myshowcase', myShowCases);
   }
+  Future<void> addOrUpdateBillList(List<BillingModel> newDataList) async {
+    List<BillingModel> _bills = [];
+    List<String> uniqueBills = [];
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _bills = myBills.map((jsonString) => BillingModel.fromJson(json.decode(jsonString))).toList();
+    // entities.removeWhere((ent) => ent.checked == "true" && !newDataList.any((newEnt) => newEnt.eid == ent.eid));
+    for (var newBill in newDataList) {
+      // Check if a user with the same uid exists in _user
+      int existingBillIndex = _bills.indexWhere((bill) => bill.bid == newBill.bid);
+      if (existingBillIndex != -1) {
+        // User with the same uid exists, compare other attributes
+        BillingModel existingBill = _bills[existingBillIndex];
+        if (existingBill.toJson().toString() != newBill.toJson().toString()) {
+          // If any attribute is different, update the existing user with the new data
+          _bills[existingBillIndex] = newBill;
+        }
+      } else {
+        // User with the same uid doesn't exist, add the new user
+        _bills.add(newBill);
+      }
+    }
+    // Mark Entity as DELETED if they are not in newDataList
+    for (var existingBill in _bills) {
+      bool existsInNewDataList = newDataList.any((newBill) => newBill.bid == existingBill.bid);
+      if (!existsInNewDataList && existingBill.checked.toString().contains("true")) {
+        existingBill.checked = "REMOVED";
+      }
+    }
+
+    uniqueBills = _bills.map((model) => jsonEncode(model.toJson())).toList();
+    sharedPreferences.setStringList('mybills', uniqueBills);
+    myBills = uniqueBills;
+  }
 
   Future<void> addOrUpdateMessagesList(List<MessModel> newDataList)async{
     List<String> uniqueMessages= [];
@@ -461,6 +495,29 @@ class Data{
     uniqueNotif = _notification.map((model) => jsonEncode(model.toJson())).toList();
     sharedPreferences.setStringList('mynotif', uniqueNotif);
     myNotif = uniqueNotif;
+  }
+  Future<void> addBill(BillingModel bill) async {
+    List<BillingModel> _bills = [];
+    List<String> uniqueBills = [];
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    _bills = myBills.map((jsonString) => BillingModel.fromJson(json.decode(jsonString))).toList();
+
+    bool exists = false;
+    for (int i = 0; i < _bills.length; i++) {
+      if (_bills[i].bid == bill.bid) {
+        _bills[i] = bill;
+        exists = true;
+        break;
+      }
+    }
+    if (!exists) {
+      _bills.add(bill);
+    }
+
+    uniqueBills = _bills.map((model) => jsonEncode(model.toJson())).toList();
+    sharedPreferences.setStringList('mybills', uniqueBills);
+    myBills = uniqueBills;
   }
 
   Future<void> removePurchaseList(List<PurchaseModel> newDataList, double amount)async{
@@ -1073,6 +1130,63 @@ class Data{
     reload();
     return false;
   }
+  Future<bool> removePayment(PaymentModel payment, Function reload, BuildContext context)async{
+    List<String> uniquePayment = [];
+    List<PaymentModel> _payments = [];
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    _payments = myPayments.map((jsonString) => PaymentModel.fromJson(json.decode(jsonString))).toList();
+
+    PaymentModel payModel = _payments.firstWhere((element) => element.payid == payment.payid);
+
+    _payments.firstWhere((element) => element.payid == payment.payid).checked = payment.checked.toString().contains("DELETE")
+        ? payModel.checked.toString()
+        : "${payModel.checked.toString()}, DELETE";
+
+    uniquePayment = _payments.map((model) => jsonEncode(model.toJson())).toList();
+    sharedPreferences.setStringList("mypayments", uniquePayment);
+    myPayments = uniquePayment;
+    reload();
+
+    if(payment.checked.toString().contains("true")){
+      await Services.deletePayment(payment.payid).then((response){
+        if(response=="success" || response=="Does not exist"){
+          _payments.removeWhere((element) => element.payid == payment.payid);
+          uniquePayment = _payments.map((model) => jsonEncode(model.toJson())).toList();
+          sharedPreferences.setStringList("mypayments", uniquePayment);
+          myPayments = uniquePayment;
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Payment removed from Payments list"),
+                showCloseIcon: true,
+              )
+          );
+        }  else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Payment removed from Payments list. Awaiting internet connection."),
+                showCloseIcon: true,
+              )
+          );
+        }
+        reload();
+      });
+    }
+    else if(payment.checked.toString().contains("REMOVE")){
+      _payments.removeWhere((element) => element.payid == payment.payid);
+      uniquePayment = _payments.map((model) => jsonEncode(model.toJson())).toList();
+      sharedPreferences.setStringList("mypayments", uniquePayment);
+      myPayments = uniquePayment;
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Payment removed from Payments list"),
+            showCloseIcon: true,
+          )
+      );
+      reload();
+    }
+    return false;
+  }
 
   Future<bool> deleteNotif(BuildContext context, NotifModel notif, Function remove) async {
     List<NotifModel> _notification = [];
@@ -1573,6 +1687,48 @@ class Data{
       }
       update();
     });
+    return false;
+  }
+  Future<bool> editBill(BillingModel updatedBill)async{
+    List<BillingModel> _bills = [];
+    List<String> uniqueBill = [];
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    _bills = myBills.map((jsonString) => BillingModel.fromJson(json.decode(jsonString))).toList();
+
+    BillingModel newBill = updatedBill;
+    newBill.accountno = updatedBill.type == 'Different'? '' : updatedBill.accountno;
+
+    _bills.firstWhere((test) => test.bid == newBill.bid).businessno = newBill.businessno;
+    _bills.firstWhere((test) => test.bid == newBill.bid).accountno = newBill.accountno;
+    _bills.firstWhere((test) => test.bid == newBill.bid).phone = newBill.phone;
+    _bills.firstWhere((test) => test.bid == newBill.bid).tillno = newBill.tillno;
+
+    uniqueBill = _bills.map((model) => jsonEncode(model.toJson())).toList();
+    sharedPreferences.setStringList('mybills', uniqueBill);
+    myBills = uniqueBill;
+
+    // await Services.updateBill(updatedBill.bid, newBill.businessno, newBill.account, newBill.type).then((value){
+    //   if(value=="success"){
+    //
+    //     reload();
+    //   } else if(value=="failed"){
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text("Account was not updated please try again"),
+    //           showCloseIcon: true,
+    //         )
+    //     );
+    //   } else {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //         SnackBar(
+    //           content: Text("Account was not updated please try again"),
+    //           showCloseIcon: true,
+    //         )
+    //     );
+    //   }
+    // });
+
+
     return false;
   }
 
