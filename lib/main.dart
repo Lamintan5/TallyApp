@@ -37,6 +37,7 @@ List<String> myNotif = [];
 List<String> myChats = [];
 List<String> myMess = [];
 List<String> myShowCases = [];
+List<String> myBills = [];
 
 final customCacheManager = CacheManager(
     Config(
@@ -102,6 +103,7 @@ class _MyAppState extends State<MyApp> {
     var obtainMyMess= sharedPreferences.getStringList('mymess');
     var obtainNotMyEntity= sharedPreferences.getStringList('notmyentity');
     var obtainMyShowcase= sharedPreferences.getStringList('myshowcase');
+    var obtainMyBills= sharedPreferences.getStringList('mybills');
 
     setState(() {
       currentUser = UserModel(
@@ -135,6 +137,7 @@ class _MyAppState extends State<MyApp> {
       myMess = obtainMyMess == null ? [] : obtainMyMess;
       notMyEntity = obtainNotMyEntity == null ? [] : obtainNotMyEntity;
       myShowCases = obtainMyShowcase == null ? [] : obtainMyShowcase;
+      myBills = obtainMyBills== null ? [] :obtainMyBills;
     });
   }
 
@@ -199,9 +202,10 @@ class _MyAppState extends State<MyApp> {
               },
             ),
           ),
+
       ),
       darkTheme: ThemeData.light(useMaterial3: true,).copyWith(
-        dialogBackgroundColor: Colors.grey[900],
+          dialogBackgroundColor: Colors.grey[900],
           popupMenuTheme: PopupMenuThemeData(color: Colors.grey[900]),
           scaffoldBackgroundColor: screenBackgroundColor,
           iconTheme: IconThemeData(color: Colors.white),

@@ -266,7 +266,6 @@ class _PurchaseReportState extends State<PurchaseReport> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
               decoration: BoxDecoration(
-                color: color,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(

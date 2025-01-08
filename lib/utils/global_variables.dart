@@ -12,6 +12,6 @@ import '../home/tabs/scanner.dart';
 List<StatefulWidget> homeScreenItems = [
   ProfilePage(),
   SellOrBuy(),
-  Payments(),
+  Payments(entity: EntityModel(eid: ""),),
   Reports(entity: EntityModel(eid: ""),),
 ];

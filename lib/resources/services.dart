@@ -14,6 +14,8 @@ import 'package:TallyApp/models/suppliers.dart';
 import 'package:TallyApp/models/users.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/billing.dart';
+
 class Services{
   static String HOST = "http://${domain}/Tally/";
   static String HOSTS5 = "http://${domain}/Studio5ive/";
@@ -31,6 +33,7 @@ class Services{
   static String _NOTIFICATIONS = HOST + 'notifications.php';
   static String _PAYMENTS = HOST + 'payments.php';
   static String _DUTIES = HOST + 'duties.php';
+  static String _BILLING = HOST + 'billing.php';
 
   static  String _ADD  = 'ADD';
   static  String _REGISTER  = 'REGISTER';
@@ -147,6 +150,12 @@ class Services{
   List<DutiesModel> dutyFromJson(String jsonString) {
     final data = json.decode(jsonString);
     return List<DutiesModel>.from(data.map((item)=>DutiesModel.fromJson(item)));
+  }
+
+  // Method to create the table Billing.
+  List<BillingModel> billingFromJson(String jsonString) {
+    final data = json.decode(jsonString);
+    return List<BillingModel>.from(data.map((item)=>BillingModel.fromJson(item)));
   }
 
 
@@ -838,6 +847,20 @@ class Services{
     }
   }
 
+  // GET MY BILLS
+  Future<List<BillingModel>> getMyBills(String uid)async{
+    var map = new Map<String, dynamic>();
+    map["action"] = _GET_MY;
+    map["uid"] = uid;
+    final response = await http.post(Uri.parse(_BILLING),body: map);
+    if(response.statusCode==200) {
+      List<BillingModel> bill = billingFromJson(response.body);
+      return bill;
+    } else {
+      return <BillingModel>[];
+    }
+  }
+
   // REGISTER USER
   static Future registerUsers(String uid, String username, String first, String last, String email, String phone,
       String password,  File? image, String status, String url, String token, String country) async {
@@ -1041,6 +1064,28 @@ class Services{
       map["phone"] = supplier.phone;
       map["email"] = supplier.email;
       final response = await http.post(Uri.parse(_SUPPLIERS), body: map);
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  // ADD BILL
+  static Future<String> addBill(BillingModel bill) async {
+    try {
+      var map = new Map<String, dynamic>();
+      map["action"] = _ADD;
+      map["bid"] = bill.bid;
+      map["pid"] = bill.pid;
+      map["eid"] = bill.eid;
+      map["bill"] = bill.bill;
+      map["businessno"] = bill.businessno;
+      map["accountno"] = bill.accountno;
+      map["phone"] = bill.phone;
+      map["tillno"] = bill.tillno;
+      map["type"] = bill.type;
+      map["account"] = bill.account;
+      final response = await http.post(Uri.parse(_BILLING), body: map);
       return response.body;
     } catch (e) {
       return 'error';
@@ -1734,6 +1779,23 @@ class Services{
     }
   }
 
+  // UPDATE BILL
+  static Future<String> updateBill(String bid,String businessno, String accountno, String phone, String till) async {
+    try {
+      var map = new Map<String, dynamic>();
+      map["action"] = _UPDATE;
+      map["bid"] = bid;
+      map["businessno"] = businessno;
+      map["accountno"] = accountno;
+      map["phone"] = phone;
+      map["tillno"] = till;
+      final response = await http.post(Uri.parse(_BILLING), body: map);
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
   // DELETE ONE INVENTORY
   static Future<String> deleteInventory(String iid) async {
     try {
@@ -2002,6 +2064,19 @@ class Services{
       var map = new Map<String, dynamic>();
       map["action"] = _DELETE_EID;
       map["eid"] = eid;
+      final response = await http.post(Uri.parse(_PAYMENTS), body: map);
+      return response.body;
+    } catch (e) {
+      return 'error';
+    }
+  }
+
+  // DELETE PAYMENTS
+  static Future<String> deletePayment(String payid) async {
+    try {
+      var map = new Map<String, dynamic>();
+      map["action"] = _DELETE;
+      map["payid"] = payid;
       final response = await http.post(Uri.parse(_PAYMENTS), body: map);
       return response.body;
     } catch (e) {
