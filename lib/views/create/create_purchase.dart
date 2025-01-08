@@ -60,7 +60,6 @@ class _CreatePurchaseState extends State<CreatePurchase> {
   List<InventModel> _inventory = [];
 
 
-
   @override
   void initState() {
     // TODO: implement initState

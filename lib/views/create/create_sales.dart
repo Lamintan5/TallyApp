@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:TallyApp/Widget/dialogs/dialog_edit_sale_qnty.dart';
 import 'package:TallyApp/Widget/dialogs/dialog_pay_sales.dart';
 import 'package:TallyApp/Widget/dialogs/dialog_select_sale_prd.dart';
+import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/models/entities.dart';
 import 'package:TallyApp/models/inventories.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -17,13 +19,16 @@ import '../../Widget/buttons/bottom_call_buttons.dart';
 import '../../Widget/buttons/card_button.dart';
 import '../../Widget/dialogs/call_actions/double_call_action.dart';
 import '../../Widget/dialogs/dialog_title.dart';
+import '../../api/mpesa-api.dart';
 import '../../main.dart';
+import '../../models/billing.dart';
 import '../../models/data.dart';
 import '../../models/payments.dart';
 import '../../models/products.dart';
 import '../../models/sales.dart';
 import '../../models/suppliers.dart';
 import '../../resources/services.dart';
+import '../../resources/socket.dart';
 import '../../utils/colors.dart';
 
 class CreateSales extends StatefulWidget {
@@ -36,6 +41,7 @@ class CreateSales extends StatefulWidget {
 }
 
 class _CreateSalesState extends State<CreateSales> {
+  Country _country = CountryParser.parseCountryCode(deviceModel.country == null? 'US' : deviceModel.country.toString());
   TextEditingController _search = TextEditingController();
 
   List<String> title = ['Total Items',];
@@ -49,12 +55,54 @@ class _CreateSalesState extends State<CreateSales> {
 
   bool _layout = true;
   bool _loading = false;
+  bool _prompted = false;
 
   String saleId = '';
   String admin = '';
   String selectedID = '';
+  String _accessToken = '';
+  String cPhone = "";
 
   double totalPrice = 0.0;
+
+
+  void _listenToSocketEvents() {
+    final socket = SocketManager().socket;
+    socket.on('pay', (pay) async {
+      if (!mounted) return;
+      print('Event received: $pay');
+      if (pay['accessToken'] == _accessToken) {
+        if (pay['status'] == "Success") {
+          // paymodel.payid == pay['payid'];
+          bool isSuccess = false;
+          //= await Data().addPayment(paymodel, widget.reload);
+          if (isSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Payment was recorded successfully✔️'),
+                showCloseIcon: true,
+              ),
+            );
+            Navigator.pop(context);
+          } else {
+            setState(() {
+              // _prompted = false;
+            });
+          }
+        } else {
+          setState(() {
+            // _prompted = false;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(pay['resultDesc']),
+              showCloseIcon: true,
+            ),
+          );
+        }
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -68,7 +116,6 @@ class _CreateSalesState extends State<CreateSales> {
     String uuid = Uuid().v1();
     saleId = uuid;
     _getDetails();
-
   }
 
 
@@ -151,6 +198,59 @@ class _CreateSalesState extends State<CreateSales> {
                                 ),
                               );
                             }),
+                        _prompted?Container(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          constraints: BoxConstraints(
+                            minWidth: 400,
+                            maxWidth: 600,
+                          ),
+                          child: Card(
+                            color: Colors.white,
+                            elevation: 8,
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5)
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.dialpad, size: 30, color: Colors.black,),
+                                  SizedBox(width: 15,),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Prompted", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),),
+                                        RichText(
+                                          textAlign: TextAlign.start,
+                                            text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                      text: 'A prompt has been successfully sent to ',
+                                                      style: TextStyle(color: Colors.black)
+                                                  ),
+                                                  TextSpan(
+                                                      text: '+${cPhone}. ',
+                                                      style: TextStyle(color: Colors.black,fontWeight: FontWeight.w600)
+                                                  ),
+                                                  TextSpan(
+                                                      text: "Kindly enter your PIN to complete the transaction.",
+                                                      style: TextStyle(color: Colors.black)
+                                                  )
+                                                ]
+                                            )
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 15,),
+                                  SizedBox(width: 20,height: 20, child: CircularProgressIndicator(color: Colors.black,strokeWidth: 3,))
+                                ],
+                              ),
+                            ),
+                          ),
+                        ):SizedBox(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -175,18 +275,19 @@ class _CreateSalesState extends State<CreateSales> {
                             _products.isEmpty
                                 ? SizedBox()
                                 : CardButton(
-                              text: 'CLEAR',
-                              backcolor: Colors.white,
-                              icon: Icon(Icons.clear_all, color: screenBackgroundColor,size: 19,),
-                              forecolor: screenBackgroundColor,
-                              onTap: () {
-                                setState(() {
-                                  _sale = [];
-                                  _products = [];
-                                  totalPrice = 0.0;
-                                });
-                              },
-                            ),
+                                    text: 'CLEAR',
+                                    backcolor: Colors.white,
+                                    icon: Icon(Icons.clear_all, color: screenBackgroundColor,size: 19,),
+                                    forecolor: screenBackgroundColor,
+                                    onTap: () {
+                                      setState(() {
+                                        _prompted = false;
+                                        _sale = [];
+                                        _products = [];
+                                        totalPrice = 0.0;
+                                      });
+                                    },
+                                  ),
                             CardButton(
                               text:'RELOAD',
                               backcolor: screenBackgroundColor,
@@ -375,14 +476,14 @@ class _CreateSalesState extends State<CreateSales> {
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text('Ksh.${formatNumberWithCommas(bprice)}',style: TextStyle(color: Colors.black),),
+                                                    Text('Ksh.${TFormat().formatNumberWithCommas(bprice)}',style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text('Ksh.${formatNumberWithCommas(sprice)}',style: TextStyle(color: Colors.black),),
+                                                    Text('Ksh.${TFormat().formatNumberWithCommas(sprice)}',style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
@@ -507,7 +608,7 @@ class _CreateSalesState extends State<CreateSales> {
                                                                 Text(_fltSpplr.length == 0 ? 'Supplier not available' : 'Supplier : ${_fltSpplr.first.name}', style: TextStyle(fontSize: 11, color: Colors.black),),
                                                                 Expanded(child: SizedBox()),
                                                                 Text(
-                                                                  "BP: Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))} SP: Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}",
+                                                                  "BP: Ksh.${TFormat().formatNumberWithCommas(double.parse(product.buying.toString()))} SP: Ksh.${TFormat().formatNumberWithCommas(double.parse(product.selling.toString()))}",
                                                                   style: TextStyle(fontSize: 11, color: Colors.black),
                                                                 )
                                                               ],
@@ -626,7 +727,7 @@ class _CreateSalesState extends State<CreateSales> {
                   DialogPaySales(
                     amount: totalPrice,
                     updatePaid: _updatePaid,
-                    entity: widget.entity,
+                    entity: widget.entity, initiateSTKPush: initiateStkPush,
                   ),
                 ],
               ),
@@ -780,6 +881,51 @@ class _CreateSalesState extends State<CreateSales> {
       );
     });
   }
+  void initiateStkPush(BillingModel bill, String accessToken, String amount, String paid, String method, String name, String phone, String date, String due) async {
+    final mpesaService = MpesaApiService();
+
+    print("Token : ${accessToken}, BNo : ${bill.businessno}, Paid : ${paid}, Phone : ${phone}, ANo : ${bill.accountno}");
+
+    setState(() {
+      _prompted = true;
+      cPhone = phone;
+      _accessToken = accessToken;
+    });
+    
+    try {
+      final response = await mpesaService.stkPush(
+          accessToken: accessToken,
+          businessShortCode: bill.businessno.toString(),
+          amount: paid,
+          phoneNumber: phone,
+          accountReference: bill.accountno.toString(),
+      );
+
+      if (response['success'] == true) {
+        setState(() {
+          _prompted = true;
+          _loading = false;
+        });
+
+        print("STK Push initiated successfully: ${response['data']}");
+      } else {
+        setState(() {
+          _prompted = false;
+          _loading = false;
+        });
+        print("STK Push failed: ${response['error']}");
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${response['details']['errorMessage']}'),
+              showCloseIcon: true,
+            )
+        );
+      }
+    } catch (e) {
+      print("Exception occurred during STK Push: $e");
+
+    }
+  }
 
   _getDetails()async{
     _getData();
@@ -910,8 +1056,5 @@ class _CreateSalesState extends State<CreateSales> {
     myPayments = uniquePayments;
   }
 
-  String formatNumberWithCommas(double number) {
-    final formatter = NumberFormat('#,###');
-    return formatter.format(number);
-  }
+  
 }
