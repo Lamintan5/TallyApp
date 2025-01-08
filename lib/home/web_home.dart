@@ -369,7 +369,7 @@ class _WebHomeState extends State<WebHome> {
                     :nav==2
                     ?Products()
                     :nav==3
-                    ?Payments()
+                    ?Payments(entity: EntityModel(eid: ""),)
                     :SizedBox(),
             ),
             SizedBox(width: 10,),
