@@ -7,11 +7,13 @@ import 'package:TallyApp/Widget/logos/studio5ive.dart';
 import 'package:TallyApp/Widget/profile_images/user_profile.dart';
 import 'package:TallyApp/Widget/buttons/row_button.dart';
 import 'package:TallyApp/Widget/show_my_case.dart';
+import 'package:TallyApp/home/tabs/payments.dart';
 import 'package:TallyApp/home/tabs/reports.dart';
 import 'package:TallyApp/main.dart';
 import 'package:TallyApp/models/duties.dart';
 import 'package:TallyApp/models/users.dart';
 import 'package:TallyApp/resources/socket.dart';
+import 'package:TallyApp/views/entity_options/billing/billing.dart';
 import 'package:TallyApp/views/entity_options/edit_entity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,6 @@ import '../models/data.dart';
 import '../models/entities.dart';
 import '../resources/services.dart';
 import '../utils/colors.dart';
-import 'entity_options/entity_payments.dart';
 import 'entity_options/managers.dart';
 import 'enty_tabs/dashboard.dart';
 import 'enty_tabs/products.dart';
@@ -44,9 +45,6 @@ class EntityDash extends StatefulWidget {
 
 class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin {
   late TabController _tabController;
-
-  bool _loading = false;
-  bool _loadingAction = false;
 
   List<String> _pidList = [];
   List<UserModel> _user = [];
@@ -73,6 +71,10 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
   double _position2 = 20.0;
   double _position3 = 20.0;
   double _position4 = 20.0;
+
+  bool _loading = false;
+  bool _loadingAction = false;
+  bool _isAdmin = false;
 
   _getDetails()async{
     _getData();
@@ -101,6 +103,7 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
     _pidList = entity.pid!.split(",");
     _pidList = _pidList.toSet().toList();
     admin = widget.entity.admin.toString().split(",");
+    _isAdmin = widget.entity.admin.toString().contains(currentUser.uid);
     _pidList.removeAt(0);
 
     _user = _user.where((usr) => _pidList.any((pids) => pids == usr.uid)).toList();
@@ -197,7 +200,7 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                Text(entity.category.toString(), style: TextStyle(color: secondaryColor),),
+                                Text(entity.location.toString(), style: TextStyle(color: secondaryColor),),
                                 Text('Created on ${DateFormat.yMMMd().format(DateTime.parse(entity.time.toString()))}',
                                   style: TextStyle(color: secondaryColor, fontSize: 11, ),),
                                 SizedBox(height: 5,),
@@ -539,25 +542,34 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
                         Navigator.pop(context);
                     Get.to(() => EditEntity(entity: entity, getData: _update,), transition: Transition.rightToLeft);
                   }, icon: Icon(CupertinoIcons.pen), title: 'Edit Entity', subtitle: ""),
+                  admin.first.toString() == currentUser.uid
+                      ? RowButton(onTap: (){
+                    dialogRemoveEntity(context);
+                  }, icon: Icon(CupertinoIcons.delete, size: 20,), title: "Remove Entity", subtitle: "")
+                      : RowButton(onTap: (){
+                    Navigator.pop(context);
+                    dialogExit(context);
+                  }, icon: Icon(Icons.logout ), title: "Exit", subtitle: ""),
+
                   !admin.contains(currentUser.uid)
                       ? SizedBox()
                       :RowButton(onTap: (){
-                    Get.to(()=>Managers(entity: entity, getManagers: _getDetails,), transition: Transition.rightToLeftWithFade);
-                  }, icon: Icon(CupertinoIcons.person_crop_circle), title: "Managers", subtitle: ""),
-                  RowButton(onTap: (){
-                    Get.to(()=>EntityPayments(entity: entity), transition: Transition.rightToLeftWithFade);
+                          Get.to(()=>Managers(entity: entity, getManagers: _getDetails,), transition: Transition.rightToLeft);
+                        }, icon: Icon(CupertinoIcons.person_crop_circle), title: "Managers", subtitle: ""),
+
+                  RowButton(
+                      onTap: (){
+                    Get.to(()=>Payments(entity: entity), transition: Transition.rightToLeft);
                   }, icon: LineIcon.wallet(), title: 'Payments', subtitle: ''),
+
+                  _isAdmin? RowButton(onTap: (){
+                          // Get.to(()=>Billing(entity: entity), transition: Transition.rightToLeft);
+                        }, icon: Icon(CupertinoIcons.creditcard), title: 'Billing', subtitle: '', isBeta: true) : SizedBox(),
+
                   RowButton(onTap: (){
-                    Get.to(()=>Reports(entity: widget.entity), transition: Transition.rightToLeftWithFade);
+                    Get.to(()=>Reports(entity: widget.entity), transition: Transition.rightToLeft);
                   }, icon: Icon(CupertinoIcons.chart_bar_alt_fill), title: 'Reports & Analytics', subtitle: ''),
-                  admin.first.toString() == currentUser.uid
-                      ? RowButton(onTap: (){
-                        dialogRemoveEntity(context);
-                      }, icon: Icon(CupertinoIcons.delete, size: 20,), title: "Remove Entity", subtitle: "")
-                      : RowButton(onTap: (){
-                      Navigator.pop(context);
-                      dialogExit(context);
-                    }, icon: Icon(Icons.logout ), title: "Exit", subtitle: ""),
+
                   Expanded(child: SizedBox()),
                   Container(
                     child: Column(
