@@ -2,15 +2,19 @@ import 'dart:convert';
 
 import 'package:TallyApp/Widget/dialogs/call_actions/single_call_action.dart';
 import 'package:TallyApp/main.dart';
+import 'package:TallyApp/models/billing.dart';
 import 'package:TallyApp/models/data.dart';
 import 'package:TallyApp/models/entities.dart';
 import 'package:TallyApp/models/inventories.dart';
 import 'package:TallyApp/resources/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icon.dart';
 
+import '../../api/mpesa-api.dart';
+import '../../models/gate_way.dart';
 import '../../models/sales.dart';
 import '../../utils/colors.dart';
 import '../text_filed_input.dart';
@@ -21,38 +25,60 @@ class DialogPaySales extends StatefulWidget {
   final EntityModel entity;
   final double amount;
   final Function updatePaid;
-  const DialogPaySales({super.key, required this.amount, required this.updatePaid, required this.entity, });
+  final Function initiateSTKPush;
+
+  const DialogPaySales({super.key, required this.amount, required this.updatePaid, required this.entity, required this.initiateSTKPush, });
 
   @override
   State<DialogPaySales> createState() => _DialogPaySalesState();
 }
 
 class _DialogPaySalesState extends State<DialogPaySales> {
-  List<InventModel> _inv = [];
-  List<InventModel> _newInv = [];
-  List<String> items = ['Cash', 'Electronic'];
-  TextEditingController _pay = TextEditingController();
-  TextEditingController _name = TextEditingController();
-  TextEditingController _phone = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-  final formKeyTwo = GlobalKey<FormState>();
-  DateTime _dateTime = DateTime.now();
-  DateTime _saleDate = DateTime.now();
-  String? method;
-  String payid = "";
-  String pidList = "";
+  MpesaApiService _apiService = MpesaApiService();
+
+  List<GateWayModel> billCard = [
+    GateWayModel(title: "Card", logo: 'assets/pay/card.png'),
+    GateWayModel(title: "PayPal", logo: 'assets/pay/paypal.png'),
+    GateWayModel(title: "CashApp", logo: 'assets/pay/cash.png'),
+    GateWayModel(title: "Mpesa", logo: 'assets/pay/mpesa.png'),
+  ];
   List<String> pidListAsList = [];
   List<SaleModel> _sales = [];
   List<SaleModel> _sale = [];
   List<SaleModel> _newSale = [];
   List<SaleModel> _filtSale = [];
   List<SaleModel> _filtNewSale = [];
+  List<InventModel> _inv = [];
+  List<InventModel> _newInv = [];
+  List<BillingModel> _bill = [];
+
+  List<String> items = ['Electronic','Cash'];
+
+  TextEditingController _pay = TextEditingController();
+  TextEditingController _name = TextEditingController();
+  TextEditingController _phone = TextEditingController();
+
+  final formKey = GlobalKey<FormState>();
+  final formKeyTwo = GlobalKey<FormState>();
+
+  DateTime _dateTime = DateTime.now();
+  DateTime _saleDate = DateTime.now();
+
+  String? method;
+  String payid = "";
+  String pidList = "";
+  String cName = "";
+  String cPhone = '';
+  String _accessToken = "";
+
+  int _expiresIn = 0;
+
   bool isCustom = true;
   bool isComp = true;
   double amount = 0.0;
+  bool _loading = false;
 
-  String cName = "";
-  String cPhone = '';
+  late BillingModel _selectedBill;
 
   bool isToday(DateTime date) {
     DateTime today = DateTime.now();
@@ -113,6 +139,13 @@ class _DialogPaySalesState extends State<DialogPaySales> {
 
   _getData(){
     _inv = myInventory.map((jsonString) => InventModel.fromJson(json.decode(jsonString))).toList();
+    _bill = myBills.map((jsonString) => BillingModel.fromJson(json.decode(jsonString))).where((test) => test.eid == widget.entity.eid).toList();
+    _selectedBill = _bill.isEmpty? BillingModel(bid: "") : _bill.first;
+    _bill.forEach((bill){
+      if(!items.contains(bill.bill)){
+        items.add(bill.bill.toString());
+      }
+    });
     setState(() {
 
     });
@@ -131,10 +164,33 @@ class _DialogPaySalesState extends State<DialogPaySales> {
     Navigator.pop(context);
   }
 
+  void _fetchAccessToken() async {
+    try {
+      final response = await _apiService.getAccessToken();
+      setState(() {
+        if (response['success'] == true) {
+          // Successfully fetched the token
+          _accessToken = response['data']['access_token'];
+          _expiresIn = int.parse(response['data']['expires_in']);
+          print(_accessToken);
+        } else {
+          // Handle error from the API
+          _accessToken = "Error: ${response['error']}";
+        }
+      });
+    } catch (e) {
+      // Handle any exceptions
+      setState(() {
+        _accessToken = "Exception occurred: $e";
+      });
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _fetchAccessToken();
     _getCustomers();
     amount = widget.amount;
     _pay.text = widget.amount.toString();
@@ -166,116 +222,111 @@ class _DialogPaySalesState extends State<DialogPaySales> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          TextFieldInput(
+            textEditingController: _pay,
+            textInputType: TextInputType.numberWithOptions(decimal: true),
+            labelText: 'Amount Paid',
+            textAlign: TextAlign.center,
+            validator: _validateAmount,
+          ),
+          SizedBox(height: 5,),
+          Text(' Payment method :  ', style: TextStyle(color: secondaryColor),),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12,),
+            decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                    width: 1,
+                    color: color
+                )
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: method,
+                dropdownColor: dilogbg,
+                icon: Icon(Icons.arrow_drop_down, color: reverse),
+                isExpanded: true,
+                items: items.map(buildMenuItem).toList(),
+                onChanged: (value) => setState(() => this.method = value),
+              ),
+            ),
+          ),
+          SizedBox(height: 5,),
+          _newSale.length == 0
+              ?Column(
             children: [
               TextFieldInput(
-                textEditingController: _pay,
-                textInputType: TextInputType.numberWithOptions(decimal: true),
-                labelText: 'Amount Paid',
-                textAlign: TextAlign.center,
-                validator: _validateAmount,
+                textEditingController: _name,
+                textInputType: TextInputType.text,
+                labelText: 'Customer Name',
+                labelStyle: TextStyle(color: secondaryColor),
+                validator: (value){
+                  if(value == null || value.isEmpty){
+                    return 'Please Enter Customer Name';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 5,),
-              Text(' Payment method :  ', style: TextStyle(color: secondaryColor),),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12,),
-                decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(
-                        width: 1,
-                        color: color
-                    )
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: method,
-                    dropdownColor: dilogbg,
-                    icon: Icon(Icons.arrow_drop_down, color: reverse),
-                    isExpanded: true,
-                    items: items.map(buildMenuItem).toList(),
-                    onChanged: (value) => setState(() => this.method = value),
-                  ),
-                ),
+              TextFieldInput(
+                textEditingController: _phone,
+                textInputType: TextInputType.text,
+                labelText: 'Customer Phone Number',
+                labelStyle: TextStyle(color: secondaryColor),
+                validator: (value){
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a phone number.';
+                  }
+                  if (value.length < 8) {
+                    return 'phone number must be at least 8 characters long.';
+                  }
+                  if (RegExp(r'^[0-9+]+$').hasMatch(value)) {
+                    return null; // Valid input (contains only digits)
+                  } else {
+                    return 'Please enter a valid phone number';
+                  }
+                },
               ),
-              SizedBox(height: 5,),
-              _newSale.length == 0
-                  ?Column(
+            ],
+          )
+              :Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextFieldInput(
-                    textEditingController: _name,
-                    textInputType: TextInputType.text,
-                    labelText: 'Customer Name',
-                    labelStyle: TextStyle(color: secondaryColor),
-                    validator: (value){
-                      if(value == null || value.isEmpty){
-                        return 'Please Enter Customer Name';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 5,),
-                  TextFieldInput(
-                    textEditingController: _phone,
-                    textInputType: TextInputType.text,
-                    labelText: 'Customer Phone Number',
-                    labelStyle: TextStyle(color: secondaryColor),
-                    validator: (value){
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a phone number.';
-                      }
-                      if (value.length < 8) {
-                        return 'phone number must be at least 8 characters long.';
-                      }
-                      if (RegExp(r'^[0-9+]+$').hasMatch(value)) {
-                        return null; // Valid input (contains only digits)
-                      } else {
-                        return 'Please enter a valid phone number';
-                      }
-                    },
-                  ),
+                  Text(' Customer :  ', style: TextStyle(color: isCustom?secondaryColor:Colors.red),),
+                  cName ==""?SizedBox(): TextButton(
+                      onPressed: (){
+                        setState(() {
+                          cName = "";
+                          cPhone = "";
+                        });
+                      },
+                      child: Text("Remove", style: TextStyle(color: CupertinoColors.activeBlue),)
+                  )
                 ],
-              )
-                  :Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(' Customer :  ', style: TextStyle(color: isCustom?secondaryColor:Colors.red),),
-                      cName ==""?SizedBox(): TextButton(
-                          onPressed: (){
-                            setState(() {
-                              cName = "";
-                              cPhone = "";
-                            });
-                          },
-                          child: Text("Remove", style: TextStyle(color: CupertinoColors.activeBlue),)
+              ),
+              InkWell(
+                onTap: (){
+                  dialogSelectCustomer(context);
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: cName==""?10:15),
+                  decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                          width: 1,
+                          color: isCustom?color:Colors.red
                       )
-                    ],
                   ),
-                  InkWell(
-                    onTap: (){
-                      dialogSelectCustomer(context);
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: cName==""?10:15),
-                      decoration: BoxDecoration(
-                          color: color,
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                              width: 1,
-                              color: isCustom?color:Colors.red
-                          )
-                      ),
-                      child: cName.toString() == ""
-                          ? Text("Press here to select frequent customer or create a new customer", style: TextStyle(color: isCustom?secondaryColor:Colors.red, fontSize: 13),)
-                          : Text(cName),
-                    ),
-                  ),
-                ],
+                  child: cName.toString() == ""
+                      ? Text("Press here to select frequent customer or create a new customer", style: TextStyle(color: isCustom?secondaryColor:Colors.red, fontSize: 13),)
+                      : Text(cName),
+                ),
               ),
             ],
           ),
@@ -395,13 +446,84 @@ class _DialogPaySalesState extends State<DialogPaySales> {
               ),
             ),
           ),
-          SingleCallAction(
-            action: (){
+          SizedBox(height: 5,),
+          method=="Mpesa"? Text(' Select Mpesa Account :  ', style: TextStyle(color: secondaryColor),): SizedBox(),
+          SizedBox(height: method=="Mpesa"? 5 : 0,),
+          method=="Mpesa"
+              ? Container(
+              constraints: BoxConstraints(
+                  maxHeight: 200,
+                  minHeight: 60
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ..._bill.map((bill){
+                      var crd = billCard.firstWhere((test) => test.title == bill.bill, orElse: () => GateWayModel(title: "", logo: ''));
+                      return ListTile(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                          leading: Image.asset(
+                            crd.logo,
+                            width: 30,
+                            height: 30,
+                          ),
+                          title: Text(
+                              bill.type.toString() =="Porchi"
+                                  ?bill.phone.toString()
+                                  :bill.type.toString()=="BBG"
+                                  ?bill.tillno.toString()
+                                  :bill.businessno.toString()
+                          ),
+                          subtitle: Text(
+                            bill.type.toString() =="Porchi"
+                                ?'Porchi la biashara'
+                                :bill.type.toString()=="BBG"
+                                ?'Buy Goods'
+                                :bill.accountno.toString(),
+                            style: TextStyle(color: secondaryColor),
+                          ),
+                          trailing: Checkbox(
+                              value: _selectedBill == bill? true: false,
+                              shape: CircleBorder(),
+                              onChanged: (value){
+                                setState(() {
+                                  _selectedBill = bill;
+                                });
+                              }
+                          ),
+                          onTap: (){
+                            setState(() {
+                              _selectedBill = bill;
+                            });
+                          }
+                      );
+                    }).toList()
+                  ],
+                ),
+              )
+          )
+              : SizedBox(),
+          Divider(
+            thickness: 0.1,
+            color: reverse,
+          ),
+          InkWell(
+            onTap: (){
               final isValidform = formKey.currentState!.validate();
               if(isValidform){
                 if(isComp){
                   if(cName!="" || _name.text.toString() != ""){
-                    _payAmount();
+
+                    if(method=="Mpesa"){
+                      setState(() {
+                        _loading = true;
+                      });
+                      _registerMpesaUrl(_accessToken);
+                    } else {
+                      _payAmount();
+                    }
                   }else {
                     setState(() {
                       isCustom = false;
@@ -415,19 +537,24 @@ class _DialogPaySalesState extends State<DialogPaySales> {
                           showCloseIcon: true,
                         )
                     );
-                  } else {
-                    if(cName!="" || _name.text.toString() != ""){
-                      _payAmount();
-                    }else {
-                      setState(() {
-                        isCustom = false;
-                      });
-                    }
                   }
                 }
               }
-            },title: "Pay",
-          )
+            },
+            borderRadius: BorderRadius.circular(5),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 10),
+              child: Center(
+                child: _loading
+                    ? SizedBox(width: 20,height: 20, child: CircularProgressIndicator(strokeWidth: 3,))
+                    :Text(
+                  "Pay",
+                  style: TextStyle(color: CupertinoColors.systemBlue, fontWeight: FontWeight.w700, fontSize: 15),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -669,5 +796,58 @@ class _DialogPaySalesState extends State<DialogPaySales> {
   String formatNumberWithCommas(double number) {
     final formatter = NumberFormat('#,###');
     return formatter.format(number);
+  }
+
+  void _registerMpesaUrl(String accessToken) async {
+    final mpesaService = MpesaApiService();
+    String shortCode = '';
+    shortCode = _selectedBill.type == "Porchi"
+        ? _selectedBill.phone.toString()
+        : _selectedBill.type == "BBG"
+        ?_selectedBill.tillno.toString()
+        :_selectedBill.businessno.toString();
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final response = await mpesaService.registerUrl(accessToken, shortCode);
+      if (response['success'] == true) {
+        setState(() {
+          _loading = false;
+        });
+        print("URL registration successful: ${response['data']}");
+        Navigator.pop(context);
+        widget.initiateSTKPush(
+          _selectedBill,
+          _accessToken,
+          amount.toString(),
+          double.parse(_pay.text).toStringAsFixed(0),
+          method,
+          cName.toString() == ""?_name.text.toString():cName,
+          cPhone.toString() == ""?_phone.text.toString():cPhone,
+          _saleDate.toString(),
+          _dateTime.toString(),
+        );
+      } else {
+        setState(() {
+          _loading = false;
+        });
+        print("URL registration failed: ${response['error']}");
+        Get.snackbar(
+            "Error",
+            response['error'],
+          maxWidth: 500,
+          icon: Icon(CupertinoIcons.exclamationmark_circle_fill, color: CupertinoColors.systemRed,),
+          shouldIconPulse: true,
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _loading = true;
+      });
+      print("Exception occurred: $e");
+    }
   }
 }

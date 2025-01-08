@@ -19,6 +19,7 @@ import '../../../models/sales.dart';
 import '../../../resources/services.dart';
 import '../../../utils/colors.dart';
 import '../../empty_data.dart';
+import '../../text/text_format.dart';
 import '../../text_filed_input.dart';
 import '../call_actions/dialog_edit_sales.dart';
 import '../call_actions/double_call_action.dart';
@@ -145,7 +146,7 @@ class _DialogScanPayState extends State<DialogScanPay> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("   Ksh.${formatNumberWithCommas(totalPaid)}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  Text("   Ksh.${formatNumberWithCommas(totalPaid)}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                   ).animate().fade(duration: Duration(milliseconds: 500)).slideY(curve: Curves.easeInOut),
                   total-totalPaid == 0? SizedBox() : Text("    Ksh.${formatNumberWithCommas(total-totalPaid)}", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
                   ).animate().fade(duration: Duration(milliseconds: 500)).slideY(curve: Curves.easeInOut),
@@ -238,121 +239,30 @@ class _DialogScanPayState extends State<DialogScanPay> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                RichText  (
-                                    text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                              text: "Items Sold : ",
-                                              style: style
-                                          ),
-                                          TextSpan(
-                                              text: items.toString(),
-                                              style: bold
-                                          )
-                                        ]
-                                    )
-                                ),
-                                RichText(
-                                    text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                              text: "Amount due : ",
-                                              style: style
-                                          ),
-                                          TextSpan(
-                                              text: "Ksh.${formatNumberWithCommas(amount)}",
-                                              style: bold
-                                          ),
-                                        ]
-                                    )
-                                ),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: RichText(
-                                          text: TextSpan(
-                                            children: [
-                                              TextSpan(
-                                                text: "Amount Paid : ",
-                                                style: style
-                                              ),
-                                              TextSpan(
-                                                  text:sales.isEmpty
-                                                      ? "Ksh.${formatNumberWithCommas(double.parse(prchModel.paid.toString()))}"
-                                                      : "Ksh.${formatNumberWithCommas(double.parse(saleModel.paid.toString()))}",
-                                                  style: bold
-                                              ),
-                                            ]
-                                          )
-                                      ),
-                                    ),
-                                    Text(sales.isEmpty
-                                        ? prchModel.type.toString()
-                                        : saleModel.method.toString(), style: bold),
-                                  ],
-                                ),
+                                horizontalItems('Items Sold', items.toString()),
+                                horizontalItems('Amount due', '${TFormat().getCurrency()}${formatNumberWithCommas(amount)}'),
+                                horizontalItems('Amount Paid', sales.isEmpty
+                                    ? "${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(prchModel.paid.toString()))}"
+                                    : "${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(saleModel.paid.toString()))}"),
+                                horizontalItems(sales.isEmpty
+                                    ?"Purchase Date"
+                                    :"Sale Date", DateFormat('d MMMM y ● HH:mm').format(DateTime.parse(sales.isEmpty ?prchModel.date.toString() :saleModel.date.toString()))),
+
+                                amount == double.parse(sales.isEmpty?prchModel.paid.toString() : saleModel.paid.toString())
+                                    || (amount== 0 || double.parse(sales.isEmpty?prchModel.paid.toString() :saleModel.paid.toString())== 0)
+                                    ? SizedBox()
+                                    : horizontalItems('Due Date', DateFormat('d MMMM y ● HH:mm').format(DateTime.parse(sales.isEmpty ? prchModel.due.toString() : saleModel.due.toString()))),
+
                                 sales.isEmpty
                                     ? SizedBox()
-                                    :Text("Customer Details", style: TextStyle(fontSize: 15),),
+                                    : Text("Customer Details", style: TextStyle(fontSize: 15),),
                                 sales.isEmpty
                                     ? SizedBox()
-                                    : RichText(
-                                    text: TextSpan(
-                                        children: [
-                                          WidgetSpan(
-                                              child: LineIcon.user(size: 13)
-                                          ),
-                                          TextSpan(
-                                              text: saleModel.customer==""? " N/A, ":" ${saleModel.customer}, ",
-                                              style: bold
-                                          ),
-                                          WidgetSpan(
-                                              child: LineIcon.phone(size: 13)
-                                          ),
-                                          TextSpan(
-                                              text: saleModel.phone==""? " N/A ":" ${saleModel.phone} ",
-                                              style: bold
-                                          ),
-                                        ]
-                                    )
-                                ),
-                                RichText(
-                                    text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                              text: sales.isEmpty
-                                                  ?"Purchase Date : "
-                                                  :"Sale Date : ",
-                                              style: style
-                                          ),
-                                          TextSpan(
-                                              text: "${DateFormat.yMMMd().format(DateTime.parse(sales.isEmpty ?prchModel.date.toString() :saleModel.date.toString()))}, "
-                                                  "${DateFormat.Hm().format(DateTime.parse(sales.isEmpty ?prchModel.date.toString() :saleModel.date.toString()))} ",
-                                              style: bold
-                                          ),
-                                        ]
-                                    )
-                                ),
-                                RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        amount == double.parse(sales.isEmpty?prchModel.paid.toString() : saleModel.paid.toString())
-                                            || (amount== 0 || double.parse(sales.isEmpty?prchModel.paid.toString() :saleModel.paid.toString())== 0)
-                                            ?WidgetSpan(child: SizedBox())
-                                            :TextSpan(
-                                            text: "Due Date : ",
-                                            style: style
-                                        ),
-                                        amount == double.parse(sales.isEmpty ?prchModel.paid.toString() :saleModel.paid.toString())
-                                            || (amount== 0 || double.parse(sales.isEmpty ?prchModel.paid.toString() :saleModel.paid.toString())== 0)
-                                            ?WidgetSpan(child: SizedBox())
-                                            :TextSpan(
-                                            text: "${DateFormat.yMMMd().format(DateTime.parse(sales.isEmpty ? prchModel.due.toString() : saleModel.due.toString()))}",
-                                            style: bold
-                                        ),
-                                      ]
-                                    )
-                                ),
+                                    : horizontalItems('Full Name', saleModel.customer==""? "--": saleModel.customer.toString()),
+                                sales.isEmpty
+                                    ? SizedBox()
+                                    : horizontalItems('Phone', saleModel.phone==""? "--" : saleModel.phone.toString()),
+                                
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -1096,6 +1006,19 @@ class _DialogScanPayState extends State<DialogScanPay> {
       );
     });
   }
+  Widget horizontalItems(String title, String value){
+    return Container(
+      margin: EdgeInsets.only(top: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: TextStyle(color: secondaryColor),),
+          Text(value, style: TextStyle(fontWeight: FontWeight.w500),),
+        ],
+      ),
+    );
+  }
+
   String formatNumberWithCommas(double number) {
     final formatter = NumberFormat('#,###');
     return formatter.format(number);
