@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:TallyApp/models/data.dart';
+import 'package:TallyApp/resources/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,6 +31,7 @@ class Receipt extends StatefulWidget {
 class _ReceiptState extends State<Receipt> {
   List<EntityModel> _enty = [];
   List<UserModel> _user = [];
+  List<UserModel> _newUser = [];
 
   List<String> _expans = ["Basic","Payment"];
 
@@ -47,9 +50,22 @@ class _ReceiptState extends State<Receipt> {
     entity = _enty.firstWhere((enty) => enty.eid == payment.eid, orElse: () => EntityModel(eid: "", title: '--'));
     cashier = _user.firstWhere((user) => user.uid == payment.payerid, orElse: () => UserModel(uid: "", username: "--", firstname: "", lastname: "", image: ""));
 
+    if(cashier.uid.isEmpty){
+      _getUser();
+    }
+
     paid = double.parse(payment.paid.toString());
     due = double.parse(payment.amount.toString());
     balance = due - paid;
+  }
+
+  _getUser()async{
+    _newUser = await Services().getCrntUsr(payment.payerid.toString());
+    await Data().addOrUpdateUserList(_newUser);
+    cashier = _newUser.isNotEmpty? _newUser.first:UserModel(uid: "", username: "--", firstname: "", lastname: "", image: "");
+    setState(() {
+
+    });
   }
 
   @override

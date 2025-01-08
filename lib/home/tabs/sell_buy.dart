@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/home/tabs/scanner.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/cupertino.dart';
@@ -760,121 +761,30 @@ class _SellOrBuyState extends State<SellOrBuy> {
                                                       child: Column(
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
-                                                          RichText  (
-                                                              text: TextSpan(
-                                                                  children: [
-                                                                    TextSpan(
-                                                                        text: "Items Sold : ",
-                                                                        style: style
-                                                                    ),
-                                                                    TextSpan(
-                                                                        text: items.toString(),
-                                                                        style: bold
-                                                                    )
-                                                                  ]
-                                                              )
-                                                          ),
-                                                          RichText(
-                                                              text: TextSpan(
-                                                                  children: [
-                                                                    TextSpan(
-                                                                        text: "Amount due : ",
-                                                                        style: style
-                                                                    ),
-                                                                    TextSpan(
-                                                                        text: "Ksh.${formatNumberWithCommas(amount)}",
-                                                                        style: bold
-                                                                    ),
-                                                                  ]
-                                                              )
-                                                          ),
-                                                          Row(
-                                                            children: [
-                                                              Expanded(
-                                                                child: RichText(
-                                                                    text: TextSpan(
-                                                                        children: [
-                                                                          TextSpan(
-                                                                              text: "Amount Paid : ",
-                                                                              style: style
-                                                                          ),
-                                                                          TextSpan(
-                                                                              text:_scndSale.isEmpty
-                                                                                  ? "Ksh.${formatNumberWithCommas(double.parse(prchModel.paid.toString()))}"
-                                                                                  : "Ksh.${formatNumberWithCommas(double.parse(saleModel.paid.toString()))}",
-                                                                              style: bold
-                                                                          ),
-                                                                        ]
-                                                                    )
-                                                                ),
-                                                              ),
-                                                              Text(_scndSale.isEmpty
-                                                                  ? prchModel.type.toString()
-                                                                  : saleModel.method.toString(), style: bold),
-                                                            ],
-                                                          ),
+                                                          horizontalItems('Items Sold', items.toString()),
+                                                          horizontalItems('Amount due', '${TFormat().getCurrency()}${formatNumberWithCommas(amount)}'),
+                                                          horizontalItems('Amount Paid', _scndSale.isEmpty
+                                                              ? "${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(prchModel.paid.toString()))}"
+                                                              : "${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(saleModel.paid.toString()))}"),
+                                                          horizontalItems(_scndSale.isEmpty
+                                                              ?"Purchase Date"
+                                                              :"Sale Date", DateFormat('d MMMM y ● HH:mm').format(DateTime.parse(_scndSale.isEmpty ?prchModel.date.toString() :saleModel.date.toString()))),
+
+                                                          amount == double.parse(_scndSale.isEmpty?prchModel.paid.toString() : saleModel.paid.toString())
+                                                              || (amount== 0 || double.parse(_scndSale.isEmpty?prchModel.paid.toString() :saleModel.paid.toString())== 0)
+                                                              ? SizedBox()
+                                                              : horizontalItems('Due Date', DateFormat('d MMMM y ● HH:mm').format(DateTime.parse(_scndSale.isEmpty ? prchModel.due.toString() : saleModel.due.toString()))),
+
                                                           _scndSale.isEmpty
                                                               ? SizedBox()
-                                                              :Text("Customer Details", style: TextStyle(fontSize: 15),),
+                                                              : Text("Customer Details", style: TextStyle(fontSize: 15),),
                                                           _scndSale.isEmpty
                                                               ? SizedBox()
-                                                              : RichText(
-                                                              text: TextSpan(
-                                                                  children: [
-                                                                    WidgetSpan(
-                                                                        child: LineIcon.user(size: 13)
-                                                                    ),
-                                                                    TextSpan(
-                                                                        text: saleModel.customer==""? " N/A, ":" ${saleModel.customer}, ",
-                                                                        style: bold
-                                                                    ),
-                                                                    WidgetSpan(
-                                                                        child: LineIcon.phone(size: 13)
-                                                                    ),
-                                                                    TextSpan(
-                                                                        text: saleModel.phone==""? " N/A ":" ${saleModel.phone} ",
-                                                                        style: bold
-                                                                    ),
-                                                                  ]
-                                                              )
-                                                          ),
-                                                          RichText(
-                                                              text: TextSpan(
-                                                                  children: [
-                                                                    TextSpan(
-                                                                        text: _scndSale.isEmpty
-                                                                            ?"Purchase Date : "
-                                                                            :"Sale Date : ",
-                                                                        style: style
-                                                                    ),
-                                                                    TextSpan(
-                                                                        text: "${DateFormat.yMMMd().format(DateTime.parse(_scndSale.isEmpty ?prchModel.date.toString() :saleModel.date.toString()))}, "
-                                                                            "${DateFormat.Hm().format(DateTime.parse(_scndSale.isEmpty ?prchModel.date.toString() :saleModel.date.toString()))} ",
-                                                                        style: bold
-                                                                    ),
-                                                                  ]
-                                                              )
-                                                          ),
-                                                          RichText(
-                                                              text: TextSpan(
-                                                                  children: [
-                                                                    amount == double.parse(_scndSale.isEmpty?prchModel.paid.toString() : saleModel.paid.toString())
-                                                                        || (amount== 0 || double.parse(_scndSale.isEmpty?prchModel.paid.toString() :saleModel.paid.toString())== 0)
-                                                                        ?WidgetSpan(child: SizedBox())
-                                                                        :TextSpan(
-                                                                        text: "Due Date : ",
-                                                                        style: style
-                                                                    ),
-                                                                    amount == double.parse(_scndSale.isEmpty ?prchModel.paid.toString() :saleModel.paid.toString())
-                                                                        || (amount== 0 || double.parse(_scndSale.isEmpty ?prchModel.paid.toString() :saleModel.paid.toString())== 0)
-                                                                        ?WidgetSpan(child: SizedBox())
-                                                                        :TextSpan(
-                                                                        text: "${DateFormat.yMMMd().format(DateTime.parse(_scndSale.isEmpty ? prchModel.due.toString() : saleModel.due.toString()))}",
-                                                                        style: bold
-                                                                    ),
-                                                                  ]
-                                                              )
-                                                          ),
+                                                              : horizontalItems('Full Name', saleModel.customer==""? "--": saleModel.customer.toString()),
+                                                          _scndSale.isEmpty
+                                                              ? SizedBox()
+                                                              : horizontalItems('Phone', saleModel.phone==""? "--" : saleModel.phone.toString()),
+
                                                           Row(
                                                             mainAxisAlignment: MainAxisAlignment.end,
                                                             children: [
@@ -1971,5 +1881,17 @@ class _SellOrBuyState extends State<SellOrBuy> {
   String formatNumberWithCommas(double number) {
     final formatter = NumberFormat('#,###');
     return formatter.format(number);
+  }
+  Widget horizontalItems(String title, String value){
+    return Container(
+      margin: EdgeInsets.only(top: 5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: TextStyle(color: secondaryColor),),
+          Text(value, style: TextStyle(fontWeight: FontWeight.w500),),
+        ],
+      ),
+    );
   }
 }

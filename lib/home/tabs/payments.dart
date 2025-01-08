@@ -42,6 +42,7 @@ class _PaymentsState extends State<Payments> {
   List<EntityModel> _newEnt = [];
   List<EntityModel> _entity = [];
   List<UserModel> _users = [];
+  List<UserModel> _newUser = [];
 
 
   bool _loading = false;
@@ -62,6 +63,8 @@ class _PaymentsState extends State<Payments> {
     _getData();
   }
 
+
+
   _getData(){
     _entity = myEntity.map((jsonString) => EntityModel.fromJson(json.decode(jsonString))).toList();
     _pay = myPayments.map((jsonString) => PaymentModel.fromJson(json.decode(jsonString))).toList();
@@ -69,6 +72,17 @@ class _PaymentsState extends State<Payments> {
 
     if(!_users.contains(currentUser)){
       _users.add(currentUser);
+    }
+
+    for (int index = 0; index < _pay.length; index++) {
+      final pay = _pay[index];
+      if (!_users.any((usr) => usr.uid == pay.payid)) {
+        _getUser(pay.payerid.toString());
+        if(index==_pay.length - 1){
+          setState(() {
+          });
+        }
+      }
     }
 
     _pay = _pay.where((test) {
@@ -87,6 +101,12 @@ class _PaymentsState extends State<Payments> {
     close = removed > 0 ?false: true;
     setState(() {
     });
+  }
+
+  _getUser(String uid)async{
+    _newUser = await Services().getCrntUsr(uid);
+    await Data().addOrUpdateUserList(_newUser);
+
   }
 
   @override
