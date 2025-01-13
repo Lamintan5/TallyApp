@@ -681,7 +681,6 @@ class _WebHomeState extends State<WebHome> {
                 ],
               ),
             ),
-
           ],
         ),
       ),
