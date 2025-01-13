@@ -314,85 +314,97 @@ class _VerifyEmailState extends State<VerifyEmail> {
           SizedBox(width: 5,)
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Verify Email",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          width: 500,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(20),
+                margin: EdgeInsets.fromLTRB(0, 30, 0, 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    width: 1, color: secondaryColor
+                  )
                 ),
-                Text(
-                  "We have sent an OTP to ${widget.userModel.email!.replaceRange(4, widget.userModel.email!.length - 5, "*******")}. Please enter the code below to verify your email address",
-                  style: TextStyle(color: secondaryColor),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              width: 450,
-              child: PinFieldAutoFill(
-                autoFocus: true,
-                decoration: BoxLooseDecoration(
-                  textStyle: TextStyle(color: isMatch ? revers : Colors.red),
-                  gapSpace: 5,
-                  strokeWidth: 1.5,
-                  radius: Radius.circular(5),
-                  strokeColorBuilder:
-                  FixedColorBuilder(isMatch ? color5 : Colors.red),
-                ),
-                currentCode: _otpCode,
-                codeLength: _otpCodeLength,
-                onCodeChanged: (code) {
-                  if (code!.length == _otpCodeLength) {
-                    _otpCode = code;
-                  }
-                },
-                onCodeSubmitted: (value) {
-                  print("Submitted");
-                },
+                child: Icon(Icons.dialpad),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            TextButton(onPressed: (){
-              if(_loading){
-
-              } else{
-                _resend();
-              }
-            }, child: _loading
-                ? Text("Loading...")
-                : Text("Resend")),
-            Expanded(child: SizedBox()),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: MaterialButton(
-                onPressed: (){
-                  if(_loading){
-
-                  } else {
-                    _verifyOTP();
-                  }
-                },
-                child: _loading ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2,)) : Text("Continue"),
-                minWidth: 500,
-                color: secColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                padding: EdgeInsets.symmetric(vertical: 15),
+              Text(
+                "Verify Email",
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            )
-          ],
+              Text(
+                "We have sent an OTP to ${widget.userModel.email!.replaceRange(4, widget.userModel.email!.length - 5, "*******")}. Please enter the code below to verify your email address",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: secondaryColor),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: 450,
+                child: PinFieldAutoFill(
+                  autoFocus: true,
+                  decoration: BoxLooseDecoration(
+                    textStyle: TextStyle(color: isMatch ? revers : Colors.red),
+                    gapSpace: 5,
+                    strokeWidth: 1.5,
+                    radius: Radius.circular(5),
+                    strokeColorBuilder:
+                    FixedColorBuilder(isMatch ? color5 : Colors.red),
+                  ),
+                  currentCode: _otpCode,
+                  codeLength: _otpCodeLength,
+                  onCodeChanged: (code) {
+                    if (code!.length == _otpCodeLength) {
+                      _otpCode = code;
+                    }
+                  },
+                  onCodeSubmitted: (value) {
+                    print("Submitted");
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              TextButton(onPressed: (){
+                if(_loading){
+
+                } else{
+                  _resend();
+                }
+              }, child: _loading
+                  ? Text("Loading...")
+                  : Text("Resend")),
+              Expanded(child: SizedBox()),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: MaterialButton(
+                  onPressed: (){
+                    if(_loading){
+
+                    } else {
+                      _verifyOTP();
+                    }
+                  },
+                  child: _loading ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2,)) : Text("Continue"),
+                  minWidth: 500,
+                  color: secColor,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row()
+            ],
+          ),
         ),
       ),
     );
