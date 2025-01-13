@@ -396,7 +396,8 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                   EntityModel entity = filteredList[index];
                                   String image = entity.image!;
                                   List<String> _managers = entity.pid!.split(",");
-                                  double totalSprice = _sale.where((sale) => sale.eid == entity.eid).fold(0.0, (previousValue, element) => previousValue + (double.parse(element.sprice.toString()) * double.parse(element.quantity.toString())));
+                                  double totalSprice = _sale.where((sale) => sale.eid == entity.eid && double.parse(sale.amount.toString()) == double.parse(sale.paid.toString())
+                                      && double.parse(sale.paid.toString()) != 0.0).fold(0.0, (previousValue, element) => previousValue + (double.parse(element.sprice.toString()) * double.parse(element.quantity.toString())));
                                   return InkWell(
                                     onTap: (){
                                       Navigator.push(context, (MaterialPageRoute(builder: (context) => ShowCaseWidget(builder: (context) => EntityDash(entity: entity, getData: _getData)))));
