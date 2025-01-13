@@ -136,8 +136,8 @@ class _OptionsState extends State<Options> {
                                     : currentUser.phone!.replaceRange(3, currentUser.phone!.length-2, "********"),
                                 icon: Icon(Icons.phone_android), onTap: () { Get.to(()=>ChangePhone(reload: (){setState(() {});},),transition: Transition.rightToLeft); },),
                               SizedBox(height: height),
-                              Divider(color: color1, thickness: 1, height: 1,),
-                              SizedBox(height: height),
+                              // Divider(color: color1, thickness: 1, height: 1,),
+                              // SizedBox(height: height),
                               // OptionButtons(txt: "Language", icon: LineIcon.language(), onTap: () {  },),
                               // SizedBox(height: height),
                               // Divider(color: color1, thickness: 1, height: 1,),
@@ -237,7 +237,7 @@ class _OptionsState extends State<Options> {
                                 ), onTap: () {},
                               ),
                               SizedBox(height: height),
-                              Divider(color: color1, thickness: 1, height: 1,),
+                              // Divider(color: color1, thickness: 1, height: 1,),
                               // SizedBox(height: height),
                               // OptionButtons(
                               //   txt: "Energy Efficiency",
@@ -257,35 +257,33 @@ class _OptionsState extends State<Options> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 40,),
+                      SizedBox(height: 20,),
+                      Center(
+                        child: InkWell(
+                          onTap: (){
+                            dialogLogOut(context);
+                          },
+                          borderRadius: BorderRadius.circular(10),
+                          child: Card(
+                            elevation: 8,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                              child: Center(child: _loading
+                                  ?  SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: reverse,strokeWidth: 2,))
+                                  :  Text("SIGN OUT",)),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: InkWell(
-                onTap: (){
-                  dialogLogOut(context);
-                },
-                child: Container(
-                  width: 350,
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        width: 1,
-                        color: reverse,
-                      )
-                  ),
-                  child: Center(child: _loading
-                      ?  SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: reverse,strokeWidth: 2,))
-                      :  Text("SIGN OUT",)),
-                ),
-              ),
-            ),
             Studio5ive(),
           ],
         ),
