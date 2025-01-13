@@ -346,7 +346,7 @@ class _LoginState extends State<Login> {
                                             )
                                         ),
                                         child: Image.asset(
-                                          Theme.of(context).brightness == Brightness.dark?'assets/add/apple_2.png' : 'assets/add/apple.png',
+                                          Theme.of(context).brightness == Brightness.dark? 'assets/add/apple_2.png' : 'assets/add/apple.png',
                                           height: 30,
                                         ),
                                       ),
