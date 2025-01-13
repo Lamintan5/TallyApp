@@ -65,7 +65,8 @@ class _SalesOverviewState extends State<SalesOverview> {
 
   double amount = 0;
   String method = "";
-  String sDate = "";
+  String fDate = "";
+  String tDate = "";
   String dDate = "";
   String sellerid = "";
   String cName = "";
@@ -98,11 +99,11 @@ class _SalesOverviewState extends State<SalesOverview> {
       bool amountFilter = amount != 0 ? double.parse(test.paid!) == amount : true;
       bool methodFilter = method.isNotEmpty ? test.method == method : true;
       bool customerFilter = cPhone.isNotEmpty && cName.isNotEmpty ? test.customer == cName && test.phone == cPhone : true;
-      bool dateFilter = sDate.isNotEmpty
-          ? DateTime.parse(test.date.toString()).year == DateTime.parse(sDate.toString()).year &&
-          DateTime.parse(test.date.toString()).month == DateTime.parse(sDate.toString()).month &&
-          DateTime.parse(test.date.toString()).day == DateTime.parse(sDate.toString()).day
+      bool dateFilter = fDate.isNotEmpty && tDate.isNotEmpty
+          ? DateTime.parse(test.date.toString()).isAfter(DateTime.parse(fDate.toString()).subtract(const Duration(days: 1))) &&
+          DateTime.parse(test.date.toString()).isBefore(DateTime.parse(tDate.toString()).add(const Duration(days: 1)))
           : true;
+
       bool sUidFilter = sellerid.isNotEmpty ? test.sellerid == sellerid : true;
 
       bool amountPaidCondition = double.parse(test.amount.toString()) == double.parse(test.paid.toString()) &&
@@ -273,7 +274,7 @@ class _SalesOverviewState extends State<SalesOverview> {
                       setState(() {
                         amount = 0;
                         method = "";
-                        sDate = "";
+                        fDate = "";
                         dDate = "";
                         sellerid = "";
                         cName = "";
@@ -1229,10 +1230,11 @@ class _SalesOverviewState extends State<SalesOverview> {
     mySales = uniqueSale;
     _getData();
   }
-  _filter(double amnt, String mth, String sDte, String dDte, String sid, String cNme, String cPne){
+  _filter(double amnt, String mth, String fDte, String tDte, String dDte, String sid, String cNme, String cPne){
     amount = amnt;
     method = mth;
-    sDate = sDte;
+    fDate = fDte;
+    tDate = tDte;
     dDate = dDte;
     sellerid = sid;
     cName = cNme;
