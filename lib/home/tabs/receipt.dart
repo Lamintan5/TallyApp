@@ -278,7 +278,7 @@ class _ReceiptState extends State<Receipt> {
                                   ),
                                 ),
                                 SizedBox(width: 20,),
-                                cashier.uid == currentUser.uid
+                                cashier.uid == currentUser.uid || cashier.uid.isEmpty
                                     ? SizedBox()
                                     :  Row(
                                         children: [
