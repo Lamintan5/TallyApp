@@ -491,11 +491,8 @@ class _SalesOverviewState extends State<SalesOverview> {
                                           Center(child: Text('S${index.toString().padLeft(3, '0')}' , style: TextStyle(color: Colors.black),)),
                                           onTap: (){
                                             items == 0? null :
-                                            Get.to(()=>SaleItems(
-                                              index: index,
-                                              saleId: sale.saleid,
-                                              entity: widget.entity, from: 'SALES', getData: _getData,
-                                            ),transition: Transition.downToUp);
+                                            _navigate(index, sale);
+
                                           }
                                       ),
                                       DataCell(
@@ -504,31 +501,31 @@ class _SalesOverviewState extends State<SalesOverview> {
                                             ),
                                           ),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
                                           Center(child: Text(qnty.toString(), style: TextStyle(color: Colors.black))),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
                                           Text('Ksh.${formatNumberWithCommas(bprice)}', style: TextStyle(color: Colors.black)),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
                                           Text('Ksh.${formatNumberWithCommas(sprice)}', style: TextStyle(color: Colors.black)),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
                                           Text('Ksh.${formatNumberWithCommas(profit)}', style: TextStyle(color: Colors.black)),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
@@ -538,7 +535,7 @@ class _SalesOverviewState extends State<SalesOverview> {
                                             ),
                                           ),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
@@ -548,7 +545,7 @@ class _SalesOverviewState extends State<SalesOverview> {
                                             ),
                                           ),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
@@ -556,7 +553,7 @@ class _SalesOverviewState extends State<SalesOverview> {
                                               sale.method.toString().toUpperCase(), style: TextStyle(color: Colors.black)
                                           ),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
@@ -566,7 +563,7 @@ class _SalesOverviewState extends State<SalesOverview> {
                                             ),
                                           ),
                                           onTap: (){
-
+                                            _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
@@ -703,8 +700,8 @@ class _SalesOverviewState extends State<SalesOverview> {
                                       ),
                                     ]);
                               }).toList(),
-                                                        ),
-                                                      ),
+                                ),
+                              ),
                             )
                             : SizedBox(
                           width: 450,
@@ -1240,6 +1237,13 @@ class _SalesOverviewState extends State<SalesOverview> {
     cName = cNme;
     cPhone = cPne;
     _getData();
+  }
+  _navigate(int index, SaleModel sale){
+    Get.to(()=>SaleItems(
+      index: index,
+      saleId: sale.saleid,
+      entity: widget.entity, from: 'SALES', getData: _getData,
+    ),transition: Transition.downToUp);
   }
 
   String formatNumberWithCommas(double number) {

@@ -35,12 +35,14 @@ class _DialogFilterPurchasesState extends State<DialogFilterPurchases> {
 
   String? type;
   String purchaserUid = "";
-  String pDate = "";
+  String fDate = "";
+  String tDate = "";
   String dDate = "";
   String pTime = "";
 
   DateTime _dateTime = DateTime.now();
-  DateTime _purchaseDate = DateTime.now();
+  DateTime _fromDate = DateTime.now();
+  DateTime _toDate = DateTime.now();
 
   _getData(){
     _user = myUsers.map((jsonString) => UserModel.fromJson(json.decode(jsonString))).toList();
@@ -70,8 +72,8 @@ class _DialogFilterPurchasesState extends State<DialogFilterPurchases> {
         ? Colors.white
         : Colors.black;
 
-    final hours = _purchaseDate.hour.toString().padLeft(2, '0');
-    final minutes = _purchaseDate.minute.toString().padLeft(2, '0');
+    final hours = _fromDate.hour.toString().padLeft(2, '0');
+    final minutes = _fromDate.minute.toString().padLeft(2, '0');
     return Form(
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -121,12 +123,11 @@ class _DialogFilterPurchasesState extends State<DialogFilterPurchases> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Purchase Date :", style: TextStyle(color: secondaryColor),),
+                    Text(" From", style: TextStyle(color: secondaryColor),),
                     InkWell(
                       onTap: (){
-                        _showSaleDatePicker();
+                        _showFromDatePicker();
                       },
                       child: Container(
                         width: double.infinity,
@@ -139,90 +140,64 @@ class _DialogFilterPurchasesState extends State<DialogFilterPurchases> {
                                 color: color1
                             )
                         ),
-                        child: Text(pDate==""?"":DateFormat.yMMMd().format(DateTime.parse(pDate)), style: TextStyle(fontSize: 13),),
+                        child: Text(fDate==""?"":DateFormat.yMMMd().format(DateTime.parse(fDate)), style: TextStyle( fontSize: 13),),
                       ),
                     ),
                   ],
                 ),
               ),
-              // SizedBox(width: 10,),
-              // Expanded(
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //     mainAxisSize: MainAxisSize.min,
-              //     children: [
-              //       Text("Time :", style: TextStyle(color: secondaryColor),),
-              //       InkWell(
-              //         onTap: ()async{
-              //   child: Column(
-              //           final time =await pickTime();
-              //           if(time==null){
-              //             return;
-              //           } else {
-              //             final newDateTime = DateTime(
-              //                 _purchaseDate.year,
-              //                 _purchaseDate.month,
-              //                 _purchaseDate.day,
-              //                 time.hour,
-              //                 time.minute
-              //             );
-              //             setState(() {
-              //               _purchaseDate = newDateTime;
-              //               pTime = '${newDateTime.hour.toString().padLeft(2, '0')}:${newDateTime.minute.toString().padLeft(2, '0')}';
-              //             });
-              //           }
-              //         },
-              //         child: Container(
-              //           width: double.infinity,
-              //           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-              //           decoration: BoxDecoration(
-              //               color: color1,
-              //               borderRadius: BorderRadius.circular(5),
-              //               border: Border.all(
-              //                   width: 1,
-              //                   color: color1
-              //               )
-              //           ),
-              //           child: Text(pTime, style: TextStyle(fontSize: 13),),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              SizedBox(width: widget.from == "PAYABLE"?10:0,),
-              widget.from == "PAYABLE"?Expanded(
+              SizedBox(width: 10,),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                      Text('Due Date', style: TextStyle(color: secondaryColor),),
-                     InkWell(
-                      onTap: _showDatePicker,
+                    Text("To", style: TextStyle(color: secondaryColor),),
+                    InkWell(
+                      onTap: (){
+                        _showToDatePicker();
+                      },
                       child: Container(
-                        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
                         decoration: BoxDecoration(
                             color: color1,
                             borderRadius: BorderRadius.circular(5),
                             border: Border.all(
-                                color: color1,
-                                width: 1
+                                width: 1,
+                                color: color1
                             )
                         ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                                child: Text(
-                                    dDate==""?"":DateFormat.yMMMd().format(DateTime.parse(dDate))
-                                )
-                            ),
-                            LineIcon.calendar(),
-
-                          ],
-                        ),
+                        child: Text(tDate==""?"":DateFormat.yMMMd().format(DateTime.parse(tDate)), style: TextStyle( fontSize: 13),),
                       ),
-                    ) ,
+                    ),
                   ],
                 ),
-              ): SizedBox()
+              ),
+            ],
+          ),
+          widget.from=="PURCHASE"? SizedBox() : SizedBox(width: 5,),
+          widget.from=="PURCHASE"? SizedBox() : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(" Due Date", style: TextStyle(color: secondaryColor),),
+              InkWell(
+                onTap: (){
+                  _showDueDatePicker();
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                  decoration: BoxDecoration(
+                      color: color1,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                          width: 1,
+                          color: color1
+                      )
+                  ),
+                  child: Text(dDate==""?"":DateFormat.yMMMd().format(DateTime.parse(dDate)), style: TextStyle( fontSize: 13),),
+                ),
+              ),
             ],
           ),
           _user.isEmpty ? SizedBox() :  Text('Purchaser :', style: TextStyle(color: secondaryColor),),
@@ -264,7 +239,8 @@ class _DialogFilterPurchasesState extends State<DialogFilterPurchases> {
               widget.filter(
                   _bprice.text.toString()==""?0.0:double.parse(_bprice.text.toString()),
                   type==null?"":type,
-                  pDate,
+                  fDate,
+                  tDate,
                   dDate,
                   purchaserUid
               );
@@ -277,12 +253,12 @@ class _DialogFilterPurchasesState extends State<DialogFilterPurchases> {
   }
   Future<TimeOfDay?> pickTime() => showTimePicker(
     context: context,
-    initialTime: TimeOfDay(hour: _purchaseDate.hour, minute: _purchaseDate.minute),
+    initialTime: TimeOfDay(hour: _fromDate.hour, minute: _fromDate.minute),
   );
-  void _showDatePicker(){
+  void _showDueDatePicker(){
     showDatePicker(
       context: context,
-      initialDate: _dateTime.isBefore(justToday)? DateTime.now() :  _dateTime,
+      initialDate: _fromDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     ).then((value) {
@@ -292,16 +268,33 @@ class _DialogFilterPurchasesState extends State<DialogFilterPurchases> {
       });
     });
   }
-  void _showSaleDatePicker(){
+  void _showFromDatePicker(){
     showDatePicker(
       context: context,
-      initialDate: _purchaseDate,
+      initialDate: _fromDate,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     ).then((value) {
       setState(() {
-        _purchaseDate = value!;
-        pDate = _purchaseDate.toString();
+        _fromDate = value!;
+        fDate = _fromDate.toString();
+        if(tDate.isEmpty){
+          tDate = fDate;
+          _toDate = value;
+        }
+      });
+    });
+  }
+  void _showToDatePicker(){
+    showDatePicker(
+      context: context,
+      initialDate: _toDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      setState(() {
+        _toDate = value!;
+        tDate = _toDate.toString();
       });
     });
   }

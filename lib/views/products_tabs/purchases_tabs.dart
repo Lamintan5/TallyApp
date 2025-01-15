@@ -63,7 +63,8 @@ class _PurchaseTabState extends State<PurchaseTab> {
 
   double amount = 0;
   String method = "";
-  String pDate = "";
+  String fDate = "";
+  String tDate = "";
   String dDate = "";
   String pUid = "";
 
@@ -96,10 +97,10 @@ class _PurchaseTabState extends State<PurchaseTab> {
       // If method is not empty, filter by method type
       bool methodFilter = method.isNotEmpty ? test.type == method : true;
       // If date is not empty, filter by the date
-      bool dateFilter = pDate.isNotEmpty ? DateTime.parse(test.date.toString()).year == DateTime.parse(pDate.toString()).year
-      && DateTime.parse(test.date.toString()).month == DateTime.parse(pDate.toString()).month
-      && DateTime.parse(test.date.toString()).day == DateTime.parse(pDate.toString()).day  : true;
-
+      bool dateFilter = fDate.isNotEmpty && tDate.isNotEmpty
+          ? DateTime.parse(test.date.toString()).isAfter(DateTime.parse(fDate.toString()).subtract(const Duration(days: 1))) &&
+           DateTime.parse(test.date.toString()).isBefore(DateTime.parse(tDate.toString()).add(const Duration(days: 1)))
+          : true;
       bool pUidFilter = pUid.isNotEmpty ? test.purchaser == pUid : true;
       // Return true if all conditions are met
       return purchaserFilter && amountFilter && methodFilter && dateFilter  && pUidFilter;
@@ -254,7 +255,8 @@ class _PurchaseTabState extends State<PurchaseTab> {
                       });
                           amount = 0.0;
                           method = "";
-                          pDate = "";
+                          fDate = "";
+                          tDate = "";
                           dDate = "";
                           pUid = "";
                           _purchase.any((test) => test.checked.toString().contains("false")
@@ -1076,14 +1078,14 @@ class _PurchaseTabState extends State<PurchaseTab> {
     myPurchases = uniquePurchase;
     _getData();
   }
-  _filter(double amnt, String mthd, String pDte, String dDte, String purchaserUid){
+  _filter(double amnt, String mthd, String fDte, String tDte, String dDte, String purchaserUid){
     amount = amnt;
     method = mthd;
-    pDate = pDte.toString();
-    dDate = dDte.toString();
+    fDate = fDte;
+    tDate = tDte;
+    dDate = dDte;
     pUid = purchaserUid;
     _getData();
-
   }
 
   String formatNumberWithCommas(double number) {

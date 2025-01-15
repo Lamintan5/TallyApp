@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:TallyApp/Widget/dialogs/call_actions/double_call_action.dart';
 import 'package:TallyApp/models/entities.dart';
+import 'package:TallyApp/models/products.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:line_icons/line_icon.dart';
@@ -12,6 +14,7 @@ import '../../../models/users.dart';
 import '../../../utils/colors.dart';
 import '../../text/text_format.dart';
 import '../../text_filed_input.dart';
+import '../dialog_selecting_product.dart';
 import '../dialog_title.dart';
 
 class DialogFilterSales extends StatefulWidget {
@@ -29,6 +32,7 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
 
   TextEditingController _pay = TextEditingController();
 
+
   List<String> items = ['Cash', 'Electronic'];
 
   List<SaleModel> _sale = [];
@@ -36,23 +40,29 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
   List<SaleModel> _filtNewSale = [];
   List<UserModel> _user = [];
 
+
   UserModel? selectedUser;
+  ProductModel? selectedProduct;
 
   String? method;
   String cName = "";
   String cPhone = '';
-  String sDate = '';
+  String fDate = '';
+  String tDate = '';
   String dDate = '';
   String sellerUid = "";
 
   bool isCustom = true;
 
-  DateTime _dateTime = DateTime.now();
-  DateTime _saleDate = DateTime.now();
 
-  _getCustomers(){
+  DateTime _dateTime = DateTime.now();
+  DateTime _fromDate = DateTime.now();
+  DateTime _toDate = DateTime.now();
+
+  _getData(){
     _user = myUsers.map((jsonString) => UserModel.fromJson(json.decode(jsonString))).toList();
     _sale = mySales.map((jsonString) => SaleModel.fromJson(json.decode(jsonString))).toList();
+
     _sale = _sale.where((element) => element.eid == widget.entity.eid).toList();
     _user = _user.where((user) => _sale.any((sale) => user.uid==sale.sellerid)).toList();
     _filtNewSale = _sale.where((element) => element.customer != "" && element.phone != "").toList();
@@ -70,7 +80,7 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getCustomers();
+    _getData();
   }
 
   @override
@@ -112,7 +122,28 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
               }
             },
           ),
-          Text(' Payment method :  ', style: TextStyle(color: secondaryColor),),
+          // Text(' Products  ', style: TextStyle(color: secondaryColor),),
+          // InkWell(
+          //   onTap: (){
+          //     dialogSelectProduct(context);
+          //   },
+          //   child: Container(
+          //     width: double.infinity,
+          //     padding: EdgeInsets.symmetric(horizontal: 12, vertical:15),
+          //     decoration: BoxDecoration(
+          //         color: color,
+          //         borderRadius: BorderRadius.circular(5),
+          //         border: Border.all(
+          //             width: 1,
+          //             color: isCustom?color:Colors.red
+          //         )
+          //     ),
+          //     child: selectedProduct == null
+          //         ? Text("Press here to select product", style: TextStyle(color: isCustom?secondaryColor:Colors.red, fontSize: 13),)
+          //         : Text(selectedProduct!.name.toString()),
+          //   ),
+          // ),
+          Text(' Payment method ', style: TextStyle(color: secondaryColor),),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 12,),
             decoration: BoxDecoration(
@@ -135,6 +166,7 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
             ),
           ),
           SizedBox(height: 5,),
+          Text(' Customer  ', style: TextStyle(color: secondaryColor),),
           InkWell(
             onTap: (){
               dialogSelectCustomer(context);
@@ -161,10 +193,10 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(" Sale Date :", style: TextStyle(color: secondaryColor),),
+                    Text(" From", style: TextStyle(color: secondaryColor),),
                     InkWell(
                       onTap: (){
-                        _showSaleDatePicker();
+                        _showFromDatePicker();
                       },
                       child: Container(
                         width: double.infinity,
@@ -177,21 +209,21 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
                                 color: color
                             )
                         ),
-                        child: Text(sDate==""?"":DateFormat.yMMMd().format(DateTime.parse(sDate)), style: TextStyle( fontSize: 13),),
+                        child: Text(fDate==""?"":DateFormat.yMMMd().format(DateTime.parse(fDate)), style: TextStyle( fontSize: 13),),
                       ),
                     ),
                   ],
                 ),
               ),
-              widget.from=="SALES"? SizedBox() : SizedBox(width: 5,),
-              widget.from=="SALES"? SizedBox() : Expanded(
+              SizedBox(width: 10,),
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(" Due Date :", style: TextStyle(color: secondaryColor),),
+                    Text("To", style: TextStyle(color: secondaryColor),),
                     InkWell(
                       onTap: (){
-                        _showDueDatePicker();
+                        _showToDatePicker();
                       },
                       child: Container(
                         width: double.infinity,
@@ -204,7 +236,7 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
                                 color: color
                             )
                         ),
-                        child: Text(dDate==""?"":DateFormat.yMMMd().format(DateTime.parse(dDate)), style: TextStyle( fontSize: 13),),
+                        child: Text(tDate==""?"":DateFormat.yMMMd().format(DateTime.parse(tDate)), style: TextStyle( fontSize: 13),),
                       ),
                     ),
                   ],
@@ -212,7 +244,32 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
               ),
             ],
           ),
-          _user.isEmpty ? SizedBox() : Text(' Seller :  ', style: TextStyle(color: secondaryColor),),
+          widget.from=="SALES"? SizedBox() : SizedBox(width: 5,),
+          widget.from=="SALES"? SizedBox() : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(" Due Date", style: TextStyle(color: secondaryColor),),
+              InkWell(
+                onTap: (){
+                  _showDueDatePicker();
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 15),
+                  decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                          width: 1,
+                          color: color
+                      )
+                  ),
+                  child: Text(dDate==""?"":DateFormat.yMMMd().format(DateTime.parse(dDate)), style: TextStyle( fontSize: 13),),
+                ),
+              ),
+            ],
+          ),
+          _user.isEmpty ? SizedBox() : Text(' Seller  ', style: TextStyle(color: secondaryColor),),
           _user.isEmpty ? SizedBox() : Container(width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 12,),
               decoration: BoxDecoration(
@@ -251,11 +308,12 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
               widget.filter(
                   _pay.text.toString()==""?0.0:double.parse(_pay.text.toString()),
                   method==null?"":method,
-                  sDate,
+                  fDate,
+                  tDate,
                   dDate,
                   sellerUid,
                   cName,
-                  cPhone
+                  cPhone,
               );
             },
           )
@@ -296,7 +354,7 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: [
-                DialogTitle(title: 'S E L E C T  P R O D U C T'),
+                DialogTitle(title: 'C U S T O M E R'),
                 Text('Select customer by clicking on any customers below',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: secondaryColor, fontSize: 12),
@@ -362,25 +420,79 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
           );
         });
   }
+  void dialogSelectProduct(BuildContext context) {
 
-  void _showSaleDatePicker(){
+    final size = MediaQuery.of(context).size;
+
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        useRootNavigator: true,
+        useSafeArea: true,
+        constraints: BoxConstraints(
+            maxHeight: size.height - 100,
+            minHeight: size.height - 100,
+            maxWidth: 500,minWidth: 450
+        ),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(10),
+              topLeft: Radius.circular(10),
+            )
+        ),
+        builder: (context){
+          return  SizedBox(width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                DialogTitle(title: 'P R O D U C T'),
+                Text(
+                  'Select product by clicking on any products below',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: secondaryColor, fontSize: 12),
+                ),
+                Expanded(child: SelectProduct(selectingProduct: _selectingProduct, entity: widget.entity))
+
+              ],
+            ),
+          );
+        });
+  }
+
+  void _showFromDatePicker(){
     showDatePicker(
       context: context,
-      initialDate: _saleDate,
+      initialDate: _fromDate,
       firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     ).then((value) {
       setState(() {
-        _saleDate = value!;
-        sDate = _saleDate.toString();
+        _fromDate = value!;
+        fDate = _fromDate.toString();
+        if(tDate.isEmpty){
+          tDate = fDate;
+          _toDate = value;
+        }
       });
     });
   }
-
+  void _showToDatePicker(){
+    showDatePicker(
+      context: context,
+      initialDate: _toDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      setState(() {
+        _toDate = value!;
+        tDate = _toDate.toString();
+      });
+    });
+  }
   void _showDueDatePicker(){
     showDatePicker(
       context: context,
-      initialDate: _saleDate,
+      initialDate: _fromDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
     ).then((value) {
@@ -391,6 +503,12 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
     });
   }
 
+  void _selectingProduct(ProductModel product){
+    setState(() {
+      selectedProduct = product;
+    });
+  }
+
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
     value: item,
     child: Text(
@@ -398,3 +516,6 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
     ),
   );
 }
+
+
+
