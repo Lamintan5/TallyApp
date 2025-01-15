@@ -971,36 +971,46 @@ class _SaleItemsState extends State<SaleItems> {
                         : SizedBox(),
                   ],
                 ),
-                seller.uid == currentUser.uid ? SizedBox() :SizedBox(height: 10,),
-                seller.uid == currentUser.uid ? SizedBox() :Divider(
+                SizedBox(height: 10,),
+                Divider(
                   thickness: 0.1,
                   color: revers,
                 ),
-                seller.uid == currentUser.uid ? SizedBox() :  IntrinsicHeight(
+                IntrinsicHeight(
                   child: Row(
                     children: [
                       Expanded(
                           child: InkWell(
                             onTap: (){
-                              Platform.isIOS || Platform.isAndroid
+                              user == "Customer"||seller.uid == currentUser.uid
+                                  ?Navigator.pop(context)
+                                  :Platform.isIOS || Platform.isAndroid
                                   ? Get.to(() => MessageScreen(changeMess: _changeMess, updateCount: _updateCount, receiver: seller), transition: Transition.rightToLeft)
                                   : Get.to(() => WebChat(selected: seller), transition: Transition.rightToLeft);
                             },
+                            borderRadius: BorderRadius.circular(5),
                             child: SizedBox(height: 40,
                               child: Center(
                                 child: Text(
-                                  'Message',
+                                  user == "Customer" || seller.uid == currentUser.uid? 'Cancel' : 'Message',
                                   style: TextStyle(color: CupertinoColors.systemBlue, fontWeight: FontWeight.w700, fontSize: 15),
                                   textAlign: TextAlign.center,),
                               ),
                             ),
-                          )
+                          ),
                       ),
-                      Platform.isIOS || Platform.isAndroid? VerticalDivider(
-                        thickness: 0.2,
-                        color: revers,
-                      ) : SizedBox(),
-                      Platform.isIOS || Platform.isAndroid? Expanded(
+                      Platform.isIOS || Platform.isAndroid
+                          ? user == "Customer" || seller.uid == currentUser.uid
+                          ? SizedBox()
+                          : VerticalDivider(
+                            thickness: 0.2,
+                            color: revers,
+                          )
+                          : SizedBox(),
+                      Platform.isIOS || Platform.isAndroid
+                          ? user == "Customer" || seller.uid == currentUser.uid
+                          ? SizedBox()
+                          : Expanded(
                           child: InkWell(
                             onTap: (){
                               Navigator.pop(context);
@@ -1015,8 +1025,8 @@ class _SaleItemsState extends State<SaleItems> {
                               } else {
                                 _callNumber(seller.phone.toString());
                               }
-
                             },
+                            borderRadius: BorderRadius.circular(5),
                             child: SizedBox(height: 40,
                               child: Center(
                                 child: Text(
@@ -1026,11 +1036,11 @@ class _SaleItemsState extends State<SaleItems> {
                               ),
                             ),
                           )
-                      ) : SizedBox(),
+                      )
+                          : SizedBox(),
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
@@ -1356,6 +1366,7 @@ class _SaleItemsState extends State<SaleItems> {
     final formatter = NumberFormat('#,###');
     return formatter.format(number);
   }
+
   _changeMess(MessModel mess){}
   _updateCount(){}
   _callNumber(String number) async{
