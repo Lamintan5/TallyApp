@@ -56,16 +56,10 @@ class _DialogIpaddressState extends State<DialogIpaddress> {
           TextFieldInput(
             textEditingController: _ipController,
             labelText: "Ip Address",
-            maxLength: 13,
-            textInputType: TextInputType.number,
+            textInputType: TextInputType.text,
             validator: (value){
               if (value == null || value.isEmpty) {
                 return 'Please enter an ipp address.';
-              }
-              if (RegExp(r'^[0-9+]+$').hasMatch(value)) {
-                return null; // Valid input (contains only digits)
-              } else {
-                return 'Please enter a valid phone number';
               }
             },
           ),
