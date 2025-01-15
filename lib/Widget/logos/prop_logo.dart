@@ -39,37 +39,37 @@ class PropLogo extends StatelessWidget {
             backgroundImage: FileImage(File(entity.image!)),
           )
           :entity.image.toString() != ""
-          ?CachedNetworkImage(
-        cacheManager: customCacheManager,
-        imageUrl:  entity.image.toString().contains("/")
-            ? Services.HOST + '/logos/${entity.image.toString().split("/").last}'
-            : entity.image.toString().contains("\\")
-            ? Services.HOST + '/logos/${entity.image.toString().split("\\").last}'
-            : Services.HOST + '/logos/${entity.image.toString()}' ,
-        key: UniqueKey(),
-        fit: BoxFit.cover,
-        imageBuilder: (context, imageProvider) => CircleAvatar(
-          radius: radius,
-          backgroundColor: Colors.transparent,
-          backgroundImage: imageProvider,
-        ),
-        placeholder: (context, url) =>
-            Container(
+          ? CachedNetworkImage(
+            cacheManager: customCacheManager,
+            imageUrl:  entity.image.toString().contains("/")
+                ? Services.HOST + 'logos/${entity.image.toString().split("/").last}'
+                : entity.image.toString().contains("\\")
+                ? Services.HOST + 'logos/${entity.image.toString().split("\\").last}'
+                : Services.HOST + 'logos/${entity.image.toString()}' ,
+            key: UniqueKey(),
+            fit: BoxFit.cover,
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              radius: radius,
+              backgroundColor: Colors.transparent,
+              backgroundImage: imageProvider,
+            ),
+            placeholder: (context, url) =>
+                Container(
+                  height: radius*2,
+                  width: radius*2,
+                ),
+            errorWidget: (context, url, error) => Container(
               height: radius*2,
               width: radius*2,
+              child: Center(child: Icon(Icons.error_outline_rounded, size: radius*2),
+              ),
             ),
-        errorWidget: (context, url, error) => Container(
-          height: radius*2,
-          width: radius*2,
-          child: Center(child: Icon(Icons.error_outline_rounded, size: radius*2),
-          ),
-        ),
-      )
+          )
           : CircleAvatar(
-        radius: radius,
-        backgroundColor: color1,
-        child: Text('${entity.title.toString().toUpperCase()[0]}', style: TextStyle(fontWeight: FontWeight.w500, color: revers, fontSize: radius/2 +5),),
-      ),
+              radius: radius,
+              backgroundColor: color1,
+              child: Text('${entity.title.toString().toUpperCase()[0]}', style: TextStyle(fontWeight: FontWeight.w500, color: revers, fontSize: radius/2 +5),),
+            ),
     );
   }
 }
