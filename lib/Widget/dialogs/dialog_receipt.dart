@@ -45,7 +45,7 @@ class _DialogReceiptState extends State<DialogReceipt> {
   _getData(){
     sale = widget.sale;
     cashier = myUsers.map((jsonString) => UserModel.fromJson(json.decode(jsonString))).firstWhere((test) => test.uid==sale.sellerid.toString(),
-        orElse: ()=>UserModel(uid: "",username: "N/A"));
+        orElse: ()=>UserModel(uid: "",username: "--"));
     _sales = mySales.map((jsonString) => SaleModel.fromJson(json.decode(jsonString))).where((test) => test.saleid == sale.saleid).toList();
     items = _sales.length;
     units = _sales.isEmpty ? 0 : _sales.fold(0, (previousValue, element) => previousValue + int.parse(element.quantity.toString()));
