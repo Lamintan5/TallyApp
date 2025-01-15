@@ -537,6 +537,8 @@ class _DialogPaySalesState extends State<DialogPaySales> {
                           showCloseIcon: true,
                         )
                     );
+                  } else {
+                    _payAmount();
                   }
                 }
               }
