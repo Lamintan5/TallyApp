@@ -26,10 +26,10 @@ class CurrentImage extends StatelessWidget {
             imageUrl: currentUser.image.toString().contains("https://")
                 ?  currentUser.image.toString()
                 :  currentUser.image.toString().contains("/")
-                ? Services.HOSTS5 + 'profile/${currentUser.image.toString().split("/").last}'
+                ? Services.HOST + 'profile/${currentUser.image.toString().split("/").last}'
                 : currentUser.image.toString().contains("\\")
-                ? Services.HOSTS5 + 'profile/${currentUser.image.toString().split("\\").last}'
-                : Services.HOSTS5 + 'profile/${currentUser.image.toString()}',
+                ? Services.HOST + 'profile/${currentUser.image.toString().split("\\").last}'
+                : Services.HOST + 'profile/${currentUser.image.toString()}',
             key: UniqueKey(),
             fit: BoxFit.cover,
             imageBuilder: (context, imageProvider) => CircleAvatar(
