@@ -30,7 +30,7 @@ import 'entities.dart';
 import 'messages.dart';
 
 class Data{
-  String message = 'Copyright © 2015-2024 Studio5ive Inc. All Rights Reserved. Accessibility, User Agreement, Privacy, Payments, Terms of Use, Cookies, Your Privacy Choices and AdChoice';
+  String message = 'Copyright © 2015-2025 Studio5ive Inc. All Rights Reserved. Accessibility, User Agreement, Privacy, Payments, Terms of Use, Cookies, Your Privacy Choices and AdChoice';
   String failed = "mhmm🤔 seems like something went wrong. Please try again";
   String noPhone = "Phone number not available";
   final socketManager = Get.find<SocketManager>();
