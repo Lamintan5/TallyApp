@@ -17,7 +17,7 @@ import 'package:http/http.dart' as http;
 import '../models/billing.dart';
 
 class Services{
-  static String HOST = "http://${domain}/Tally/";
+  static String HOST = "http://tally.studio5ive.org/";
   static String HOSTS5 = "http://${domain}/Studio5ive/";
   //static  HOST = "http://192.168.137.1/Tally/";
   //static  HOST = "http://192.168.100.10/Tally/";
