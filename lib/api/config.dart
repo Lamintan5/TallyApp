@@ -1,7 +1,13 @@
-import 'package:TallyApp/main.dart';
+import 'dart:developer';
+
+import 'package:TallyApp/resources/services.dart';
+
+import '../main.dart';
+
 
 class Config{
   static String apiURL = "$domain:4000";
-  static const String otpLoginAPI = "/api/otpLogin";
-  static const String otpVerifyAPI = "/api/verifyOTP";
+
+  static String otpLoginAPI = Services.HOST + "api/otpLogin";
+  static String otpVerifyAPI = Services.HOST + "api/verifyOTP";
 } 
