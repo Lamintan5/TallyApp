@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:TallyApp/api/config.dart';
 import 'package:http/http.dart' as http;
 
+import '../resources/services.dart';
+
 class MpesaApiService {
-  static String _baseUrl = 'http://${Config.apiURL}/api';
+  static String _baseUrl = '${Services.HOST}api';
 
   Future<Map<String, dynamic>> getAccessToken() async {
     try {
