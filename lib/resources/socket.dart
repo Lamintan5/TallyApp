@@ -61,7 +61,7 @@ class SocketManager extends GetxController  {
   // Connect method
   void connect() {
     setData();
-    _socket = IO.io("http://${Config.apiURL}" , <String, dynamic>{
+    _socket = IO.io("http://tally.studio5ive.org:4000" , <String, dynamic>{
       "transports": ["websocket"],
       "autoConnect": false,
     });
@@ -132,8 +132,8 @@ class SocketManager extends GetxController  {
     _products = await Services().getMyPrdct(currentUser.uid);
     _purchases = await Services().getMyPurchase(currentUser.uid);
     _duties = await Services().getMyDuties(currentUser.uid);
-    _inventory = await Services().getMyInv(currentUser.uid);
     _payments = await Services().getMyPayments(currentUser.uid);
+    _inventory = await Services().getMyInv(currentUser.uid);
     _bill = await Services().getMyBills(currentUser.uid);
 
 
@@ -147,6 +147,7 @@ class SocketManager extends GetxController  {
     await Data().addOrUpdateInvList(_inventory);
     await Data().addOrUpdatePayments(_payments);
     await Data().addOrUpdateBillList(_bill);
+
     return false;
   }
   void setData(){
