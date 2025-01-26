@@ -78,14 +78,14 @@ class _DialogAddManagersState extends State<DialogAddManagers> {
           filteredList.add(item);
       });
     } else {
-      filteredList = _filtUser;
+      filteredList = [];
     }
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
         children: [
-            TextFormField(
+          TextFormField(
             controller: _search,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
@@ -129,7 +129,9 @@ class _DialogAddManagersState extends State<DialogAddManagers> {
               }
             }),
           ),
-          _isLoading?LinearProgressIndicator(color: reverse,backgroundColor: color1,):SizedBox(),
+          _isLoading
+              ? LinearProgressIndicator(color: reverse,backgroundColor: color1,)
+              : SizedBox(),
           Expanded(
             child: _loading
                 ?LoadingScreen()
@@ -238,7 +240,7 @@ class _DialogAddManagersState extends State<DialogAddManagers> {
     setState(() {
       Uuid uuid = Uuid();
       nid = uuid.v1();
-      message = "${currentUser.username} has sent you a request to join ${widget.entity.title.toString().toLowerCase()} as a amanager";
+      message = "${currentUser.username} has sent you a request to join ${widget.entity.title.toString().toLowerCase()} as a manager";
       _isLoading = true;
     });
     NotifModel notitifcation = NotifModel(
