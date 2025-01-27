@@ -216,12 +216,12 @@ class _OptionsState extends State<Options> {
                               SizedBox(height: height),
                               Divider(color: color1, thickness: 1, height: 1,),
                               SizedBox(height: height),
-                              OptionButtons(
-                                txt: "Domain",
-                                mssg: domain,
-                                icon: Icon(Icons.cable), onTap: () { dialogIpAddress(context); },),
-                              SizedBox(height: height),
-                              Divider(color: color1, thickness: 1, height: 1,),
+                              // OptionButtons(
+                              //   txt: "Domain",
+                              //   mssg: domain,
+                              //   icon: Icon(Icons.cable), onTap: () { dialogIpAddress(context); },),
+                              // SizedBox(height: height),
+                              // Divider(color: color1, thickness: 1, height: 1,),
                               SizedBox(height: height),
                               OptionButtons(
                                 txt: "Auto Upload",
@@ -334,6 +334,7 @@ class _OptionsState extends State<Options> {
         preferences.remove('mymess');
         preferences.remove('mynotif');
         preferences.remove('notmyentity');
+        preferences.remove('mybills');
         // preferences.remove('myshowcase');
         currentUser = UserModel(
             uid: "",
@@ -360,6 +361,7 @@ class _OptionsState extends State<Options> {
         myChats = [];
         myNotif = [];
         myMess = [];
+        myBills = [];
         // myShowCases = [];
         notMyEntity = [];
         socketManager.chats.clear();
@@ -368,6 +370,28 @@ class _OptionsState extends State<Options> {
         socketManager.signout();
         socketManager.disconnect();
         Data().addOrRemoveShowCase("Upload", "remove");
+
+        Map<String, List> lists = {
+          "myEntity": myEntity,
+          "myUsers": myUsers,
+          "mySuppliers": mySuppliers,
+          "mySales": mySales,
+          "myDuties": myDuties,
+          "myProducts": myProducts,
+          "myPurchases": myPurchases,
+          "myInventory": myInventory,
+          "myPayments": myPayments,
+          "myChats": myChats,
+          "myNotif": myNotif,
+          "myMess": myMess,
+          "myBills": myBills,
+        };
+
+        // Print the number of elements in each list
+        lists.forEach((name, list) {
+          print('$name has ${list.length} item(s).');
+        });
+
         Get.offAll(()=>Login(), transition: Transition.leftToRight);
         Get.snackbar(
             "Success",
