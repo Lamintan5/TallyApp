@@ -100,10 +100,10 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         RowLogo(text: 'Login Account',),
-                        IconButton(onPressed: (){dialogIpAddress(context);}, icon: Icon(Icons.settings)),
+                        // IconButton(onPressed: (){dialogIpAddress(context);}, icon: Icon(Icons.settings)),
                       ],
                     ),
                     SizedBox(height: 30,),

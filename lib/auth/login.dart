@@ -175,14 +175,14 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       RowLogo(text: 'Login Account',),
-                      IconButton(onPressed: (){dialogIpAddress(context);}, icon: Icon(Icons.settings)),
+                      // IconButton(onPressed: (){dialogIpAddress(context);}, icon: Icon(Icons.settings)),
                     ],
                   ),
                   Expanded(
-                      child: Padding(
+                      child: Padding( 
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: SizedBox(width: 450,
                           child: Column(
