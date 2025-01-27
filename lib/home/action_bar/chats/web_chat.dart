@@ -24,6 +24,7 @@ import '../../../main.dart';
 import '../../../models/chats.dart';
 import '../../../models/data.dart';
 import '../../../models/messages.dart';
+import '../../../resources/services.dart';
 import '../../../resources/socket.dart';
 
 class WebChat extends StatefulWidget {
@@ -116,12 +117,20 @@ class _WebChatState extends State<WebChat> {
       "sourceId":sourceId,
       "targetId":targetId,
       "message":message,
-      "path":path,
+      "path":path.isEmpty? "" : "${Services.HOST}uploads/${path}",
       "time":time,
       "type":type,
       "title": currentUser.username,
       "token": selectedUser.token.toString().split(","),
-      "profile": currentUser.image,
+      "profile": currentUser.image.toString().isEmpty
+          ? ""
+          : currentUser.image!.contains("https://")
+          ? currentUser.image
+          : currentUser.image.toString().contains("/")
+          ? Services.HOST + 'profile/${currentUser.image.toString().split("/").last}'
+          : currentUser.image.toString().contains("\\")
+          ? Services.HOST + 'profile/${currentUser.image.toString().split("\\").last}'
+          : Services.HOST + 'profile/${currentUser.image.toString()}',
     });
   }
   void connect() {

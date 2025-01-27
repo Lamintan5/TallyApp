@@ -20,6 +20,7 @@ import '../../../models/chats.dart';
 import '../../../models/data.dart';
 import '../../../models/messages.dart';
 import '../../../models/users.dart';
+import '../../../resources/services.dart';
 import '../../../resources/socket.dart';
 import '../../../utils/colors.dart';
 
@@ -64,12 +65,20 @@ class _MessageScreenState extends State<MessageScreen> {
       "sourceId":sourceId,
       "targetId":targetId,
       "message":message,
-      "path":path,
+      "path":path.isEmpty? "" : "${Services.HOST}uploads/${path}",
       "time":time,
       "type":type,
       "title": currentUser.username,
       "token": widget.receiver.token.toString().split(","),
-      "profile": currentUser.image,
+      "profile": currentUser.image.toString().isEmpty
+          ? ""
+          : currentUser.image!.contains("https://")
+          ? currentUser.image
+          : currentUser.image.toString().contains("/")
+          ? Services.HOST + 'profile/${currentUser.image.toString().split("/").last}'
+          : currentUser.image.toString().contains("\\")
+          ? Services.HOST + 'profile/${currentUser.image.toString().split("\\").last}'
+          : Services.HOST + 'profile/${currentUser.image.toString()}',
     });
   }
   void setMessage(String mid, String gid,String sourceId, String targetId, String message, String path, String type,String time){
