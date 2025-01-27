@@ -141,9 +141,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -258,7 +255,7 @@ class _MyAppState extends State<MyApp> {
       themeMode: ThemeMode.system,
       home:
       _loading
-          ?FetchingData()
+          ? FetchingData()
           :currentUser.uid.isEmpty || currentUser.uid=="" || currentUser.uid.isNull
           ? Welcome()
           : Platform.isAndroid || Platform.isIOS
@@ -266,6 +263,5 @@ class _MyAppState extends State<MyApp> {
           : ShowCaseWidget(builder : (context) => WebHome()),
     );
   }
-
 }
 
