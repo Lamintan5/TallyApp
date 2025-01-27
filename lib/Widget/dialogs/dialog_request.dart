@@ -132,7 +132,7 @@ class _DialogRequestState extends State<DialogRequest> {
       "text":"${widget.action},${widget.account}",
       "title": widget.entity.title,
       "token": admin.token.toString().split(","),
-      "profile": "${Services.HOST}logos/${widget.entity.image}",
+      "profile": widget.entity.image.toString().isEmpty? "" : "${Services.HOST}logos/${widget.entity.image}",
     });
   }
 

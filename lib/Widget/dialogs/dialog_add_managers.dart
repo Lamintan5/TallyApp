@@ -319,7 +319,7 @@ class _DialogAddManagersState extends State<DialogAddManagers> {
       "text":"",
       "title": widget.entity.title,
       "token": tokens,
-      "profile": "${Services.HOST}logos/${widget.entity.image}",
+      "profile": widget.entity.image.toString().isEmpty? "" : "${Services.HOST}logos/${widget.entity.image}",
     });
   }
 }
