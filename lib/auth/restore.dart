@@ -171,7 +171,7 @@ class _RestoreState extends State<Restore> {
                                     margin: EdgeInsets.symmetric(vertical: 10),
                                     child: Row(
                                       children: [
-                                        Icon(CupertinoIcons.money_dollar_circle, color: secondaryColor),
+                                        Icon(CupertinoIcons.cart, color: secondaryColor),
                                         SizedBox(width: 15,),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,7 +219,7 @@ class _RestoreState extends State<Restore> {
                                     margin: EdgeInsets.symmetric(vertical: 10),
                                     child: Row(
                                       children: [
-                                        Icon(CupertinoIcons.money_dollar, color: secondaryColor,),
+                                        Icon(CupertinoIcons.money_dollar_circle, color: secondaryColor,),
                                         SizedBox(width: 15,),
                                         Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
