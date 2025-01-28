@@ -102,7 +102,7 @@ class _SignUpState extends State<SignUp> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        RowLogo(text: 'Login Account',),
+                        RowLogo(text: 'Register Account',),
                         // IconButton(onPressed: (){dialogIpAddress(context);}, icon: Icon(Icons.settings)),
                       ],
                     ),
@@ -776,10 +776,11 @@ class _SignUpState extends State<SignUp> {
       image: _image!=null?_image!.path:"",
       status: "",
       url: imageUrl,
-      token: deviceModel.id,
+      token: deviceModel.id == null? "" : deviceModel.id,
       time: DateTime.now().toString(),
       country: deviceModel.country == null? _country.countryCode : deviceModel.country.toString()
     );
+    print(deviceModel.id);
     APIService.otpLogin(_emailController.text.trim()).then((response)async{
       print(response.data);
       setState(() {
@@ -810,80 +811,6 @@ class _SignUpState extends State<SignUp> {
     } else {
       Get.to(() => PasswordScreen(user: user), transition: Transition.rightToLeft);
     }
-// _registerUsers()async{
-//   const uuid = Uuid();
-//   String id = uuid.v1();
-//   setState(() {
-//     _isLoading = true;
-//   });
-//   Services.registerUsers(
-//       id,
-//       _usernameController.text.trim().toString(),
-//       _firstName.text.trim().toString(),
-//       _secondName.text.trim().toString(),
-//       _emailController.text.trim().toString(),
-//       _phoneController.text.trim().toString(),
-//       _confirmPassword.text.trim().toString(),
-//       type, _image,"",)
-//       .then((response) async{
-//     final String responseString = await response.stream.bytesToString();
-//     if (responseString.contains('Exists'))
-//     {
-//       Get.snackbar(
-//         'Authentication',
-//         'Username already exists.',
-//         shouldIconPulse: true,
-//         icon: Icon(Icons.error, color: Colors.red),
-//       );
-//     } else if (responseString.contains('Error'))
-//     {
-//       Get.snackbar(
-//         'Authentication',
-//         'Email already registered.',
-//         shouldIconPulse: true,
-//         icon: Icon(Icons.error, color: Colors.red),
-//       );
-//     } else if (responseString.contains('Success'))
-//     {
-//       final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-//       sharedPreferences.setString('uid', id);
-//       sharedPreferences.setString('first', _firstName.text.trim());
-//       sharedPreferences.setString('last', _secondName.text.trim());
-//       sharedPreferences.setString('username', _usernameController.text.trim());
-//       sharedPreferences.setString('email', _emailController.text.trim());
-//       sharedPreferences.setString('image', imageUrl.trim());
-//       sharedPreferences.setString('phone', _phoneController.text.trim());
-//       sharedPreferences.setString('type', type.toString());
-//       sharedPreferences.setString('password', _passwordController.text.trim());
-//       currentUser.uid = id;
-//       currentUser.username = _usernameController.text.trim().toString();
-//       currentUser.firstname = _firstName.text.trim().toString();
-//       currentUser.lastname = _secondName.text.trim().toString();
-//       currentUser.image = '';
-//       currentUser.email = _emailController.text.trim().toString();
-//       currentUser.phone = _phoneController.text.trim().toString();
-//       currentUser.type = type.toString();
-//       currentUser.password = _passwordController.text.trim().toString();
-//       //Get.offAll(()=>ShowCaseWidget(builder: (context) => HomeScreen()), transition: Transition.fadeIn);
-//       Get.snackbar(
-//         'Authentication',
-//         'User account created successfully.',
-//         shouldIconPulse: true,
-//         icon: Icon(Icons.check, color: Colors.green),
-//       );
-//     } else
-//     {
-//       Get.snackbar(
-//         'Authentication',
-//         'An error occurred. please try again0',
-//         shouldIconPulse: true,
-//         icon: Icon(Icons.error, color: Colors.red),
-//       );
-//     }
-//     setState(() {
-//       _isLoading = false;
-//     });
-//   });
-// }
+
   }
 }
