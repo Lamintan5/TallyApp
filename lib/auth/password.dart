@@ -55,7 +55,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
         user.lastname!,
         user.email!,
         user.phone!,
-        _repass.text.toString(),
+        md5.convert(utf8.encode(_repass.text.trim().toString())).toString(),
         user.image =="" || user.image!.contains("https://")? null : File(user.image!),
         "",
         user.image.toString(),
@@ -371,7 +371,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 20),
               Row(),
               Expanded(
                 child: SingleChildScrollView(
