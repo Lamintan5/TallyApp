@@ -34,7 +34,7 @@ class UserProfile extends StatelessWidget {
     )
         : CachedNetworkImage(
       cacheManager: customCacheManager,
-      imageUrl: image.contains("https://")? image :  '${Services.HOSTS5}profile/${image}',
+      imageUrl: image.contains("https://")? image :  '${Services.HOST}profile/${image}',
       key: UniqueKey(),
       fit: BoxFit.cover,
       imageBuilder: (context, imageProvider) => Container(
