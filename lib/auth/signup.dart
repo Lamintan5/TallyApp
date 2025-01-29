@@ -443,7 +443,7 @@ class _SignUpState extends State<SignUp> {
                                             ),
                                           ),
                                         )
-                                        : SizedBox(),
+                                        : SizedBox(), 
                                   ],
                                 ) : SizedBox(),
                               ]
