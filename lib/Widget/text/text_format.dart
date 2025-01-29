@@ -253,7 +253,86 @@ class TFormat{
     "NO": "kr", // Norway
     "NP": "₨", // Nepal
     "NR": "\$", // Nauru
-    "NU": "\$", //
+    "NU": "\$", // Niue
+    "NZ": "\$", // New Zealand
+    "OM": "ر.ع.", // Oman
+    "PA": "B/.", // Panama
+    "PE": "S/.", // Peru
+    "PF": "XPF", // French Polynesia
+    "PG": "K", // Papua New Guinea
+    "PH": "₱", // Philippines
+    "PK": "₨", // Pakistan
+    "PL": "zł", // Poland
+    "PM": "€", // Saint Pierre and Miquelon
+    "PN": "\$", // Pitcairn Islands
+    "PR": "\$", // Puerto Rico
+    "PS": "₪", // Palestine
+    "PT": "€", // Portugal
+    "PW": "\$", // Palau
+    "PY": "₲", // Paraguay
+    "QA": "ر.ق", // Qatar
+    "RE": "€", // Réunion
+    "RO": "lei", // Romania
+    "RS": "дин", // Serbia
+    "RU": "₽", // Russia
+    "RW": "FRw", // Rwanda
+    "SA": "ر.س", // Saudi Arabia
+    "SB": "\$", // Solomon Islands
+    "SC": "₨", // Seychelles
+    "SD": "ج.س.", // Sudan
+    "SE": "kr", // Sweden
+    "SG": "\$", // Singapore
+    "SH": "£", // Saint Helena
+    "SI": "€", // Slovenia
+    "SJ": "kr", // Svalbard and Jan Mayen
+    "SK": "€", // Slovakia
+    "SL": "Le", // Sierra Leone
+    "SM": "€", // San Marino
+    "SN": "CFA", // Senegal
+    "SO": "Sh", // Somalia
+    "SR": "\$", // Suriname
+    "SS": "£", // South Sudan
+    "ST": "Db", // São Tomé and Príncipe
+    "SV": "\$", // El Salvador
+    "SX": "\$", // Sint Maarten
+    "SY": "ل.س", // Syria
+    "SZ": "L", // Eswatini
+    "TC": "\$", // Turks and Caicos Islands
+    "TD": "CFA", // Chad
+    "TF": "€", // French Southern Territories
+    "TG": "CFA", // Togo
+    "TH": "฿", // Thailand
+    "TJ": "ЅМ", // Tajikistan
+    "TK": "\$", // Tokelau
+    "TL": "\$", // Timor-Leste
+    "TM": "m", // Turkmenistan
+    "TN": "د.ت", // Tunisia
+    "TO": "T\$", // Tonga
+    "TR": "₺", // Turkey
+    "TT": "TT\$", // Trinidad and Tobago
+    "TV": "\$", // Tuvalu
+    "TW": "NT\$", // Taiwan
+    "TZ": "TSh", // Tanzania
+    "UA": "₴", // Ukraine
+    "UG": "USh", // Uganda
+    "UM": "\$", // United States Minor Outlying Islands
+    "US": "\$", // United States
+    "UY": "\$", // Uruguay
+    "UZ": "so'm", // Uzbekistan
+    "VA": "€", // Vatican City
+    "VC": "\$", // Saint Vincent and the Grenadines
+    "VE": "Bs.", // Venezuela
+    "VG": "\$", // British Virgin Islands
+    "VI": "\$", // U.S. Virgin Islands
+    "VN": "₫", // Vietnam
+    "VU": "Vt", // Vanuatu
+    "WF": "XPF", // Wallis and Futuna
+    "WS": "T", // Samoa
+    "YE": "﷼", // Yemen
+    "YT": "€", // Mayotte
+    "ZA": "R", // South Africa
+    "ZM": "ZK", // Zambia
+    "ZW": "\$", // Zimbabwe
   };
   final Map<String, String> countryToCurrencyCode = {
     'AF': 'AFN', 'AL': 'ALL', 'DZ': 'DZD', 'AS': 'USD', 'AD': 'EUR',
