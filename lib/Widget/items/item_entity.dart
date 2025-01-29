@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 import '../../models/data.dart';
 import '../../views/entity_dash.dart';
 import '../frosted_glass.dart';
+import '../text/text_format.dart';
 
 class ItemEntity extends StatefulWidget {
   final EntityModel entity;
@@ -178,7 +179,7 @@ class _ItemEntityState extends State<ItemEntity> {
                         text: TextSpan(
                             children: [
                               TextSpan(
-                                  text: 'Ksh.${formatNumberWithCommas(totalSprice)} ',
+                                  text: '${TFormat().getCurrency()}${formatNumberWithCommas(totalSprice)} ',
                                   style: style
                               ),
                               TextSpan(

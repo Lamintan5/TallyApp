@@ -23,6 +23,7 @@ import '../../Widget/dialogs/dialog_title.dart';
 import '../../Widget/dialogs/filters/dialog_filter_goods.dart';
 import '../../Widget/profile_images/user_profile.dart';
 import '../../Widget/shimmer_widget.dart';
+import '../../Widget/text/text_format.dart';
 import '../../home/action_bar/chats/message_screen.dart';
 import '../../home/action_bar/chats/web_chat.dart';
 import '../../main.dart';
@@ -182,11 +183,11 @@ class _PurchaseItemsState extends State<PurchaseItems> {
                               Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
                               Text(
                                 index==0
-                                  ?'Ksh.${formatNumberWithCommas(totalAmount)}'
+                                  ?'${TFormat().getCurrency()}${formatNumberWithCommas(totalAmount)}'
                                   :index==1
-                                  ?'Ksh.${formatNumberWithCommas(totalPaid)}'
+                                  ?'${TFormat().getCurrency()}${formatNumberWithCommas(totalPaid)}'
                                   :index==2
-                                  ?'Ksh.${formatNumberWithCommas(totalAmount-totalPaid)}'
+                                  ?'${TFormat().getCurrency()}${formatNumberWithCommas(totalAmount-totalPaid)}'
                                   :index==3
                                   ?_purchase.length.toString()
                                   :totalQuantities.toString(),
@@ -538,7 +539,7 @@ class _PurchaseItemsState extends State<PurchaseItems> {
                                             Text(suppName.name.toString(),style: TextStyle(color: Colors.black),),
                                           ),
                                           DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(bprice * qnty)}',style: TextStyle(color: Colors.black),),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(bprice * qnty)}',style: TextStyle(color: Colors.black),),
                                           ),
                                           DataCell(
                                               Center(
@@ -700,7 +701,7 @@ class _PurchaseItemsState extends State<PurchaseItems> {
                                                             style: TextStyle(fontSize: 11, color: Colors.black),),
                                                           Expanded(child: SizedBox()),
                                                           Text(
-                                                            "BP: Ksh.${formatNumberWithCommas(double.parse(prchsmodel.bprice.toString()))} SP: Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}",
+                                                            "BP: ${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(prchsmodel.bprice.toString()))} SP: ${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.selling.toString()))}",
                                                             style: TextStyle(fontSize: 11, color: Colors.black),
                                                           )
                                                         ],

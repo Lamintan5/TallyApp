@@ -11,6 +11,7 @@ import '../../models/data.dart';
 import '../../models/inventories.dart';
 import '../../models/suppliers.dart';
 import '../../utils/colors.dart';
+import '../text/text_format.dart';
 
 class EntityPurchaseReport extends StatefulWidget {
   final String eid;
@@ -178,7 +179,7 @@ class _EntityPurchaseReportState extends State<EntityPurchaseReport> {
                     }
                 ),
                 DataCell(
-                    Text('Ksh.${formatNumberWithCommas(double.parse(product.bprice.toString()))}',style: style),
+                    Text('${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.bprice.toString()))}',style: style),
                     onTap: (){
                       // _setValues(inventory);
                       // _selectedInv = inventory;

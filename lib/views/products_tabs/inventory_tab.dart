@@ -22,6 +22,7 @@ import '../../Widget/dialogs/call_actions/double_call_action.dart';
 import '../../Widget/dialogs/dialog_add_inv.dart';
 import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
+import '../../Widget/text/text_format.dart';
 import '../../models/duties.dart';
 import '../../resources/services.dart';
 import '../../utils/colors.dart';
@@ -561,7 +562,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            'Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))}',
+                                            '${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.buying.toString()))}',
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -570,7 +571,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            'Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}',
+                                            '${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.selling.toString()))}',
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -579,7 +580,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            filtInv.length == 0 ? '0' : 'Ksh.${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString()) * double.parse(product.buying.toString()))}',
+                                            filtInv.length == 0 ? '0' : '${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString()) * double.parse(product.buying.toString()))}',
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -588,7 +589,7 @@ class _InvReportTabState extends State<InvReportTab> {
                                       ),
                                       DataCell(
                                           Text(
-                                            filtInv.length == 0 ? '0' : 'Ksh.${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.selling.toString()))}',
+                                            filtInv.length == 0 ? '0' : '${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.selling.toString()))}',
                                             style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
@@ -810,14 +811,14 @@ class _InvReportTabState extends State<InvReportTab> {
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
-                                                      Text('BP:Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))}, SP:Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontSize: 11),),
+                                                      Text('BP:${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.buying.toString()))}, SP:${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.selling.toString()))}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontSize: 11),),
                                                       Text(_fltSpplr.length == 0 ? 'Supplier not available' : 'Supplier : ${_fltSpplr.first.name}', style: TextStyle(fontSize: 11, color: Colors.black),)
                                                     ],
                                                   ),
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
-                                                      Text('IV:Ksh.${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.buying.toString()))}, SV:Ksh.${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.selling.toString()))}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontSize: 11),),
+                                                      Text('IV:${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.buying.toString()))}, SV:${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(filtInv.first.quantity.toString())* double.parse(product.selling.toString()))}', style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontSize: 11),),
                                                       Text('${product.category}', style: TextStyle(color: Colors.black, fontSize: 11),),
                                                     ],
                                                   ),

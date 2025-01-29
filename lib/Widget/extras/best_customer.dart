@@ -8,6 +8,7 @@ import 'package:line_icons/line_icon.dart';
 
 import '../../main.dart';
 import '../../utils/colors.dart';
+import '../text/text_format.dart';
 
 class BestCustomer extends StatefulWidget {
   final String eid;
@@ -113,7 +114,7 @@ class _BestCustomerState extends State<BestCustomer> {
                             children: [
                               Text(customer.phone.toString(), style: TextStyle(color: secondaryColor, fontSize: 12)),
                               Expanded(child: SizedBox()),
-                              Text("Ksh.${formatNumberWithCommas(revenue)}", style: TextStyle(color: secondaryColor, fontSize: 12)),
+                              Text("${TFormat().getCurrency()}${formatNumberWithCommas(revenue)}", style: TextStyle(color: secondaryColor, fontSize: 12)),
                             ],
                           ),
                           LinearPercentIndicator(

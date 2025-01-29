@@ -404,7 +404,7 @@ class _DialogFilterSalesState extends State<DialogFilterSales> {
                                   ),
                                   Column(
                                     children: [
-                                      Text("Ksh.${TFormat().formatNumberWithCommas(revenue)}"),
+                                      Text("${TFormat().getCurrency()}${TFormat().formatNumberWithCommas(revenue)}"),
                                       Text("Revenue", style: TextStyle(color: secondaryColor),),
                                     ],
                                   )

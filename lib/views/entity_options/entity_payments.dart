@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Widget/buttons/card_button.dart';
 import '../../Widget/items/item_paymements.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/data.dart';
 import '../../models/entities.dart';
@@ -111,9 +112,9 @@ class _EntityPaymentsState extends State<EntityPayments> {
                                 SizedBox(height: 10,),
                                 Text(
                                   index==0
-                                      ?'Ksh.${formatNumberWithCommas(inPay)}'
+                                      ?'${TFormat().getCurrency()}${formatNumberWithCommas(inPay)}'
                                       : index==1
-                                      ? 'Ksh.${formatNumberWithCommas(outPay)}'
+                                      ? '${TFormat().getCurrency()}${formatNumberWithCommas(outPay)}'
                                       : index==2
                                       ? _pay.length.toString()
                                       : index==3

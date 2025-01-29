@@ -23,6 +23,7 @@ import '../../Widget/dialogs/call_actions/double_call_action.dart';
 import '../../Widget/dialogs/dialog_receipt.dart';
 import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
+import '../../Widget/text/text_format.dart';
 import '../../models/entities.dart';
 import '../../models/inventories.dart';
 import '../../resources/services.dart';
@@ -185,9 +186,9 @@ class _SalesOverviewState extends State<SalesOverview> {
                           Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
                           Text(
                             index==0
-                                ?'Ksh.${formatNumberWithCommas(totalSprice)}'
+                                ?'${TFormat().getCurrency()}${formatNumberWithCommas(totalSprice)}'
                                 : index==1
-                                ? 'Ksh.${formatNumberWithCommas(pOrL)}'
+                                ? '${TFormat().getCurrency()}${formatNumberWithCommas(pOrL)}'
                                 : index==2
                                 ? totalSales.toString()
                                 : index ==3
@@ -511,19 +512,19 @@ class _SalesOverviewState extends State<SalesOverview> {
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(bprice)}', style: TextStyle(color: Colors.black)),
+                                          Text('${TFormat().getCurrency()}${formatNumberWithCommas(bprice)}', style: TextStyle(color: Colors.black)),
                                           onTap: (){
                                             _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(sprice)}', style: TextStyle(color: Colors.black)),
+                                          Text('${TFormat().getCurrency()}${formatNumberWithCommas(sprice)}', style: TextStyle(color: Colors.black)),
                                           onTap: (){
                                             _navigate(index, sale);
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(profit)}', style: TextStyle(color: Colors.black)),
+                                          Text('${TFormat().getCurrency()}${formatNumberWithCommas(profit)}', style: TextStyle(color: Colors.black)),
                                           onTap: (){
                                             _navigate(index, sale);
                                           }
@@ -797,7 +798,7 @@ class _SalesOverviewState extends State<SalesOverview> {
                                                             )
                                                         ),
                                                         Text(
-                                                            'BP : Ksh.${formatNumberWithCommas(bprice)}, SP : Ksh.${formatNumberWithCommas(sprice)}',
+                                                            'BP : ${TFormat().getCurrency()}${formatNumberWithCommas(bprice)}, SP : ${TFormat().getCurrency()}${formatNumberWithCommas(sprice)}',
                                                             style: bold
                                                         ),
                                                       ],
@@ -810,7 +811,7 @@ class _SalesOverviewState extends State<SalesOverview> {
                                                             style: style
                                                         ),
                                                         Text(
-                                                            'P/L : Ksh.${formatNumberWithCommas(profit)}',
+                                                            'P/L : ${TFormat().getCurrency()}${formatNumberWithCommas(profit)}',
                                                             style: bold
                                                         ),
                                                       ],

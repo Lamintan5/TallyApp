@@ -27,6 +27,7 @@ import '../../Widget/dialogs/dialog_edit_prch_qnty.dart';
 import '../../Widget/dialogs/dialog_edit_sale_qnty.dart';
 import '../../Widget/dialogs/dialog_title.dart';
 import '../../Widget/frosted_glass.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/duties.dart';
 import '../../models/entities.dart';
@@ -668,8 +669,8 @@ class _ScannerState extends State<Scanner> {
                           ),
                           Text(
                               prdct.checked.toString().split(",").last.contains("SALE")
-                                  ?'Ksh.${formatNumberWithCommas(double.parse(salemodel.sprice.toString()))}'
-                                  :'Ksh.${formatNumberWithCommas(double.parse(prchmodel.bprice.toString()))}',
+                                  ?'${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(salemodel.sprice.toString()))}'
+                                  :'${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(prchmodel.bprice.toString()))}',
                               style: bold
                           ),
                         ],

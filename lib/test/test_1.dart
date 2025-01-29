@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:line_icons/line_icon.dart';
 
 import '../../main.dart';
+import '../Widget/text/text_format.dart';
 
 class PieChartGraph extends StatefulWidget {
   final String eid;
@@ -113,7 +114,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Sales Revenue", style: TextStyle(fontSize: 12),),
-                    Text("Ksh.${formatNumberWithCommas(buying)}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100, color: Colors.cyan),),
+                    Text("${TFormat().getCurrency()}${formatNumberWithCommas(buying)}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100, color: Colors.cyan),),
                   ],
                 )
               ],
@@ -138,7 +139,7 @@ class _PieChartGraphState extends State<PieChartGraph> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Profits", style: TextStyle(fontSize: 12),),
-                    Text("Ksh.${formatNumberWithCommas(profit)}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100, color: Colors.cyanAccent),),
+                    Text("${TFormat().getCurrency()}${formatNumberWithCommas(profit)}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w100, color: Colors.cyanAccent),),
                   ],
                 )
               ],

@@ -22,6 +22,7 @@ import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
 import '../../Widget/dialogs/filters/dialog_filter_sales.dart';
 import '../../Widget/empty_data.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/duties.dart';
 import '../../models/inventories.dart';
@@ -182,13 +183,13 @@ class _ReceivablesState extends State<Receivables> {
                           Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black)),
                           Text(
                             index==0
-                                ?'Ksh.${formatNumberWithCommas(totalReceive)}'
+                                ?'${TFormat().getCurrency()}${formatNumberWithCommas(totalReceive)}'
                                 :index==1
-                                ? 'Ksh.${formatNumberWithCommas(totalPaid)}'
+                                ? '${TFormat().getCurrency()}${formatNumberWithCommas(totalPaid)}'
                                 : index==2
-                                ? 'Ksh.${formatNumberWithCommas(totalSprice)}'
+                                ? '${TFormat().getCurrency()}${formatNumberWithCommas(totalSprice)}'
                                 : index==3
-                                ? 'Ksh.${formatNumberWithCommas(totalProfit)}'
+                                ? '${TFormat().getCurrency()}${formatNumberWithCommas(totalProfit)}'
                                 : index==4
                                 ? totalItems.toString()
                                 : totalQuantity.toString(),
@@ -487,31 +488,31 @@ class _ReceivablesState extends State<Receivables> {
                                             }
                                         ),
                                         DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(bprice)}', style: TextStyle(color: Colors.black)),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(bprice)}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
 
                                             }
                                         ),
                                         DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(sprice)}', style: TextStyle(color: Colors.black)),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(sprice)}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
 
                                             }
                                         ),
                                         DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(profit)}', style: TextStyle(color: Colors.black)),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(profit)}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
 
                                             }
                                         ),
                                         DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(double.parse(sale.paid.toString()))}', style: TextStyle(color: Colors.black)),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(sale.paid.toString()))}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
 
                                             }
                                         ),
                                         DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(receivable)}', style: TextStyle(color: receivable < 0? Colors.red: Colors.black)),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(receivable)}', style: TextStyle(color: receivable < 0? Colors.red: Colors.black)),
                                             onTap: (){
 
                                             }
@@ -804,12 +805,12 @@ class _ReceivablesState extends State<Receivables> {
                                                     Row(
                                                       children: [
                                                         Expanded(
-                                                          child: Text('BP : Ksh.${formatNumberWithCommas(bprice)}, SP : Ksh.${formatNumberWithCommas(sprice)}',
+                                                          child: Text('BP : ${TFormat().getCurrency()}${formatNumberWithCommas(bprice)}, SP : ${TFormat().getCurrency()}${formatNumberWithCommas(sprice)}',
                                                             style: bold,
                                                           ),
                                                         ),
                                                         Text(
-                                                            'P/L : Ksh.${formatNumberWithCommas(profit)}',
+                                                            'P/L : ${TFormat().getCurrency()}${formatNumberWithCommas(profit)}',
                                                           style: bold,
                                                         ),
                                                       ],

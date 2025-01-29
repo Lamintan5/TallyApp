@@ -17,6 +17,7 @@ import '../../Widget/graphs/barchart.dart';
 import '../../Widget/graphs/pie_chart.dart';
 import '../../Widget/graphs/small_line_graph.dart';
 import '../../Widget/graphs/weekly_bar_chart.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/data.dart';
 import '../../resources/services.dart';
@@ -197,7 +198,7 @@ class _compSaleReportState extends State<SaleReport> {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    Text("Ksh.${formatNumberWithCommas(index==0?totalSales :index==1?totalRecv:index==2?totalProfit:0)}",
+                                    Text("${TFormat().getCurrency()}${formatNumberWithCommas(index==0?totalSales :index==1?totalRecv:index==2?totalProfit:0)}",
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style:TextStyle(

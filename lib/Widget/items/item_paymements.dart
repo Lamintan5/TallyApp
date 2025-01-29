@@ -24,6 +24,7 @@ import '../../models/messages.dart';
 import '../../utils/colors.dart';
 import '../dialogs/dialog_title.dart';
 import '../shimmer_widget.dart';
+import '../text/text_format.dart';
 
 class ItemPayments extends StatefulWidget {
   final PaymentModel payment;
@@ -152,7 +153,7 @@ class _ItemPaymentsState extends State<ItemPayments> {
                                 ? Expanded(child: Text(user.username.toString(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: reverse),))
                                 : Expanded(child: Text(entity.title.toString(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: reverse),)),
                             Text(
-                              '${widget.payment.type == "SALE" || widget.payment.type == "RECEIVABLE"? "+":"-"}Ksh.${formatNumberWithCommas(double.parse(widget.payment.paid.toString()))}',
+                              '${widget.payment.type == "SALE" || widget.payment.type == "RECEIVABLE"? "+":"-"}${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(widget.payment.paid.toString()))}',
                               style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
@@ -188,14 +189,14 @@ class _ItemPaymentsState extends State<ItemPayments> {
                                     text: '',
                                   ),
                                   TextSpan(
-                                      text: 'Ksh.${formatNumberWithCommas(double.parse(widget.payment.paid.toString()))} ',
+                                      text: '${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(widget.payment.paid.toString()))} ',
                                       style: TextStyle(fontWeight: FontWeight.w700)
                                   ),
                                   TextSpan(
                                     text: double.parse(widget.payment.amount!)-double.parse(widget.payment.paid!) == 0? "" :  "with a balance of "
                                   ),
                                   TextSpan(
-                                      text: double.parse(widget.payment.amount!)-double.parse(widget.payment.paid!) == 0? "" : 'Ksh.${formatNumberWithCommas(double.parse(widget.payment.amount!)-double.parse(widget.payment.paid!))} ',
+                                      text: double.parse(widget.payment.amount!)-double.parse(widget.payment.paid!) == 0? "" : '${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(widget.payment.amount!)-double.parse(widget.payment.paid!))} ',
                                       style: TextStyle(fontWeight: FontWeight.w700)
                                   ),
                                   TextSpan(
@@ -295,7 +296,7 @@ class _ItemPaymentsState extends State<ItemPayments> {
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(color: color1, width: 0.5)
                             ),
-                            child: Text("Ksh.${formatNumberWithCommas(double.parse(widget.payment.amount!)-double.parse(widget.payment.paid!))}", style: TextStyle(fontSize: 11, color: Colors.red, fontWeight: FontWeight.w600),),
+                            child: Text("${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(widget.payment.amount!)-double.parse(widget.payment.paid!))}", style: TextStyle(fontSize: 11, color: Colors.red, fontWeight: FontWeight.w600),),
                           ),
                         ],
                       )

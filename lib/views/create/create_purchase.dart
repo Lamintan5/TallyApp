@@ -16,6 +16,7 @@ import '../../Widget/dialogs/dialog_add_payment.dart';
 import '../../Widget/dialogs/dialog_edit_prch_qnty.dart';
 import '../../Widget/dialogs/dialog_select_product.dart';
 import '../../Widget/dialogs/dialog_title.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/data.dart';
 import '../../models/inventories.dart';
@@ -386,14 +387,14 @@ class _CreatePurchaseState extends State<CreatePurchase> {
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text('Ksh.${formatNumberWithCommas(buy*qnty)}',style: TextStyle(color: Colors.black),),
+                                                    Text('${TFormat().getCurrency()}${formatNumberWithCommas(buy*qnty)}',style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text('Ksh.${formatNumberWithCommas(sell*qnty)}',style: TextStyle(color: Colors.black),),
+                                                    Text('${TFormat().getCurrency()}${formatNumberWithCommas(sell*qnty)}',style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
@@ -526,7 +527,7 @@ class _CreatePurchaseState extends State<CreatePurchase> {
                                                                 Text( 'Supplier : ${supplier}', style: TextStyle(fontSize: 11, color: Colors.black),),
                                                                 Expanded(child: SizedBox()),
                                                                 Text(
-                                                                  "BP: Ksh.${formatNumberWithCommas(buy*qnty)} SP: Ksh.${formatNumberWithCommas(sell*qnty)}",
+                                                                  "BP: ${TFormat().getCurrency()}${formatNumberWithCommas(buy*qnty)} SP: ${TFormat().getCurrency()}${formatNumberWithCommas(sell*qnty)}",
                                                                   style: TextStyle(fontSize: 11, color: Colors.black),
                                                                 )
                                                               ],

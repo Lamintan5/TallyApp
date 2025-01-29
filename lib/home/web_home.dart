@@ -26,6 +26,7 @@ import '../Widget/items/item_entity.dart';
 import '../Widget/logos/prop_logo.dart';
 import '../Widget/profile_images/current_profile.dart';
 import '../Widget/show_my_case.dart';
+import '../Widget/text/text_format.dart';
 import '../create/create.dart';
 import '../main.dart';
 import '../models/data.dart';
@@ -642,7 +643,7 @@ class _WebHomeState extends State<WebHome> {
                                                   text: TextSpan(
                                                       children: [
                                                         TextSpan(
-                                                            text: 'Ksh.${formatNumberWithCommas(totalSprice)} ',
+                                                            text: '${TFormat().getCurrency()}${formatNumberWithCommas(totalSprice)} ',
                                                             style: style
                                                         ),
                                                         TextSpan(

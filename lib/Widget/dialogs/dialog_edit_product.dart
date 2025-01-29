@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../models/data.dart';
 import '../../models/suppliers.dart';
 import '../../utils/colors.dart';
+import '../text/text_format.dart';
 import '../text_filed_input.dart';
 
 class DialogEditProduct extends StatefulWidget {
@@ -201,7 +202,7 @@ class _DialogEditProductState extends State<DialogEditProduct> {
                   child: TextFieldInput(
                     textEditingController: _buy,
                     textInputType: TextInputType.number,
-                    labelText: 'Buying Price (Ksh.)',
+                    labelText: 'Buying Price (${TFormat().getCurrency()})',
                     validator: (value){
                       if(value == null || value.isEmpty){
                         return 'Please Enter The Buying Price';
@@ -219,7 +220,7 @@ class _DialogEditProductState extends State<DialogEditProduct> {
                   child: TextFieldInput(
                     textEditingController: _sell,
                     textInputType: TextInputType.number,
-                    labelText: 'Selling Price (Ksh.)',
+                    labelText: 'Selling Price (${TFormat().getCurrency()})',
                     validator: (value){
                       if(value == null || value.isEmpty){
                         return 'Please Enter The Selling Price';

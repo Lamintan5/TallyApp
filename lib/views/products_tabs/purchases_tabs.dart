@@ -18,6 +18,7 @@ import '../../Widget/dialogs/call_actions/double_call_action.dart';
 import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
 import '../../Widget/empty_data.dart';
+import '../../Widget/text/text_format.dart';
 import '../../Widget/text_filed_input.dart';
 import '../../main.dart';
 import '../../models/data.dart';
@@ -169,7 +170,7 @@ class _PurchaseTabState extends State<PurchaseTab> {
                           Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
                           Text(
                             index == 0
-                                ? 'Ksh.${formatNumberWithCommas(totalAmount)}'
+                                ? '${TFormat().getCurrency()}${formatNumberWithCommas(totalAmount)}'
                                 : index==1
                                 ? uniquePurchaseList.length.toString()
                                 :totalItems.toString(), style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black),)
@@ -471,7 +472,7 @@ class _PurchaseTabState extends State<PurchaseTab> {
                                         }
                                     ),
                                     DataCell(
-                                        Text('Ksh.${formatNumberWithCommas(amount)}', style: TextStyle(color: Colors.black)),
+                                        Text('${TFormat().getCurrency()}${formatNumberWithCommas(amount)}', style: TextStyle(color: Colors.black)),
                                         onTap: (){
 
                                         }
@@ -672,7 +673,7 @@ class _PurchaseTabState extends State<PurchaseTab> {
                                                         style: bold
                                                     ),
                                                     Text(
-                                                        'Ksh.${formatNumberWithCommas(amount)}',
+                                                        '${TFormat().getCurrency()}${formatNumberWithCommas(amount)}',
                                                         style: bold
                                                     ),
                                                   ],

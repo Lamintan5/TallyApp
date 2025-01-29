@@ -16,6 +16,7 @@ import 'package:TallyApp/utils/colors.dart';
 import '../../Widget/frosted_glass.dart';
 import '../../main.dart';
 import '../../resources/services.dart';
+import '../Widget/text/text_format.dart';
 
 class TestScan extends StatefulWidget {
   const TestScan({super.key});
@@ -462,7 +463,7 @@ class _TestScanState extends State<TestScan> {
                               style: small
                           ),
                           TextSpan(
-                              text: 'Ksh.${formatNumberWithCommas(double.parse(prdct.selling.toString()))}' ,
+                              text: '${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(prdct.selling.toString()))}' ,
                               style: bold
                           ),
                         ]

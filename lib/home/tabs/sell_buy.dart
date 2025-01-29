@@ -202,7 +202,7 @@ class _SellOrBuyState extends State<SellOrBuy> {
                                         ? items.toString()
                                         : index==1
                                         ? units.toString()
-                                        : "Ksh.${formatNumberWithCommas(amountDue)}",
+                                        : "${TFormat().getCurrency()}${formatNumberWithCommas(amountDue)}",
                                     style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black),)
                                 ],
                               ),
@@ -610,8 +610,8 @@ class _SellOrBuyState extends State<SellOrBuy> {
                                                                         ),
                                                                         Text(
                                                                             product.checked.toString().split(",").last.contains("SALE")
-                                                                                ?'Ksh.${formatNumberWithCommas(double.parse(salemodel.sprice.toString()))}'
-                                                                                :'Ksh.${formatNumberWithCommas(double.parse(prchmodel.bprice.toString()))}',
+                                                                                ?'${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(salemodel.sprice.toString()))}'
+                                                                                :'${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(prchmodel.bprice.toString()))}',
                                                                             style: bold
                                                                         ),
                                                                       ],
@@ -664,9 +664,9 @@ class _SellOrBuyState extends State<SellOrBuy> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text("   Ksh.${formatNumberWithCommas(amountDue)}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                                            Text("   ${TFormat().getCurrency()}${formatNumberWithCommas(amountDue)}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                                             ).animate().fade(duration: Duration(milliseconds: 500)).slideY(curve: Curves.easeInOut),
-                                            amountDue-totalPaid == 0? SizedBox() : Text("    Ksh.${formatNumberWithCommas(amountDue-totalPaid)}", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
+                                            amountDue-totalPaid == 0? SizedBox() : Text("    ${TFormat().getCurrency()}${formatNumberWithCommas(amountDue-totalPaid)}", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
                                             ).animate().fade(duration: Duration(milliseconds: 500)).slideY(curve: Curves.easeInOut),
                                           ],
                                         ),
@@ -750,8 +750,8 @@ class _SellOrBuyState extends State<SellOrBuy> {
                                                         trailing: isExpanded
                                                             ? SizedBox()
                                                             : Text(_scndSale.isEmpty
-                                                            ? "Ksh.${formatNumberWithCommas(double.parse(prchModel.paid.toString()))}"
-                                                            : "Ksh.${formatNumberWithCommas(double.parse(saleModel.paid.toString()))}",
+                                                            ? "${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(prchModel.paid.toString()))}"
+                                                            : "${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(saleModel.paid.toString()))}",
                                                           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                                                         ).animate().fade(duration: Duration(milliseconds: 500)).slideY(curve: Curves.easeInOut),
                                                       );
@@ -1341,7 +1341,7 @@ class _SellOrBuyState extends State<SellOrBuy> {
                                   ),
                                   Column(
                                     children: [
-                                      Text("Ksh.${formatNumberWithCommas(revenue)}"),
+                                      Text("${TFormat().getCurrency()}${formatNumberWithCommas(revenue)}"),
                                       Text("Revenue", style: TextStyle(color: secondaryColor),),
                                     ],
                                   )

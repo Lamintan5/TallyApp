@@ -17,6 +17,7 @@ import 'package:showcaseview/showcaseview.dart';
 import '../../Widget/basic_stats.dart';
 import '../../Widget/frosted_glass.dart';
 import '../../Widget/logos/prop_logo.dart';
+import '../../Widget/text/text_format.dart';
 import '../../create/create.dart';
 import '../../Widget/logos/row_logo.dart';
 import '../../models/entities.dart';
@@ -500,7 +501,7 @@ class _ProfilePageState extends State<ProfilePage> with TickerProviderStateMixin
                                                       text: TextSpan(
                                                           children: [
                                                             TextSpan(
-                                                                text: 'Ksh.${formatNumberWithCommas(totalSprice)} ',
+                                                                text: '${TFormat().getCurrency()}${formatNumberWithCommas(totalSprice)} ',
                                                                 style: style
                                                             ),
                                                             TextSpan(

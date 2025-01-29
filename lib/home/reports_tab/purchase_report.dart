@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../Widget/buttons/card_button.dart';
 import '../../Widget/extras/entity_purchase_report.dart';
 import '../../Widget/graphs/weekly_purchase_bar.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/purchases.dart';
 import '../../utils/colors.dart';
@@ -141,7 +142,7 @@ class _PurchaseReportState extends State<PurchaseReport> {
                                     title[index],
                                     style: TextStyle(color: reverse),
                                   ),
-                                  Text("Ksh.${formatNumberWithCommas(index==0?totalPurchase:totalPayable)}",
+                                  Text("${TFormat().getCurrency()}${formatNumberWithCommas(index==0?totalPurchase:totalPayable)}",
                                     style:TextStyle(
                                         fontWeight: FontWeight.w100,
                                         color: secBtn,fontSize: 18

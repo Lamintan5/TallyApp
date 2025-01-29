@@ -146,9 +146,9 @@ class _DialogScanPayState extends State<DialogScanPay> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("   Ksh.${formatNumberWithCommas(totalPaid)}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                  Text("   ${TFormat().getCurrency()}${formatNumberWithCommas(totalPaid)}", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                   ).animate().fade(duration: Duration(milliseconds: 500)).slideY(curve: Curves.easeInOut),
-                  total-totalPaid == 0? SizedBox() : Text("    Ksh.${formatNumberWithCommas(total-totalPaid)}", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
+                  total-totalPaid == 0? SizedBox() : Text("    ${TFormat().getCurrency()}${formatNumberWithCommas(total-totalPaid)}", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
                   ).animate().fade(duration: Duration(milliseconds: 500)).slideY(curve: Curves.easeInOut),
                 ],
               ),
@@ -228,8 +228,8 @@ class _DialogScanPayState extends State<DialogScanPay> {
                               trailing: isExpanded
                                   ? SizedBox() 
                                   : Text(sales.isEmpty
-                                  ? "Ksh.${formatNumberWithCommas(double.parse(prchModel.paid.toString()))}"
-                                  : "Ksh.${formatNumberWithCommas(double.parse(saleModel.paid.toString()))}",
+                                  ? "${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(prchModel.paid.toString()))}"
+                                  : "${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(saleModel.paid.toString()))}",
                                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                               ).animate().fade(duration: Duration(milliseconds: 500)).slideY(curve: Curves.easeInOut),
                             );
@@ -898,7 +898,7 @@ class _DialogScanPayState extends State<DialogScanPay> {
                                   ),
                                   Column(
                                     children: [
-                                      Text("Ksh.${formatNumberWithCommas(revenue)}"),
+                                      Text("${TFormat().getCurrency()}${formatNumberWithCommas(revenue)}"),
                                       Text("Revenue", style: TextStyle(color: secondaryColor),),
                                     ],
                                   )

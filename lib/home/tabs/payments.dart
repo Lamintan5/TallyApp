@@ -181,9 +181,9 @@ class _PaymentsState extends State<Payments> {
                                   Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
                                   Text(
                                     index==0
-                                        ?'Ksh.${formatNumberWithCommas(inPay)}'
+                                        ?'${TFormat().getCurrency()}${formatNumberWithCommas(inPay)}'
                                         : index==1
-                                        ? 'Ksh.${formatNumberWithCommas(outPay)}'
+                                        ? '${TFormat().getCurrency()}${formatNumberWithCommas(outPay)}'
                                         : index==2
                                         ? _pay.length.toString()
                                         : index==3

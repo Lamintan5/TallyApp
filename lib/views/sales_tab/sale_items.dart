@@ -20,6 +20,7 @@ import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
 import '../../Widget/profile_images/user_profile.dart';
 import '../../Widget/shimmer_widget.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/data.dart';
 import '../../models/duties.dart';
@@ -161,13 +162,13 @@ class _SaleItemsState extends State<SaleItems> {
                           children: [
                             Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
                             Text(index==0
-                                ?'Ksh.${formatNumberWithCommas(receivable)}'
+                                ?'${TFormat().getCurrency()}${formatNumberWithCommas(receivable)}'
                                 :index==1
-                                ?'Ksh.${formatNumberWithCommas(paid)}'
+                                ?'${TFormat().getCurrency()}${formatNumberWithCommas(paid)}'
                                 :index==2
-                                ?'Ksh.${formatNumberWithCommas(totalSprice)}'
+                                ?'${TFormat().getCurrency()}${formatNumberWithCommas(totalSprice)}'
                                 :index==3
-                                ?'Ksh.${formatNumberWithCommas(totalSprice -totalBprice)}'
+                                ?'${TFormat().getCurrency()}${formatNumberWithCommas(totalSprice -totalBprice)}'
                                 :index==4
                                 ? quantity.toStringAsFixed(0)
                                 : _products.length.toString(),
@@ -610,21 +611,21 @@ class _SaleItemsState extends State<SaleItems> {
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(bprice)}',style: TextStyle(color: Colors.black),),
+                                          Text('${TFormat().getCurrency()}${formatNumberWithCommas(bprice)}',style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(sprice)}',style: TextStyle(color: Colors.black),),
+                                          Text('${TFormat().getCurrency()}${formatNumberWithCommas(sprice)}',style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(profit)}',style: TextStyle(color: Colors.black),),
+                                          Text('${TFormat().getCurrency()}${formatNumberWithCommas(profit)}',style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
@@ -798,7 +799,7 @@ class _SaleItemsState extends State<SaleItems> {
                                                           style: TextStyle(fontSize: 11, color: Colors.black),),
                                                         Expanded(child: SizedBox()),
                                                         Text(
-                                                          "BP: Ksh.${formatNumberWithCommas(double.parse(salemodel.bprice.toString()))} SP: Ksh.${formatNumberWithCommas(double.parse(salemodel.sprice.toString()))}",
+                                                          "BP: ${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(salemodel.bprice.toString()))} SP: ${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(salemodel.sprice.toString()))}",
                                                           style: TextStyle(fontSize: 11, color: Colors.black),
                                                         )
                                                       ],

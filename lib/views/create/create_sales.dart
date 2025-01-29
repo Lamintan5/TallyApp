@@ -476,14 +476,14 @@ class _CreateSalesState extends State<CreateSales> {
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text('Ksh.${TFormat().formatNumberWithCommas(bprice)}',style: TextStyle(color: Colors.black),),
+                                                    Text('${TFormat().getCurrency()}${TFormat().formatNumberWithCommas(bprice)}',style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
                                                     }
                                                 ),
                                                 DataCell(
-                                                    Text('Ksh.${TFormat().formatNumberWithCommas(sprice)}',style: TextStyle(color: Colors.black),),
+                                                    Text('${TFormat().getCurrency()}${TFormat().formatNumberWithCommas(sprice)}',style: TextStyle(color: Colors.black),),
                                                     onTap: (){
                                                       // _setValues(inventory);
                                                       // _selectedInv = inventory;
@@ -608,7 +608,7 @@ class _CreateSalesState extends State<CreateSales> {
                                                                 Text(_fltSpplr.length == 0 ? 'Supplier not available' : 'Supplier : ${_fltSpplr.first.name}', style: TextStyle(fontSize: 11, color: Colors.black),),
                                                                 Expanded(child: SizedBox()),
                                                                 Text(
-                                                                  "BP: Ksh.${TFormat().formatNumberWithCommas(double.parse(product.buying.toString()))} SP: Ksh.${TFormat().formatNumberWithCommas(double.parse(product.selling.toString()))}",
+                                                                  "BP: ${TFormat().getCurrency()}${TFormat().formatNumberWithCommas(double.parse(product.buying.toString()))} SP: ${TFormat().getCurrency()}${TFormat().formatNumberWithCommas(double.parse(product.selling.toString()))}",
                                                                   style: TextStyle(fontSize: 11, color: Colors.black),
                                                                 )
                                                               ],

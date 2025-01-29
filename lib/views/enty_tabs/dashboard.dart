@@ -11,6 +11,7 @@ import '../../Widget/buttons/card_button.dart';
 import '../../Widget/graphs/barchart.dart';
 import '../../Widget/graphs/weekly_bar_chart.dart';
 import '../../Widget/sellers.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/purchases.dart';
 import '../../models/sales.dart';
@@ -167,15 +168,15 @@ class _DashboardState extends State<Dashboard> {
                         Text(title[index], style: TextStyle(fontWeight: FontWeight.w300,color: Colors.black),),
                         Text(
                           index==0
-                              ?'Ksh.${formatNumberWithCommas(totalSprice)}'
+                              ?'${TFormat().getCurrency()}${formatNumberWithCommas(totalSprice)}'
                               : index==1
-                              ? 'Ksh.${formatNumberWithCommas(totalPurchases)}'
+                              ? '${TFormat().getCurrency()}${formatNumberWithCommas(totalPurchases)}'
                               : index==2
-                              ? 'Ksh.${formatNumberWithCommas(totalProfit)}'
+                              ? '${TFormat().getCurrency()}${formatNumberWithCommas(totalProfit)}'
                               : index==3
-                              ? 'Ksh.${formatNumberWithCommas(totalReceive)}'
+                              ? '${TFormat().getCurrency()}${formatNumberWithCommas(totalReceive)}'
                               : index == 4
-                              ? 'Ksh.${formatNumberWithCommas(totalPayable)}'
+                              ? '${TFormat().getCurrency()}${formatNumberWithCommas(totalPayable)}'
                               : totalSuppliers.toString(),
                           style: TextStyle(fontWeight: FontWeight.w600,color: Colors.black),
                         )

@@ -11,6 +11,7 @@ import '../../../models/inventories.dart';
 import '../../../models/sales.dart';
 import '../../../resources/services.dart';
 import '../../../utils/colors.dart';
+import '../../text/text_format.dart';
 import '../../text_filed_input.dart';
 import '../call_actions/double_call_action.dart';
 import '../dialog_title.dart';
@@ -97,7 +98,7 @@ class _DialogEditScanSaleState extends State<DialogEditScanSale> {
     } else {
       double enteredAmount = double.parse(value);
       if (enteredAmount > amount) {
-        return 'Amount is more than Ksh.${formatNumberWithCommas(amount)}';
+        return 'Amount is more than ${TFormat().getCurrency()}${formatNumberWithCommas(amount)}';
       }
     }
     return null;
@@ -572,7 +573,7 @@ class _DialogEditScanSaleState extends State<DialogEditScanSale> {
                                   ),
                                   Column(
                                     children: [
-                                      Text("Ksh.${formatNumberWithCommas(revenue)}"),
+                                      Text("${TFormat().getCurrency()}${formatNumberWithCommas(revenue)}"),
                                       Text("Revenue", style: TextStyle(color: secondaryColor),),
                                     ],
                                   )

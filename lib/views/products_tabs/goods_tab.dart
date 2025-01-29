@@ -20,6 +20,7 @@ import '../../Widget/dialogs/dialog_edit_product.dart';
 import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
 import '../../Widget/dialogs/filters/dialog_filter_goods.dart';
+import '../../Widget/text/text_format.dart';
 import '../../main.dart';
 import '../../models/data.dart';
 import '../../models/duties.dart';
@@ -618,14 +619,14 @@ class _GoodsTabState extends State<GoodsTab> {
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))}',style: TextStyle(color: Colors.black),),
+                                          Text('${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.buying.toString()))}',style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
                                           }
                                       ),
                                       DataCell(
-                                          Text('Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}',style: TextStyle(color: Colors.black),),
+                                          Text('${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.selling.toString()))}',style: TextStyle(color: Colors.black),),
                                           onTap: (){
                                             // _setValues(inventory);
                                             // _selectedInv = inventory;
@@ -832,7 +833,7 @@ class _GoodsTabState extends State<GoodsTab> {
                                                       Text(_fltSpplr.length == 0 ? 'Supplier not available' : 'Supplier : ${_fltSpplr.first.name}', style: TextStyle(fontSize: 11, color: Colors.black),),
                                                       Expanded(child: SizedBox()),
                                                       Text(
-                                                        "BP: Ksh.${formatNumberWithCommas(double.parse(product.buying.toString()))} SP: Ksh.${formatNumberWithCommas(double.parse(product.selling.toString()))}",
+                                                        "BP: ${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.buying.toString()))} SP: ${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.selling.toString()))}",
                                                         style: TextStyle(fontSize: 11, color: Colors.black),
                                                       )
                                                     ],
@@ -1014,14 +1015,14 @@ class _GoodsTabState extends State<GoodsTab> {
                                           // Row(
                                           //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           //   children: [
-                                          //     Expanded(child: Text('Buying Price : Ksh.${formatNumberWithCommas(double.parse(product.selling!))}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),)),
+                                          //     Expanded(child: Text('Buying Price : ${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.selling!))}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),)),
                                           //     Text('${product.volume}', style: TextStyle(color: Colors.black, ),),
                                           //   ],
                                           // ),
                                           // Row(
                                           //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           //   children: [
-                                          //     Expanded(child: Text('Selling Price : Ksh.${formatNumberWithCommas(double.parse(product.selling!))}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),)),
+                                          //     Expanded(child: Text('Selling Price : ${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(product.selling!))}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w500),)),
                                           //     Text('${product.category}', style: TextStyle(color: Colors.black, ),),
                                           //   ],
                                           // ),

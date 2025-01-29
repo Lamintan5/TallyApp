@@ -19,6 +19,7 @@ import '../../Widget/dialogs/dialog_request.dart';
 import '../../Widget/dialogs/dialog_title.dart';
 import '../../Widget/dialogs/filters/dialog_filter_purchases.dart';
 import '../../Widget/empty_data.dart';
+import '../../Widget/text/text_format.dart';
 import '../../Widget/text_filed_input.dart';
 import '../../main.dart';
 import '../../models/duties.dart';
@@ -484,19 +485,19 @@ class _PayablesTabState extends State<PayablesTab> {
                                             }
                                         ),
                                         DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(amount)}', style: TextStyle(color: Colors.black)),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(amount)}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
 
                                             }
                                         ),
                                         DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(double.parse(purchase.paid.toString()))}', style: TextStyle(color: Colors.black)),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(purchase.paid.toString()))}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
 
                                             }
                                         ),
                                         DataCell(
-                                            Text('Ksh.${formatNumberWithCommas(amount - double.parse(purchase.paid.toString()))}', style: TextStyle(color: Colors.black)),
+                                            Text('${TFormat().getCurrency()}${formatNumberWithCommas(amount - double.parse(purchase.paid.toString()))}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
 
                                             }
@@ -762,7 +763,7 @@ class _PayablesTabState extends State<PayablesTab> {
                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
                                                         Text(
-                                                            'Amount : Ksh.${formatNumberWithCommas(amount)}, Paid : Ksh.${paid}',
+                                                            'Amount : ${TFormat().getCurrency()}${formatNumberWithCommas(amount)}, Paid : ${TFormat().getCurrency()}${paid}',
                                                             style: style
                                                         ),
                                                         Text(

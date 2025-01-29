@@ -17,6 +17,7 @@ import '../../api/mpesa-api.dart';
 import '../../models/gate_way.dart';
 import '../../models/sales.dart';
 import '../../utils/colors.dart';
+import '../text/text_format.dart';
 import '../text_filed_input.dart';
 import 'call_actions/double_call_action.dart';
 import 'dialog_title.dart';
@@ -94,7 +95,7 @@ class _DialogPaySalesState extends State<DialogPaySales> {
     } else {
       double enteredAmount = double.parse(value);
       if (enteredAmount > amount) {
-        return 'Amount is more than Ksh.${formatNumberWithCommas(amount)}';
+        return 'Amount is more than ${TFormat().getCurrency()}${formatNumberWithCommas(amount)}';
       }
     }
     return null;
@@ -691,7 +692,7 @@ class _DialogPaySalesState extends State<DialogPaySales> {
                                   ),
                                   Column(
                                     children: [
-                                      Text("Ksh.${formatNumberWithCommas(revenue)}"),
+                                      Text("${TFormat().getCurrency()}${formatNumberWithCommas(revenue)}"),
                                       Text("Revenue", style: TextStyle(color: secondaryColor),),
                                     ],
                                   )
