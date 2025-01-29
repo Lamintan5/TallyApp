@@ -195,13 +195,23 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
                               children: [
                                 Text(
                                   entity.title.toString(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                Text(entity.location.toString(), style: TextStyle(color: secondaryColor),),
-                                Text('Created on ${DateFormat.yMMMd().format(DateTime.parse(entity.time.toString()))}',
+                                Text(
+                                  entity.location.toString(),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(color: secondaryColor),
+                                ),
+                                Text(
+                                  'Created on ${DateFormat.yMMMd().format(DateTime.parse(entity.time.toString()))}',
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(color: secondaryColor, fontSize: 11, ),),
                                 SizedBox(height: 5,),
                               ],
@@ -439,14 +449,27 @@ class _EntityDashState extends State<EntityDash>  with TickerProviderStateMixin 
                             indicatorColor: Colors.transparent,
                             splashBorderRadius: const BorderRadius.all(Radius.circular(30)),
                             tabs: [
-                              Text('Overview',),
-                              Text('Products',),
-                              Text('Sales',),
+                              Text('Overview',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                              ),
+                              Text('Products',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                'Sales',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                              ),
                               ShowMyCase(
                                   mykey: _one,
                                   title: null,
                                   description: "Get started by adding a new supplier to streamline procurement.",
-                                  child: Text('Suppliers',)
+                                  child: Text('Suppliers',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  )
                               ),
                             ],
                           ),
