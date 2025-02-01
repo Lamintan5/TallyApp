@@ -34,6 +34,7 @@ class Data{
   String failed = "mhmm🤔 seems like something went wrong. Please try again";
   String noPhone = "Phone number not available";
   final socketManager = Get.find<SocketManager>();
+
   List<DutyModel> dutyList = [
     DutyModel(text: 'Inventory', message: 'Allow manager to add, remove and change quantity of inventory data', icon: LineIcon.boxes()),
     DutyModel(text: 'Product', message: 'Allow manager to add, remove and edit product data', icon: LineIcon.box()),
