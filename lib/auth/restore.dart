@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Home/homescreen.dart';
 import '../home/web_home.dart';
@@ -22,6 +23,7 @@ class Restore extends StatefulWidget {
 
 class _RestoreState extends State<Restore> {
   bool _loading = false;
+  final Uri _url = Uri.parse('https://flutter.dev');
 
   _getData()async{
     setState(() {
@@ -65,14 +67,14 @@ class _RestoreState extends State<Restore> {
                           children: [
                             TextSpan(
                               text: "TallyApp securely fetches and syncs your business data, providing real-time access to "
-                                  "key insights such as daily sales, expenses, and inventory.",
+                                  "key insights such as daily sales, expenses, and inventory. ",
                               style: TextStyle(color: secondaryColor, fontSize: 13),
                             ),
                             WidgetSpan(
                                 child: InkWell(
-                                  onTap: (){},
+                                  onTap: _launchUrl,
+                                  borderRadius: BorderRadius.circular(5),
                                   child: Text("Privacy Statement", style: TextStyle(color: CupertinoColors.activeBlue, fontWeight: FontWeight.w700, fontSize: 13),),
-
                                 )
                             )
                           ]
@@ -347,5 +349,10 @@ class _RestoreState extends State<Restore> {
           )
       ),
     );
+  }
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
   }
 }
