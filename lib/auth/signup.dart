@@ -374,29 +374,29 @@ class _SignUpState extends State<SignUp> {
                                 Platform.isAndroid || Platform.isIOS ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Tooltip(
-                                      message: "Register with Facebook",
-                                      child: InkWell(
-                                        onTap:(){},
-                                        borderRadius: BorderRadius.circular(15),
-                                        splashColor: CupertinoColors.activeBlue,
-                                        child: Container(
-                                          padding: EdgeInsets.all(15),
-                                          decoration: BoxDecoration(
-                                              color: CupertinoColors.activeBlue,
-                                              borderRadius: BorderRadius.circular(15),
-                                              border: Border.all(
-                                                  width: 2, color: Colors.blue
-                                              )
-                                          ),
-                                          child: Image.asset(
-                                            'assets/add/fb.png',
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10,),
+                                    // Tooltip(
+                                    //   message: "Register with Facebook",
+                                    //   child: InkWell(
+                                    //     onTap:(){},
+                                    //     borderRadius: BorderRadius.circular(15),
+                                    //     splashColor: CupertinoColors.activeBlue,
+                                    //     child: Container(
+                                    //       padding: EdgeInsets.all(15),
+                                    //       decoration: BoxDecoration(
+                                    //           color: CupertinoColors.activeBlue,
+                                    //           borderRadius: BorderRadius.circular(15),
+                                    //           border: Border.all(
+                                    //               width: 2, color: Colors.blue
+                                    //           )
+                                    //       ),
+                                    //       child: Image.asset(
+                                    //         'assets/add/fb.png',
+                                    //         height: 30,
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                    // SizedBox(width: 10,),
                                     Tooltip(
                                       message: "Register with Google",
                                       child: InkWell(

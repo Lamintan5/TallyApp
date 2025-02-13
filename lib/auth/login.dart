@@ -283,29 +283,29 @@ class _LoginState extends State<Login> {
                               Platform.isAndroid || Platform.isIOS ? Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Tooltip(
-                                    message: "Register with Facebook",
-                                    child: InkWell(
-                                      onTap:(){},
-                                      borderRadius: BorderRadius.circular(15),
-                                      splashColor: CupertinoColors.activeBlue,
-                                      child: Container(
-                                        padding: EdgeInsets.all(15),
-                                        decoration: BoxDecoration(
-                                            color: CupertinoColors.activeBlue,
-                                            borderRadius: BorderRadius.circular(15),
-                                            border: Border.all(
-                                                width: 2, color: Colors.blue
-                                            )
-                                        ),
-                                        child: Image.asset(
-                                          'assets/add/fb.png',
-                                          height: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10,),
+                                  // Tooltip(
+                                  //   message: "Register with Facebook",
+                                  //   child: InkWell(
+                                  //     onTap:(){},
+                                  //     borderRadius: BorderRadius.circular(15),
+                                  //     splashColor: CupertinoColors.activeBlue,
+                                  //     child: Container(
+                                  //       padding: EdgeInsets.all(15),
+                                  //       decoration: BoxDecoration(
+                                  //           color: CupertinoColors.activeBlue,
+                                  //           borderRadius: BorderRadius.circular(15),
+                                  //           border: Border.all(
+                                  //               width: 2, color: Colors.blue
+                                  //           )
+                                  //       ),
+                                  //       child: Image.asset(
+                                  //         'assets/add/fb.png',
+                                  //         height: 30,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // SizedBox(width: 10,),
                                   Tooltip(
                                     message: "Register with Google",
                                     child: InkWell(
@@ -328,7 +328,7 @@ class _LoginState extends State<Login> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: Platform.isAndroid || Platform.isIOS ?10:0,),
+                                  SizedBox(width:Platform.isIOS ?10:0,),
                                   Platform.isIOS
                                       ? Tooltip(
                                     message: "Register with Apple",
