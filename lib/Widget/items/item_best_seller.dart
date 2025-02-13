@@ -44,13 +44,12 @@ class _ItemBestSellerState extends State<ItemBestSeller> {
       _loading = true;
     });
     _usr = myUsers.map((jsonString) => UserModel.fromJson(json.decode(jsonString))).toList();
+    user = _usr.firstWhere((test) => test.uid == widget.sale.sellerid, orElse: ()=> UserModel(uid: "", username: "--"));
     setState(() {
-      user = _usr.firstWhere((test) => test.uid == widget.sale.sellerid, orElse: ()=> UserModel(uid: "", username: ""));
+
       _loading = false;
     });
   }
-
-
 
   @override
   void initState() {
