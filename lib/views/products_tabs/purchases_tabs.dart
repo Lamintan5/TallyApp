@@ -444,16 +444,7 @@ class _PurchaseTabState extends State<PurchaseTab> {
                                     DataCell(
                                         Center(child: Text('P${index.toString().padLeft(3, '0')}' , style: TextStyle(color: Colors.black),)),
                                         onTap: (){
-                                          items==0? null :
-                                          Get.to(()=>PurchaseItems(
-                                            index: index,
-                                            purchaseId: purchase.purchaseid,
-                                            entity: widget.entity,
-                                            pid: purchase.pid.toString(),
-                                            from: 'purchase', getPurchase: _getData,
-
-                                          ), transition: Transition.rightToLeft
-                                          );
+                                          _onClick(items, index, purchase);
                                         }
                                     ),
                                     DataCell(
@@ -462,25 +453,25 @@ class _PurchaseTabState extends State<PurchaseTab> {
                                           ),
                                         ),
                                         onTap: (){
-
+                                          _onClick(items, index, purchase);
                                         }
                                     ),
                                     DataCell(
                                         Center(child: Text(qnty.toStringAsFixed(0), style: TextStyle(color: Colors.black))),
                                         onTap: (){
-
+                                          _onClick(items, index, purchase);
                                         }
                                     ),
                                     DataCell(
                                         Text('${TFormat().getCurrency()}${formatNumberWithCommas(amount)}', style: TextStyle(color: Colors.black)),
                                         onTap: (){
-
+                                          _onClick(items, index, purchase);
                                         }
                                     ),
                                     DataCell(
                                         Text(purchase.type.toString().toUpperCase(), style: TextStyle(color: Colors.black)),
                                         onTap: (){
-
+                                          _onClick(items, index, purchase);
                                         }
                                     ),
                                     DataCell(
@@ -490,7 +481,7 @@ class _PurchaseTabState extends State<PurchaseTab> {
                                           ),
                                         ),
                                         onTap: (){
-
+                                          _onClick(items, index, purchase);
                                         }
                                     ),
                                     DataCell(
@@ -812,16 +803,7 @@ class _PurchaseTabState extends State<PurchaseTab> {
                                           ),
                                           BottomCallButtons(
                                               onTap: (){
-                                                items==0? null :
-                                                Get.to(()=>PurchaseItems(
-                                                  index: index,
-                                                  purchaseId: purchase.purchaseid,
-                                                  entity: widget.entity,
-                                                  pid: purchase.pid.toString(),
-                                                  from: 'purchase', getPurchase: _getData,
-
-                                                ), transition: Transition.rightToLeft
-                                                );
+                                                _onClick(items, index, purchase);
                                               },
                                               icon: Icon(
                                                 CupertinoIcons.list_bullet_below_rectangle,
@@ -1087,6 +1069,18 @@ class _PurchaseTabState extends State<PurchaseTab> {
     dDate = dDte;
     pUid = purchaserUid;
     _getData();
+  }
+  _onClick(int items, int index, PurchaseModel purchase){
+    items==0? null :
+    Get.to(()=>PurchaseItems(
+      index: index,
+      purchaseId: purchase.purchaseid,
+      entity: widget.entity,
+      pid: purchase.pid.toString(),
+      from: 'purchase', getPurchase: _getData,
+
+    ), transition: Transition.rightToLeft
+    );
   }
 
   String formatNumberWithCommas(double number) {

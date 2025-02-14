@@ -464,12 +464,8 @@ class _ReceivablesState extends State<Receivables> {
                                         DataCell(
                                             Center(child: Text('R${index.toString().padLeft(3, '0')}' , style: TextStyle(color: Colors.black),)),
                                             onTap: (){
-                                              items == 0? null :
-                                              Get.to(()=>SaleItems(
-                                                index: index,
-                                                saleId: sale.saleid,
-                                                entity: widget.entity, from: 'RECEIVABLE', getData: _getData,
-                                              ),transition: Transition.downToUp);
+                                              _navigate(items, index, sale);
+                                              
                                             }
                                         ),
                                         DataCell(
@@ -478,43 +474,43 @@ class _ReceivablesState extends State<Receivables> {
                                               ),
                                             ),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
                                             Center(child: Text(qnty.toString(), style: TextStyle(color: Colors.black))),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
                                             Text('${TFormat().getCurrency()}${formatNumberWithCommas(bprice)}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
                                             Text('${TFormat().getCurrency()}${formatNumberWithCommas(sprice)}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
                                             Text('${TFormat().getCurrency()}${formatNumberWithCommas(profit)}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
                                             Text('${TFormat().getCurrency()}${formatNumberWithCommas(double.parse(sale.paid.toString()))}', style: TextStyle(color: Colors.black)),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
                                             Text('${TFormat().getCurrency()}${formatNumberWithCommas(receivable)}', style: TextStyle(color: receivable < 0? Colors.red: Colors.black)),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
@@ -522,7 +518,7 @@ class _ReceivablesState extends State<Receivables> {
                                                 sale.customer.toString(), style: TextStyle(color: Colors.black)
                                             ),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
@@ -532,7 +528,7 @@ class _ReceivablesState extends State<Receivables> {
                                               ),
                                             ),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
@@ -540,7 +536,7 @@ class _ReceivablesState extends State<Receivables> {
                                                 sale.method.toString().toUpperCase(), style: TextStyle(color: Colors.black)
                                             ),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
@@ -550,7 +546,7 @@ class _ReceivablesState extends State<Receivables> {
                                               ),
                                             ),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
@@ -560,7 +556,7 @@ class _ReceivablesState extends State<Receivables> {
                                               ),
                                             ),
                                             onTap: (){
-
+                                              _navigate(items, index, sale);
                                             }
                                         ),
                                         DataCell(
@@ -580,6 +576,9 @@ class _ReceivablesState extends State<Receivables> {
                                               center: Text('${(status*100).toStringAsFixed(0)}%', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),),
                                             ),
                                           ),
+                                          onTap: (){
+                                            _navigate(items, index, sale);
+                                          }
                                         ),
                                         DataCell(
                                           Center(
@@ -1207,6 +1206,15 @@ class _ReceivablesState extends State<Receivables> {
     cName = cNme;
     cPhone = cPne;
     _getData();
+  }
+
+  _navigate(int items, int index, SaleModel sale){
+    items == 0? null :
+    Get.to(()=>SaleItems(
+      index: index,
+      saleId: sale.saleid,
+      entity: widget.entity, from: 'RECEIVABLE', getData: _getData,
+    ),transition: Transition.downToUp);
   }
 
   String formatNumberWithCommas(double number) {
