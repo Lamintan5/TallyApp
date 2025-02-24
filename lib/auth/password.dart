@@ -15,6 +15,7 @@ import 'package:showcaseview/showcaseview.dart';
 import '../Widget/dialogs/dialog_title.dart';
 import '../Widget/dialogs/dialog_user_info.dart';
 import '../Widget/profile_images/user_profile.dart';
+import '../Widget/text/text_format.dart';
 import '../api/google_signin_api.dart';
 import '../home/homescreen.dart';
 import '../home/web_home.dart';
@@ -55,7 +56,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
         user.lastname!,
         user.email!,
         user.phone!,
-        md5.convert(utf8.encode(_repass.text.trim().toString())).toString(),
+        TFormat().encryptText(_repass.text.trim().toString(), user.uid),
         user.image =="" || user.image!.contains("https://")? null : File(user.image!),
         "",
         user.image.toString(),
@@ -98,7 +99,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
         sharedPreferences.setString('image', user.image.toString());
         sharedPreferences.setString('phone', user.phone.toString());
         sharedPreferences.setString('token', user.token.toString());
-        sharedPreferences.setString('password', md5.convert(utf8.encode(_repass.text.trim().toString())).toString());
+        sharedPreferences.setString('password', TFormat().encryptText(_repass.text.trim().toString(), user.uid));
         sharedPreferences.setString('country', user.country.toString());
         currentUser = UserModel(
             uid: user.uid.toString(),
@@ -109,7 +110,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
             phone: user.phone.toString(),
             image: user.image.toString(),
             token: user.token.toString(),
-            password: md5.convert(utf8.encode(_repass.text.trim().toString())).toString(),
+            password: TFormat().encryptText(_repass.text.trim().toString(), user.uid),
             status: user.status,
             country: user.country
         );
@@ -162,7 +163,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
         sharedPreferences.setString('image', user.image.toString());
         sharedPreferences.setString('phone', user.phone.toString());
         sharedPreferences.setString('token', user.token.toString());
-        sharedPreferences.setString('password', md5.convert(utf8.encode(_repass.text.trim().toString())).toString());
+        sharedPreferences.setString('password', TFormat().encryptText(_repass.text.trim().toString(), user.uid));
         sharedPreferences.setString('country', user.country.toString());
         currentUser = UserModel(
             uid: user.uid.toString(),
@@ -173,7 +174,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
             phone: user.phone.toString(),
             image: user.image.toString(),
             token: user.token.toString(),
-            password: md5.convert(utf8.encode(_repass.text.trim().toString())).toString(),
+            password: TFormat().encryptText(_repass.text.trim().toString(), user.uid),
             status: user.status,
             country: user.country
         );

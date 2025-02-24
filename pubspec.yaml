@@ -59,7 +59,6 @@ dependencies:
   country_picker: ^2.0.24
   camera: ^0.10.5+9
   sms_autofill: ^2.4.0
-  onesignal_flutter: ^5.2.6
   qr_flutter: ^4.1.0
   qr_scanner_overlay: ^0.0.2
   mobile_scanner: ^4.0.1
@@ -71,6 +70,7 @@ dependencies:
   timeago: ^3.6.1
   http: any
   flutter_cache_manager: any
+  onesignal_flutter: ^5.2.9
   vibration: ^1.9.0
   audioplayers: ^6.0.0
   crypto: ^3.0.5

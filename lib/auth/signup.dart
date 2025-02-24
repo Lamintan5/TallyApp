@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:TallyApp/Widget/dialogs/call_actions/single_call_action.dart';
 import 'package:TallyApp/Widget/logos/row_logo.dart';
+import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/auth/password.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:TallyApp/Widget/emailTextFormWidget.dart';
@@ -315,17 +315,18 @@ class _SignUpState extends State<SignUp> {
                                     onPressed: (){
                                       final form = formKey.currentState!;
                                       if(form.validate()) {
-                                        if(_isLoading){
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(
-                                                content: Text("Please wait!", style: TextStyle(color: revers),),
-                                                backgroundColor: dilogbg,
-                                                behavior: SnackBarBehavior.floating,
-                                              )
-                                          );
-                                        } else {
-                                          _verifyEmail();
-                                        }
+                                        _verifyEmail();
+                                        // if(_isLoading){
+                                        //   ScaffoldMessenger.of(context).showSnackBar(
+                                        //       SnackBar(
+                                        //         content: Text("Please wait!", style: TextStyle(color: revers),),
+                                        //         backgroundColor: dilogbg,
+                                        //         behavior: SnackBarBehavior.floating,
+                                        //       )
+                                        //   );
+                                        // } else {
+                                        //
+                                        // }
                                       }
                                     },
                                     child: _isLoading ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.black,strokeWidth: 2,)) : Text("Create Account"),
@@ -369,7 +370,7 @@ class _SignUpState extends State<SignUp> {
                                   ],
                                 ) : SizedBox(),
                                 Platform.isAndroid || Platform.isIOS ? SizedBox(height: 10,) : SizedBox(),
-                                Platform.isAndroid || Platform.isIOS ? Text('Continue with...') : SizedBox(),
+                                Platform.isAndroid || Platform.isIOS ? Text('Continue with') : SizedBox(),
                                 Platform.isAndroid || Platform.isIOS ? SizedBox(height: 10,) : SizedBox(),
                                 Platform.isAndroid || Platform.isIOS ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -771,7 +772,7 @@ class _SignUpState extends State<SignUp> {
       lastname: _secondName.text.trim().toString(),
       email: _emailController.text.trim().toString(),
       phone: "+"+ _country.phoneCode+_phoneController.text.trim().toString(),
-      password: md5.convert(utf8.encode(_passwordController.text.trim().toString())).toString(),
+      password: TFormat().encryptText(_passwordController.text.trim().toString(), id),
       type: type,
       image: _image!=null?_image!.path:"",
       status: "",
@@ -780,9 +781,7 @@ class _SignUpState extends State<SignUp> {
       time: DateTime.now().toString(),
       country: deviceModel.country == null? _country.countryCode : deviceModel.country.toString()
     );
-    print(deviceModel.id);
     APIService.otpLogin(_emailController.text.trim()).then((response)async{
-      print(response.data);
       setState(() {
         _isLoading = false;
       });
