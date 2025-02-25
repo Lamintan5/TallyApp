@@ -240,7 +240,7 @@ class _LoginState extends State<Login> {
                                 ],
                               ),
                               SizedBox(height: 10,),
-                              Padding(
+                              Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: InkWell(
                                   onTap: (){
@@ -333,31 +333,31 @@ class _LoginState extends State<Login> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width:Platform.isIOS ?10:0,),
-                                  Platform.isIOS
-                                      ? Tooltip(
-                                    message: "Register with Apple",
-                                    child: InkWell(
-                                      onTap: (){},
-                                      borderRadius: BorderRadius.circular(15),
-                                      splashColor: CupertinoColors.activeBlue,
-                                      child: Container(
-                                        padding: EdgeInsets.all(15),
-                                        decoration: BoxDecoration(
-                                            color: color2,
-                                            borderRadius: BorderRadius.circular(15),
-                                            border: Border.all(
-                                                width: 2, color: color1
-                                            )
-                                        ),
-                                        child: Image.asset(
-                                          Theme.of(context).brightness == Brightness.dark? 'assets/add/apple_2.png' : 'assets/add/apple.png',
-                                          height: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                      : SizedBox(),
+                                  // SizedBox(width:Platform.isIOS ?10:0,),
+                                  // Platform.isIOS
+                                  //     ? Tooltip(
+                                  //   message: "Register with Apple",
+                                  //   child: InkWell(
+                                  //     onTap: (){},
+                                  //     borderRadius: BorderRadius.circular(15),
+                                  //     splashColor: CupertinoColors.activeBlue,
+                                  //     child: Container(
+                                  //       padding: EdgeInsets.all(15),
+                                  //       decoration: BoxDecoration(
+                                  //           color: color2,
+                                  //           borderRadius: BorderRadius.circular(15),
+                                  //           border: Border.all(
+                                  //               width: 2, color: color1
+                                  //           )
+                                  //       ),
+                                  //       child: Image.asset(
+                                  //         Theme.of(context).brightness == Brightness.dark? 'assets/add/apple_2.png' : 'assets/add/apple.png',
+                                  //         height: 30,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // )
+                                  //     : SizedBox(),
                                 ],
                               ) : SizedBox(),
                             ],
