@@ -23,7 +23,7 @@ class Restore extends StatefulWidget {
 
 class _RestoreState extends State<Restore> {
   bool _loading = false;
-  final Uri _url = Uri.parse('https://flutter.dev');
+  final Uri _url = Uri.parse('https://studio5ive.org/privacy.html');
 
   _getData()async{
     setState(() {
@@ -56,7 +56,7 @@ class _RestoreState extends State<Restore> {
           child: Center(
             child: Container(
               width: 500,
-              margin: EdgeInsets.symmetric(horizontal: 5),
+              margin: EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

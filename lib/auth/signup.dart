@@ -17,6 +17,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:line_icons/line_icon.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
 import '../Widget/dialogs/dialog_ipaddress.dart';
@@ -45,6 +46,10 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPassword = TextEditingController();
+
+  final Uri _privacyUrl = Uri.parse('https://studio5ive.org/privacy.html');
+  final Uri _userUrl = Uri.parse('https://studio5ive.org/useragreement.html');
+
 
   File? _image;
 
@@ -471,7 +476,7 @@ class _SignUpState extends State<SignUp> {
                               WidgetSpan(
                                 child: InkWell(
                                   onTap: () {
-                                    // Handle button press
+                                    _launchUrl(_userUrl);
                                   },
                                   child: Text('User Agreement ',style: boldBtn),
                                 ),
@@ -482,10 +487,10 @@ class _SignUpState extends State<SignUp> {
                               ),
                               WidgetSpan(
                                 child: InkWell(
-                                  onTap: () {
-                                    // Get.to(() => PrivacyPolicy(), transition: Transition.rightToLeft);
-                                  },
-                                  child: Text('User Privacy Notice.',style: boldBtn),
+                                  onTap: (){
+                                      _launchUrl(_privacyUrl);
+                                    },
+                                  child: Text('Privacy Policy.',style: boldBtn),
                                 ),
                               ),
                             ]
@@ -811,5 +816,10 @@ class _SignUpState extends State<SignUp> {
       Get.to(() => PasswordScreen(user: user), transition: Transition.rightToLeft);
     }
 
+  }
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $_privacyUrl');
+    }
   }
 }
