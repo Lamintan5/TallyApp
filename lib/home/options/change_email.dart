@@ -9,6 +9,7 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Widget/text/text_format.dart';
 import '../../api/api_service.dart';
 import '../../auth/verify_email.dart';
 
@@ -84,7 +85,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a password.';
                               }
-                              if (md5.convert(utf8.encode(value!)).toString()!= currentUser.password) {
+                              if (TFormat().encryptText(_password.text.trim(), currentUser.uid) != currentUser.password) {
                                 return 'Please Enter the correct password';
                               }
 

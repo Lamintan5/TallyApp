@@ -9,6 +9,7 @@ import 'package:TallyApp/widget/text_filed_input.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Widget/text/text_format.dart';
 import '../../utils/colors.dart';
 
 
@@ -131,7 +132,7 @@ class _ChangePhoneState extends State<ChangePhone> {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter a password.';
                               }
-                              if (md5.convert(utf8.encode(value!)).toString()!= currentUser.password) {
+                              if (TFormat().encryptText(_password.text.trim(), currentUser.uid) != currentUser.password) {
                                 return 'Please Enter the correct password';
                               }
                               return null;

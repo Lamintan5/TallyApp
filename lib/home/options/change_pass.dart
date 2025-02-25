@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:TallyApp/Widget/text/text_format.dart';
 import 'package:TallyApp/Widget/text_filed_input.dart';
 import 'package:TallyApp/utils/colors.dart';
 import 'package:crypto/crypto.dart';
@@ -77,7 +78,7 @@ class _ChangePassState extends State<ChangePass> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter current password.';
                             }
-                            if (md5.convert(utf8.encode(value!)).toString()!= currentUser.password) {
+                            if (TFormat().encryptText(_current.text.trim(), currentUser.uid) != currentUser.password) {
                               return 'Please enter the correct password.';
                             }
                           },
@@ -102,8 +103,8 @@ class _ChangePassState extends State<ChangePass> {
                             if (!value.contains(RegExp(r'[A-Z]'))) {
                               return 'Password must contain at least one uppercase letter.';
                             }
-                            if (value.replaceAll(RegExp(r'[^0-9]'), '').length < 4) {
-                              return 'Password must contain at least four digits.';
+                            if (value.replaceAll(RegExp(r'[^0-9]'), '').length < 1) {
+                              return 'Password must contain at least one digits.';
                             }
                             if (!value.contains(RegExp(r'[!@#\$%^&*()_+{}\[\]:;<>,.?~\\-]'))) {
                               return 'Password must contain at least one special character.';
@@ -169,11 +170,11 @@ class _ChangePassState extends State<ChangePass> {
       _loading = true;
     });
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    Services.updatePassword(currentUser.uid, _repass.text.trim()).then((response){
+    Services.updatePassword(currentUser.uid, TFormat().encryptText(_repass.text.trim(), currentUser.uid)).then((response){
       if(response=="success"){
         Navigator.pop(context);
-        sharedPreferences.setString('password', _repass.text.trim().toString());
-        currentUser.password = _repass.text.trim().toString();
+        sharedPreferences.setString('password', TFormat().encryptText(_repass.text.trim(), currentUser.uid));
+        currentUser.password = TFormat().encryptText(_repass.text.trim(), currentUser.uid);
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text("Password update", style: TextStyle(color: revers),),

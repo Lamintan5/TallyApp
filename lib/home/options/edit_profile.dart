@@ -20,6 +20,7 @@ import 'package:line_icons/line_icon.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Widget/dialogs/dialog_title.dart';
+import '../../Widget/text/text_format.dart';
 import '../../auth/camera.dart';
 import '../../models/avatars.dart';
 import '../../models/users.dart';
@@ -334,7 +335,7 @@ class _EditProfileState extends State<EditProfile> {
                     labelText: "Password",
                     isPass: true,
                     validator: (value){
-                      if(md5.convert(utf8.encode(value!)).toString()!= currentUser.password){
+                      if(TFormat().encryptText(value!, currentUser.uid) != currentUser.password){
                         return "Please enter the correct password";
                       }
                     },
