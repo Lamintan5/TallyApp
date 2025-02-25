@@ -52,7 +52,7 @@ class _ItemNotifState extends State<ItemNotif> {
 
   String did = '';
   bool _loading = false;
-  bool _isExpanded = false;
+  bool _isExpanded = true;
 
   EntityModel entity = EntityModel(eid: "", title: "N/A");
   UserModel user = UserModel(uid: "", username: "N/A");
