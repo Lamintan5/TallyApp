@@ -412,8 +412,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
                             if (!value.contains(RegExp(r'[A-Z]'))) {
                               return 'Password must contain at least one uppercase letter.';
                             }
-                            if (value.replaceAll(RegExp(r'[^0-9]'), '').length < 3) {
-                              return 'Password must contain at least three digits.';
+                            if (value.replaceAll(RegExp(r'[^0-9]'), '').length < 1) {
+                              return 'Password must contain at least one digits.';
                             }
                             if (!value.contains(RegExp(r'[!@#\$%^&*()_+{}\[\]:;<>,.?~\\-]'))) {
                               return 'Password must contain at least one special character.';
